@@ -1,0 +1,163 @@
+<project basedir="." default="jar">
+
+   <echo message="*********************************************"/>
+   <echo message="** ${ant.version} "/>
+   <echo message="** Ant Java Version: ${ant.java.version} "/>
+   <echo message="** Java VM Version: ${java.vm.version} "/>
+   <echo message="*********************************************"/>
+
+   <tstamp>
+      <format property="TODAY" pattern="MM/dd/yyyy HH:mm:ss" />
+   </tstamp>
+
+   <property name="build.major" value="01"/>
+   <property name="build.minor" value="07"/>
+
+   <property name="src" location="src"/>
+   <property name="classes" location="classes"/>
+   <property name="doc" location="doc"/>
+
+   <property name="rpm" location="rpm"/>
+   <property name="rpm.sources" value="${rpm}/SOURCES"/>
+   <property name="rpm.specs" value="${rpm}/SPECS"/>
+   <property name="rpm.build" value="${rpm}/BUILD"/>
+   <property name="rpm.srpms" value="${rpm}/SRPMS"/>
+   <property name="rpm.rpms" value="${rpm}/RPMS"/>
+   <property name="avrcam.spec" value="AVRcam.spec"/>
+
+   <property name="comm.jar" location="lib/linux/comm.jar"/>
+   <property name="jdom.jar" location="lib/jdom.jar"/>
+   <property name="jar.file" value="AVRcamVIEW.jar"/>
+   <property name="jar.main.class" value="avr.swing.JAVRCamFrame"/>
+
+   <property name="build.property.file" value="avr.properties"/>
+   <property name="build.property.file.location" location="${classes}/avr/resource/${build.property.file}"/>
+
+   <property name="javac.source" value="${ant.java.version}"/>
+   <property name="javac.target" value="${ant.java.version}"/>
+
+   <filterset id="build.properties">
+      <filter token="DATE" value="${TODAY}" />
+      <filter token="MAJOR" value="${build.major}" />
+      <filter token="MINOR" value="${build.minor}" />
+   </filterset>
+
+   <condition property="isUnix">
+      <os family="unix"/>
+   </condition>
+
+   <target name="testOS" unless="isUnix">
+      <fail message="This build can only run on Unix Platforms"/>
+   </target>
+
+   <target name="init" depends="testOS">
+      <mkdir dir="${classes}"/>
+      <mkdir dir="${doc}"/>
+      <mkdir dir="${rpm}"/>
+      <mkdir dir="${rpm.sources}"/>
+      <mkdir dir="${rpm.specs}"/>
+      <mkdir dir="${rpm.build}"/>
+      <mkdir dir="${rpm.srpms}"/>
+      <mkdir dir="${rpm.rpms}"/>
+   </target>
+
+   <target name="check-uptodate">
+      <uptodate property="src-uptodate" targetfile="${build.property.file.location}">
+         <srcfiles dir="${src}" includes="avr/**"/>
+      </uptodate>
+   </target>
+
+   <target name="compile" depends="init,check-uptodate" unless="src-uptodate">
+      <javac source="${javac.source}"
+             target="${javac.target}"
+             srcdir="${src}"
+             destdir="${classes}"
+             debug="off"
+             optimize="yes"
+             listfiles="yes">
+
+         <!-- if compiling with JDK 1.4 or lessor, the following line MUST be uncommented
+              because the JNewColorMapPanel contains JDK 5.0 specific code. -->
+         <!-- <exclude name="**/JNewColorMapPanel.java"/> -->
+
+<!--
+         <classpath>
+            <pathelement location="${comm.jar}"/>
+            <pathelement location="${jdom.jar}"/>
+         </classpath>
+-->
+         <!-- print all warnings -->
+         <!-- <compilerarg value="-Xlint"/> -->
+      </javac>
+      <copy todir="${classes}" overwrite="yes">
+    <filterset refid="build.properties" />
+         <fileset dir="${src}">
+            <include name="**/*.properties*"/>
+         </fileset>
+      </copy>
+   </target>
+
+   <target name="doc" depends="compile">
+      <javadoc destdir="${doc}" sourcepath="${src}" packagenames="avr.*">
+         <link href="http://java.sun.com/j2se/1.5.0/docs/api"/>
+         <classpath path="${classes}"/>
+      </javadoc>
+   </target>
+
+   <target name="jar" depends="compile">
+      <jar destfile="${jar.file}" basedir="${classes}" includes="avr/**">
+         <manifest>
+            <attribute name="Main-Class" value="${jar.main.class}"/>
+         </manifest>
+      </jar>
+   </target>
+
+   <target name="clean-src" depends="check-uptodate" unless="src-uptodate">
+
+      <property name="prefix" value="AVRcamVIEW-${build.major}.${build.minor}"/>
+      <property name="tar.file" location="${rpm.sources}/${prefix}.tar.gz"/>
+
+      <delete file="${tar.file}" />
+
+   </target>
+
+   <target name="zip-src" depends="clean-src">
+
+      <property name="prefix" value="AVRcamVIEW-${build.major}.${build.minor}"/>
+      <property name="tar.file" location="${rpm.sources}/${prefix}.tar.gz"/>
+
+      <tar compression="gzip" destfile="${tar.file}">
+         <tarfileset prefix="${prefix}" dir=".">
+            <exclude name="**/CVS/**" />
+            <include name="src/**/*" />
+            <include name="${build.property.file}" />
+            <include name="build.linux.xml" />
+            <include name="AVRcamVIEW.sh" />
+            <include name="jre/**/*" />
+         </tarfileset>
+      </tar>
+   </target>
+
+   <target name="rpm" depends="init, zip-src">
+      <copy file="${avrcam.spec}" todir="${rpm.specs}"/>
+      <rpm topDir="${rpm}" specFile="${avrcam.spec}" />
+   </target>
+
+   <target name="clean" depends="clean-classes, clean-doc, clean-jar">
+   </target>
+
+   <target name="clean-classes">
+      <delete dir="${classes}"/>
+   </target>
+
+   <target name="clean-doc">
+      <delete dir="${doc}"/>
+   </target>
+
+   <target name="clean-jar">
+      <delete file="${jar.file}"/>
+   </target>
+
+   <target name="rebuild-all" depends="clean, jar" />
+
+</project>
