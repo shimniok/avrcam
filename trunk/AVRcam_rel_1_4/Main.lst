@@ -1,0 +1,426 @@
+GAS LISTING C:\cygwin\tmp/ccUQSbK2.s 			page 1
+
+
+   1               		.file	"Main.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.section	.debug_abbrev,"",@progbits
+   9               	.Ldebug_abbrev0:
+  10               		.section	.debug_info,"",@progbits
+  11               	.Ldebug_info0:
+  12               		.section	.debug_line,"",@progbits
+  13               	.Ldebug_line0:
+  14               		.text
+  15               	.Ltext0:
+  16               	.global	main
+  17               		.type	main, @function
+  18               	main:
+  19               	.LFB2:
+  20               	.LM1:
+  21               	/* prologue: function */
+  22               	/* frame size = 0 */
+  23               	.LM2:
+  24 0000 00D0      		rcall DebugInt_init
+  25               	.LM3:
+  26 0002 00D0      		rcall UartInt_init
+  27               	.LM4:
+  28 0004 00D0      		rcall I2CInt_init
+  29               	.LM5:
+  30 0006 00D0      		rcall CamInt_init
+  31               	.LM6:
+  32               	/* #APP */
+  33               	 ;  79 "Main.c" 1
+  34 0008 7894      		sei
+  35               	 ;  0 "" 2
+  36               	.LM7:
+  37               	/* #NOAPP */
+  38 000a 00D0      		rcall CamConfig_init
+  39               	.LM8:
+  40 000c 00D0      		rcall UIMgr_init
+  41               	.LM9:
+  42 000e 00D0      		rcall FrameMgr_init
+  43               	.LM10:
+  44 0010 88EE      		ldi r24,lo8(1000)
+  45 0012 93E0      		ldi r25,hi8(1000)
+  46 0014 00D0      		rcall Utility_delay
+  47               	.LM11:
+  48 0016 00D0      		rcall Exec_run
+  49               	.LM12:
+  50 0018 80E0      		ldi r24,lo8(0)
+  51 001a 90E0      		ldi r25,hi8(0)
+  52               	/* epilogue start */
+  53 001c 0895      		ret
+  54               	.LFE2:
+  55               		.size	main, .-main
+  56               		.section	.debug_frame,"",@progbits
+  57               	.Lframe0:
+GAS LISTING C:\cygwin\tmp/ccUQSbK2.s 			page 2
+
+
+  58 0000 0C00 0000 		.long	.LECIE0-.LSCIE0
+  59               	.LSCIE0:
+  60 0004 FFFF FFFF 		.long	0xffffffff
+  61 0008 01        		.byte	0x1
+  62 0009 00        		.string	""
+  63 000a 01        		.uleb128 0x1
+  64 000b 7F        		.sleb128 -1
+  65 000c 24        		.byte	0x24
+  66 000d 0C        		.byte	0xc
+  67 000e 20        		.uleb128 0x20
+  68 000f 00        		.uleb128 0x0
+  69               		.p2align	2
+  70               	.LECIE0:
+  71               	.LSFDE0:
+  72 0010 0C00 0000 		.long	.LEFDE0-.LASFDE0
+  73               	.LASFDE0:
+  74 0014 0000 0000 		.long	.Lframe0
+  75 0018 0000 0000 		.long	.LFB2
+  76 001c 1E00 0000 		.long	.LFE2-.LFB2
+  77               		.p2align	2
+  78               	.LEFDE0:
+  79               		.text
+  80               	.Letext0:
+  81               		.section	.debug_info
+  82 0000 7200 0000 		.long	0x72
+  83 0004 0200      		.word	0x2
+  84 0006 0000 0000 		.long	.Ldebug_abbrev0
+  85 000a 04        		.byte	0x4
+  86 000b 01        		.uleb128 0x1
+  87 000c 0000 0000 		.long	.LASF7
+  88 0010 01        		.byte	0x1
+  89 0011 0000 0000 		.long	.LASF8
+  90 0015 0000 0000 		.long	.LASF9
+  91 0019 0000 0000 		.long	.Ltext0
+  92 001d 0000 0000 		.long	.Letext0
+  93 0021 0000 0000 		.long	.Ldebug_line0
+  94 0025 02        		.uleb128 0x2
+  95 0026 01        		.byte	0x1
+  96 0027 06        		.byte	0x6
+  97 0028 0000 0000 		.long	.LASF0
+  98 002c 02        		.uleb128 0x2
+  99 002d 01        		.byte	0x1
+ 100 002e 08        		.byte	0x8
+ 101 002f 0000 0000 		.long	.LASF1
+ 102 0033 03        		.uleb128 0x3
+ 103 0034 02        		.byte	0x2
+ 104 0035 05        		.byte	0x5
+ 105 0036 696E 7400 		.string	"int"
+ 106 003a 02        		.uleb128 0x2
+ 107 003b 02        		.byte	0x2
+ 108 003c 07        		.byte	0x7
+ 109 003d 0000 0000 		.long	.LASF2
+ 110 0041 02        		.uleb128 0x2
+ 111 0042 04        		.byte	0x4
+ 112 0043 05        		.byte	0x5
+ 113 0044 0000 0000 		.long	.LASF3
+ 114 0048 02        		.uleb128 0x2
+GAS LISTING C:\cygwin\tmp/ccUQSbK2.s 			page 3
+
+
+ 115 0049 04        		.byte	0x4
+ 116 004a 07        		.byte	0x7
+ 117 004b 0000 0000 		.long	.LASF4
+ 118 004f 02        		.uleb128 0x2
+ 119 0050 08        		.byte	0x8
+ 120 0051 05        		.byte	0x5
+ 121 0052 0000 0000 		.long	.LASF5
+ 122 0056 02        		.uleb128 0x2
+ 123 0057 08        		.byte	0x8
+ 124 0058 07        		.byte	0x7
+ 125 0059 0000 0000 		.long	.LASF6
+ 126 005d 04        		.uleb128 0x4
+ 127 005e 01        		.byte	0x1
+ 128 005f 0000 0000 		.long	.LASF10
+ 129 0063 01        		.byte	0x1
+ 130 0064 46        		.byte	0x46
+ 131 0065 01        		.byte	0x1
+ 132 0066 3300 0000 		.long	0x33
+ 133 006a 0000 0000 		.long	.LFB2
+ 134 006e 0000 0000 		.long	.LFE2
+ 135 0072 02        		.byte	0x2
+ 136 0073 90        		.byte	0x90
+ 137 0074 20        		.uleb128 0x20
+ 138 0075 00        		.byte	0x0
+ 139               		.section	.debug_abbrev
+ 140 0000 01        		.uleb128 0x1
+ 141 0001 11        		.uleb128 0x11
+ 142 0002 01        		.byte	0x1
+ 143 0003 25        		.uleb128 0x25
+ 144 0004 0E        		.uleb128 0xe
+ 145 0005 13        		.uleb128 0x13
+ 146 0006 0B        		.uleb128 0xb
+ 147 0007 03        		.uleb128 0x3
+ 148 0008 0E        		.uleb128 0xe
+ 149 0009 1B        		.uleb128 0x1b
+ 150 000a 0E        		.uleb128 0xe
+ 151 000b 11        		.uleb128 0x11
+ 152 000c 01        		.uleb128 0x1
+ 153 000d 12        		.uleb128 0x12
+ 154 000e 01        		.uleb128 0x1
+ 155 000f 10        		.uleb128 0x10
+ 156 0010 06        		.uleb128 0x6
+ 157 0011 00        		.byte	0x0
+ 158 0012 00        		.byte	0x0
+ 159 0013 02        		.uleb128 0x2
+ 160 0014 24        		.uleb128 0x24
+ 161 0015 00        		.byte	0x0
+ 162 0016 0B        		.uleb128 0xb
+ 163 0017 0B        		.uleb128 0xb
+ 164 0018 3E        		.uleb128 0x3e
+ 165 0019 0B        		.uleb128 0xb
+ 166 001a 03        		.uleb128 0x3
+ 167 001b 0E        		.uleb128 0xe
+ 168 001c 00        		.byte	0x0
+ 169 001d 00        		.byte	0x0
+ 170 001e 03        		.uleb128 0x3
+ 171 001f 24        		.uleb128 0x24
+GAS LISTING C:\cygwin\tmp/ccUQSbK2.s 			page 4
+
+
+ 172 0020 00        		.byte	0x0
+ 173 0021 0B        		.uleb128 0xb
+ 174 0022 0B        		.uleb128 0xb
+ 175 0023 3E        		.uleb128 0x3e
+ 176 0024 0B        		.uleb128 0xb
+ 177 0025 03        		.uleb128 0x3
+ 178 0026 08        		.uleb128 0x8
+ 179 0027 00        		.byte	0x0
+ 180 0028 00        		.byte	0x0
+ 181 0029 04        		.uleb128 0x4
+ 182 002a 2E        		.uleb128 0x2e
+ 183 002b 00        		.byte	0x0
+ 184 002c 3F        		.uleb128 0x3f
+ 185 002d 0C        		.uleb128 0xc
+ 186 002e 03        		.uleb128 0x3
+ 187 002f 0E        		.uleb128 0xe
+ 188 0030 3A        		.uleb128 0x3a
+ 189 0031 0B        		.uleb128 0xb
+ 190 0032 3B        		.uleb128 0x3b
+ 191 0033 0B        		.uleb128 0xb
+ 192 0034 27        		.uleb128 0x27
+ 193 0035 0C        		.uleb128 0xc
+ 194 0036 49        		.uleb128 0x49
+ 195 0037 13        		.uleb128 0x13
+ 196 0038 11        		.uleb128 0x11
+ 197 0039 01        		.uleb128 0x1
+ 198 003a 12        		.uleb128 0x12
+ 199 003b 01        		.uleb128 0x1
+ 200 003c 40        		.uleb128 0x40
+ 201 003d 0A        		.uleb128 0xa
+ 202 003e 00        		.byte	0x0
+ 203 003f 00        		.byte	0x0
+ 204 0040 00        		.byte	0x0
+ 205               		.section	.debug_pubnames,"",@progbits
+ 206 0000 1700 0000 		.long	0x17
+ 207 0004 0200      		.word	0x2
+ 208 0006 0000 0000 		.long	.Ldebug_info0
+ 209 000a 7600 0000 		.long	0x76
+ 210 000e 5D00 0000 		.long	0x5d
+ 211 0012 6D61 696E 		.string	"main"
+ 211      00
+ 212 0017 0000 0000 		.long	0x0
+ 213               		.section	.debug_aranges,"",@progbits
+ 214 0000 1C00 0000 		.long	0x1c
+ 215 0004 0200      		.word	0x2
+ 216 0006 0000 0000 		.long	.Ldebug_info0
+ 217 000a 04        		.byte	0x4
+ 218 000b 00        		.byte	0x0
+ 219 000c 0000      		.word	0x0
+ 220 000e 0000      		.word	0x0
+ 221 0010 0000 0000 		.long	.Ltext0
+ 222 0014 1E00 0000 		.long	.Letext0-.Ltext0
+ 223 0018 0000 0000 		.long	0x0
+ 224 001c 0000 0000 		.long	0x0
+ 225               		.section	.debug_line
+ 226 0000 8A00 0000 		.long	.LELT0-.LSLT0
+ 227               	.LSLT0:
+GAS LISTING C:\cygwin\tmp/ccUQSbK2.s 			page 5
+
+
+ 228 0004 0200      		.word	0x2
+ 229 0006 1A00 0000 		.long	.LELTP0-.LASLTP0
+ 230               	.LASLTP0:
+ 231 000a 01        		.byte	0x1
+ 232 000b 01        		.byte	0x1
+ 233 000c F6        		.byte	0xf6
+ 234 000d F5        		.byte	0xf5
+ 235 000e 0A        		.byte	0xa
+ 236 000f 00        		.byte	0x0
+ 237 0010 01        		.byte	0x1
+ 238 0011 01        		.byte	0x1
+ 239 0012 01        		.byte	0x1
+ 240 0013 01        		.byte	0x1
+ 241 0014 00        		.byte	0x0
+ 242 0015 00        		.byte	0x0
+ 243 0016 00        		.byte	0x0
+ 244 0017 01        		.byte	0x1
+ 245 0018 00        		.byte	0x0
+ 246 0019 4D61 696E 		.string	"Main.c"
+ 246      2E63 00
+ 247 0020 00        		.uleb128 0x0
+ 248 0021 00        		.uleb128 0x0
+ 249 0022 00        		.uleb128 0x0
+ 250 0023 00        		.byte	0x0
+ 251               	.LELTP0:
+ 252 0024 00        		.byte	0x0
+ 253 0025 05        		.uleb128 0x5
+ 254 0026 02        		.byte	0x2
+ 255 0027 0000 0000 		.long	.LM1
+ 256 002b 59        		.byte	0x59
+ 257 002c 00        		.byte	0x0
+ 258 002d 05        		.uleb128 0x5
+ 259 002e 02        		.byte	0x2
+ 260 002f 0000 0000 		.long	.LM2
+ 261 0033 16        		.byte	0x16
+ 262 0034 00        		.byte	0x0
+ 263 0035 05        		.uleb128 0x5
+ 264 0036 02        		.byte	0x2
+ 265 0037 0000 0000 		.long	.LM3
+ 266 003b 15        		.byte	0x15
+ 267 003c 00        		.byte	0x0
+ 268 003d 05        		.uleb128 0x5
+ 269 003e 02        		.byte	0x2
+ 270 003f 0000 0000 		.long	.LM4
+ 271 0043 15        		.byte	0x15
+ 272 0044 00        		.byte	0x0
+ 273 0045 05        		.uleb128 0x5
+ 274 0046 02        		.byte	0x2
+ 275 0047 0000 0000 		.long	.LM5
+ 276 004b 15        		.byte	0x15
+ 277 004c 00        		.byte	0x0
+ 278 004d 05        		.uleb128 0x5
+ 279 004e 02        		.byte	0x2
+ 280 004f 0000 0000 		.long	.LM6
+ 281 0053 18        		.byte	0x18
+ 282 0054 00        		.byte	0x0
+ 283 0055 05        		.uleb128 0x5
+GAS LISTING C:\cygwin\tmp/ccUQSbK2.s 			page 6
+
+
+ 284 0056 02        		.byte	0x2
+ 285 0057 0000 0000 		.long	.LM7
+ 286 005b 15        		.byte	0x15
+ 287 005c 00        		.byte	0x0
+ 288 005d 05        		.uleb128 0x5
+ 289 005e 02        		.byte	0x2
+ 290 005f 0000 0000 		.long	.LM8
+ 291 0063 15        		.byte	0x15
+ 292 0064 00        		.byte	0x0
+ 293 0065 05        		.uleb128 0x5
+ 294 0066 02        		.byte	0x2
+ 295 0067 0000 0000 		.long	.LM9
+ 296 006b 15        		.byte	0x15
+ 297 006c 00        		.byte	0x0
+ 298 006d 05        		.uleb128 0x5
+ 299 006e 02        		.byte	0x2
+ 300 006f 0000 0000 		.long	.LM10
+ 301 0073 18        		.byte	0x18
+ 302 0074 00        		.byte	0x0
+ 303 0075 05        		.uleb128 0x5
+ 304 0076 02        		.byte	0x2
+ 305 0077 0000 0000 		.long	.LM11
+ 306 007b 18        		.byte	0x18
+ 307 007c 00        		.byte	0x0
+ 308 007d 05        		.uleb128 0x5
+ 309 007e 02        		.byte	0x2
+ 310 007f 0000 0000 		.long	.LM12
+ 311 0083 18        		.byte	0x18
+ 312 0084 00        		.byte	0x0
+ 313 0085 05        		.uleb128 0x5
+ 314 0086 02        		.byte	0x2
+ 315 0087 0000 0000 		.long	.Letext0
+ 316 008b 00        		.byte	0x0
+ 317 008c 01        		.uleb128 0x1
+ 318 008d 01        		.byte	0x1
+ 319               	.LELT0:
+ 320 008e 1600 0000 		.section	.debug_str,"MS",@progbits,1
+ 320      0200 1000 
+ 320      0000 0101 
+ 320      FB0E 0A00 
+ 320      0101 0101 
+ 321               	.LASF8:
+ 322 0000 4D61 696E 		.string	"Main.c"
+ 322      2E63 00
+ 323               	.LASF2:
+ 324 0007 756E 7369 		.string	"unsigned int"
+ 324      676E 6564 
+ 324      2069 6E74 
+ 324      00
+ 325               	.LASF4:
+ 326 0014 6C6F 6E67 		.string	"long unsigned int"
+ 326      2075 6E73 
+ 326      6967 6E65 
+ 326      6420 696E 
+ 326      7400 
+ 327               	.LASF7:
+ 328 0026 474E 5520 		.string	"GNU C 4.3.3"
+GAS LISTING C:\cygwin\tmp/ccUQSbK2.s 			page 7
+
+
+ 328      4320 342E 
+ 328      332E 3300 
+ 329               	.LASF0:
+ 330 0032 7369 676E 		.string	"signed char"
+ 330      6564 2063 
+ 330      6861 7200 
+ 331               	.LASF6:
+ 332 003e 6C6F 6E67 		.string	"long long unsigned int"
+ 332      206C 6F6E 
+ 332      6720 756E 
+ 332      7369 676E 
+ 332      6564 2069 
+ 333               	.LASF9:
+ 334 0055 433A 5C44 		.ascii	"C:\\Documents and Setti"
+ 334      6F63 756D 
+ 334      656E 7473 
+ 334      2061 6E64 
+ 334      2053 6574 
+ 335 006b 6E67 735C 		.string	"ngs\\Michael Shimniok\\My Documents\\Projects\\AVRcam\\AVRcam_rel_1_4"
+ 335      4D69 6368 
+ 335      6165 6C20 
+ 335      5368 696D 
+ 335      6E69 6F6B 
+ 336               	.LASF1:
+ 337 00ac 756E 7369 		.string	"unsigned char"
+ 337      676E 6564 
+ 337      2063 6861 
+ 337      7200 
+ 338               	.LASF3:
+ 339 00ba 6C6F 6E67 		.string	"long int"
+ 339      2069 6E74 
+ 339      00
+ 340               	.LASF10:
+ 341 00c3 6D61 696E 		.string	"main"
+ 341      00
+ 342               	.LASF5:
+ 343 00c8 6C6F 6E67 		.string	"long long int"
+ 343      206C 6F6E 
+ 343      6720 696E 
+ 343      7400 
+GAS LISTING C:\cygwin\tmp/ccUQSbK2.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 Main.c
+C:\cygwin\tmp/ccUQSbK2.s:2      *ABS*:0000003f __SREG__
+C:\cygwin\tmp/ccUQSbK2.s:3      *ABS*:0000003e __SP_H__
+C:\cygwin\tmp/ccUQSbK2.s:4      *ABS*:0000003d __SP_L__
+C:\cygwin\tmp/ccUQSbK2.s:5      *ABS*:00000034 __CCP__
+C:\cygwin\tmp/ccUQSbK2.s:6      *ABS*:00000000 __tmp_reg__
+C:\cygwin\tmp/ccUQSbK2.s:7      *ABS*:00000001 __zero_reg__
+C:\cygwin\tmp/ccUQSbK2.s:18     .text:00000000 main
+
+UNDEFINED SYMBOLS
+DebugInt_init
+UartInt_init
+I2CInt_init
+CamInt_init
+CamConfig_init
+UIMgr_init
+FrameMgr_init
+Utility_delay
+Exec_run
