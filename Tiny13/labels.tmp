@@ -1,0 +1,39 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.1.42</VERSION>
+ <DEVICE>ATtiny13</DEVICE>
+ <WORKING_DIR>C:\Documents and Settings\Michael Shimniok\My Documents\Projects\AVRcam\Tiny</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:\Program Files\Atmel\AVR Tools\AvrAssembler2\Appnotes</DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>C:\Documents and Settings\Michael Shimniok\My Documents\Projects\AVRcam\Tiny\AVRCamTiny.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:\Program Files\Atmel\AVR Tools\AvrAssembler2\Appnotes\tn13def.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>C:\Documents and Settings\Michael Shimniok\My Documents\Projects\AVRcam\Tiny\AVRCamTiny.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>C:\Documents and Settings\Michael Shimniok\My Documents\Projects\AVRcam\Tiny\AVRCamTiny.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>C:\Documents and Settings\Michael Shimniok\My Documents\Projects\AVRcam\Tiny\AVRCamTiny.map</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <RESET><FILE>C:\Documents and Settings\Michael Shimniok\My Documents\Projects\AVRcam\Tiny\AVRCamTiny.asm</FILE><LINE>293</LINE></RESET>
+  <i2c_delay_hp><FILE>C:\Documents and Settings\Michael Shimniok\My Documents\Projects\AVRcam\Tiny\AVRCamTiny.asm</FILE><LINE>104</LINE></i2c_delay_hp>
+  <i2c_start><FILE>C:\Documents and Settings\Michael Shimniok\My Documents\Projects\AVRcam\Tiny\AVRCamTiny.asm</FILE><LINE>133</LINE></i2c_start>
+  <i2c_write><FILE>C:\Documents and Settings\Michael Shimniok\My Documents\Projects\AVRcam\Tiny\AVRCamTiny.asm</FILE><LINE>159</LINE></i2c_write>
+  <i2c_write_first><FILE>C:\Documents and Settings\Michael Shimniok\My Documents\Projects\AVRcam\Tiny\AVRCamTiny.asm</FILE><LINE>165</LINE></i2c_write_first>
+  <i2c_write_bit><FILE>C:\Documents and Settings\Michael Shimniok\My Documents\Projects\AVRcam\Tiny\AVRCamTiny.asm</FILE><LINE>163</LINE></i2c_write_bit>
+  <i2c_get_ack><FILE>C:\Documents and Settings\Michael Shimniok\My Documents\Projects\AVRcam\Tiny\AVRCamTiny.asm</FILE><LINE>183</LINE></i2c_get_ack>
+  <i2c_write_low><FILE>C:\Documents and Settings\Michael Shimniok\My Documents\Projects\AVRcam\Tiny\AVRCamTiny.asm</FILE><LINE>173</LINE></i2c_write_low>
+  <i2c_write_high><FILE>C:\Documents and Settings\Michael Shimniok\My Documents\Projects\AVRcam\Tiny\AVRCamTiny.asm</FILE><LINE>176</LINE></i2c_write_high>
+  <i2c_ack_wait><FILE>C:\Documents and Settings\Michael Shimniok\My Documents\Projects\AVRcam\Tiny\AVRCamTiny.asm</FILE><LINE>188</LINE></i2c_ack_wait>
+  <i2c_stop><FILE>C:\Documents and Settings\Michael Shimniok\My Documents\Projects\AVRcam\Tiny\AVRCamTiny.asm</FILE><LINE>215</LINE></i2c_stop>
+  <i2c_init><FILE>C:\Documents and Settings\Michael Shimniok\My Documents\Projects\AVRcam\Tiny\AVRCamTiny.asm</FILE><LINE>251</LINE></i2c_init>
+  <main_delay><FILE>C:\Documents and Settings\Michael Shimniok\My Documents\Projects\AVRcam\Tiny\AVRCamTiny.asm</FILE><LINE>263</LINE></main_delay>
+  <delay_loop1><FILE>C:\Documents and Settings\Michael Shimniok\My Documents\Projects\AVRcam\Tiny\AVRCamTiny.asm</FILE><LINE>265</LINE></delay_loop1>
+  <main><FILE>C:\Documents and Settings\Michael Shimniok\My Documents\Projects\AVRcam\Tiny\AVRCamTiny.asm</FILE><LINE>304</LINE></main>
+  <wait_forever><FILE>C:\Documents and Settings\Michael Shimniok\My Documents\Projects\AVRcam\Tiny\AVRCamTiny.asm</FILE><LINE>349</LINE></wait_forever>
+ </LABELS>
+</ASSEMBLER_INFO>

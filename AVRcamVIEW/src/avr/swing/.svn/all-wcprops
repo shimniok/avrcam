@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/5/trunk/AVRcamVIEW/src/avr/swing
+END
+JLogApplet.java
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/5/trunk/AVRcamVIEW/src/avr/swing/JLogApplet.java
+END
+InvalidColorMapException.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/5/trunk/AVRcamVIEW/src/avr/swing/InvalidColorMapException.java
+END
+WrapSpinnerNumberModel.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/5/trunk/AVRcamVIEW/src/avr/swing/WrapSpinnerNumberModel.java
+END
+JAboutDialog.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/5/trunk/AVRcamVIEW/src/avr/swing/JAboutDialog.java
+END
+JColorMapPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/5/trunk/AVRcamVIEW/src/avr/swing/JColorMapPanel.java
+END
+JColorMapInterface.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/5/trunk/AVRcamVIEW/src/avr/swing/JColorMapInterface.java
+END
+JSerialPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/5/trunk/AVRcamVIEW/src/avr/swing/JSerialPanel.java
+END
+JRegisterPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/5/trunk/AVRcamVIEW/src/avr/swing/JRegisterPanel.java
+END
+JMessagePanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/5/trunk/AVRcamVIEW/src/avr/swing/JMessagePanel.java
+END
+ProxyAction.java
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/5/trunk/AVRcamVIEW/src/avr/swing/ProxyAction.java
+END
+JNewColorMapPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/5/trunk/AVRcamVIEW/src/avr/swing/JNewColorMapPanel.java
+END
+JTrackingInternalFrame.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/5/trunk/AVRcamVIEW/src/avr/swing/JTrackingInternalFrame.java
+END
+JCaptureInternalFrame.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/5/trunk/AVRcamVIEW/src/avr/swing/JCaptureInternalFrame.java
+END
+JTrackingPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/5/trunk/AVRcamVIEW/src/avr/swing/JTrackingPanel.java
+END
+JCapturePanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/5/trunk/AVRcamVIEW/src/avr/swing/JCapturePanel.java
+END
+JAVRCamFrame.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/5/trunk/AVRcamVIEW/src/avr/swing/JAVRCamFrame.java
+END

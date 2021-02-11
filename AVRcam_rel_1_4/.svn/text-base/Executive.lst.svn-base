@@ -1,0 +1,1229 @@
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 1
+
+
+   1               		.file	"Executive.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.section	.debug_abbrev,"",@progbits
+   9               	.Ldebug_abbrev0:
+  10               		.section	.debug_info,"",@progbits
+  11               	.Ldebug_info0:
+  12               		.section	.debug_line,"",@progbits
+  13               	.Ldebug_line0:
+  14               		.text
+  15               	.Ltext0:
+  16               	.global	Exec_writeEventFifo
+  17               		.type	Exec_writeEventFifo, @function
+  18               	Exec_writeEventFifo:
+  19               	.LFB4:
+  20               	.LM1:
+  21               	.LVL0:
+  22               	/* prologue: function */
+  23               	/* frame size = 0 */
+  24               	.LM2:
+  25               	/* #APP */
+  26               	 ;  211 "Executive.c" 1
+  27 0000 F894      		cli
+  28               	 ;  0 "" 2
+  29               	.LM3:
+  30               	/* #NOAPP */
+  31 0002 9091 0000 		lds r25,Exec_eventFifoHead
+  32 0006 E0E0      		ldi r30,lo8(Exec_eventFifo)
+  33 0008 F0E0      		ldi r31,hi8(Exec_eventFifo)
+  34 000a E90F      		add r30,r25
+  35 000c F11D      		adc r31,__zero_reg__
+  36 000e 8083      		st Z,r24
+  37               	.LM4:
+  38 0010 9F5F      		subi r25,lo8(-(1))
+  39 0012 9770      		andi r25,lo8(7)
+  40 0014 9093 0000 		sts Exec_eventFifoHead,r25
+  41               	.LM5:
+  42               	/* #APP */
+  43               	 ;  217 "Executive.c" 1
+  44 0018 7894      		sei
+  45               	 ;  0 "" 2
+  46               	/* epilogue start */
+  47               	.LM6:
+  48               	/* #NOAPP */
+  49 001a 0895      		ret
+  50               	.LFE4:
+  51               		.size	Exec_writeEventFifo, .-Exec_writeEventFifo
+  52               	.global	Exec_run
+  53               		.type	Exec_run, @function
+  54               	Exec_run:
+  55               	.LFB2:
+  56               	.LM7:
+  57 001c CF93      		push r28
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 2
+
+
+  58 001e DF93      		push r29
+  59               	/* prologue: function */
+  60               	/* frame size = 0 */
+  61               	.LBB4:
+  62               	.LBB5:
+  63               	.LM8:
+  64 0020 C0E0      		ldi r28,lo8(Exec_eventFifo)
+  65 0022 D0E0      		ldi r29,hi8(Exec_eventFifo)
+  66               	.LVL1:
+  67               	.L20:
+  68               	.LBE5:
+  69               	.LBE4:
+  70               	.LM9:
+  71 0024 8091 0000 		lds r24,fastEventBitmask
+  72 0028 8823      		tst r24
+  73 002a 01F0      		breq .L5
+  74               	.LM10:
+  75 002c 80FF      		sbrs r24,0
+  76 002e 00C0      		rjmp .L6
+  77               	.LM11:
+  78               	/* #APP */
+  79               	 ;  102 "Executive.c" 1
+  80 0030 F894      		cli
+  81               	 ;  0 "" 2
+  82               	.LM12:
+  83               	/* #NOAPP */
+  84 0032 8E7F      		andi r24,lo8(-2)
+  85 0034 8093 0000 		sts fastEventBitmask,r24
+  86               	.LM13:
+  87               	/* #APP */
+  88               	 ;  104 "Executive.c" 1
+  89 0038 7894      		sei
+  90               	 ;  0 "" 2
+  91               	.LM14:
+  92               	/* #NOAPP */
+  93 003a 00D0      		rcall FrameMgr_processLine
+  94               	.LVL2:
+  95               	.LM15:
+  96 003c 00D0      		rcall UIMgr_transmitPendingData
+  97               	.LVL3:
+  98               	.L6:
+  99               	.LM16:
+ 100 003e 8091 0000 		lds r24,fastEventBitmask
+ 101 0042 81FF      		sbrs r24,1
+ 102 0044 00C0      		rjmp .L5
+ 103               	.LM17:
+ 104               	/* #APP */
+ 105               	 ;  118 "Executive.c" 1
+ 106 0046 F894      		cli
+ 107               	 ;  0 "" 2
+ 108               	.LM18:
+ 109               	/* #NOAPP */
+ 110 0048 8D7F      		andi r24,lo8(-3)
+ 111 004a 8093 0000 		sts fastEventBitmask,r24
+ 112               	.LM19:
+ 113               	/* #APP */
+ 114               	 ;  120 "Executive.c" 1
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 3
+
+
+ 115 004e 7894      		sei
+ 116               	 ;  0 "" 2
+ 117               	.LM20:
+ 118               	/* #NOAPP */
+ 119 0050 00D0      		rcall FrameMgr_acquireLine
+ 120               	.LVL4:
+ 121               	.L5:
+ 122               	.LM21:
+ 123 0052 9091 0000 		lds r25,Exec_eventFifoTail
+ 124 0056 8091 0000 		lds r24,Exec_eventFifoHead
+ 125 005a 8917      		cp r24,r25
+ 126 005c 01F0      		breq .L20
+ 127               	.LBB7:
+ 128               	.LBB6:
+ 129               	.LM22:
+ 130               	/* #APP */
+ 131               	 ;  189 "Executive.c" 1
+ 132 005e F894      		cli
+ 133               	 ;  0 "" 2
+ 134               	.LM23:
+ 135               	/* #NOAPP */
+ 136 0060 FE01      		movw r30,r28
+ 137               	.LVL5:
+ 138 0062 E90F      		add r30,r25
+ 139 0064 F11D      		adc r31,__zero_reg__
+ 140 0066 E081      		ld r30,Z
+ 141               	.LVL6:
+ 142               	.LM24:
+ 143 0068 892F      		mov r24,r25
+ 144 006a 8F5F      		subi r24,lo8(-(1))
+ 145 006c 8770      		andi r24,lo8(7)
+ 146 006e 8093 0000 		sts Exec_eventFifoTail,r24
+ 147               	.LM25:
+ 148               	/* #APP */
+ 149               	 ;  194 "Executive.c" 1
+ 150 0072 7894      		sei
+ 151               	 ;  0 "" 2
+ 152               	/* #NOAPP */
+ 153               	.LBE6:
+ 154               	.LBE7:
+ 155               	.LM26:
+ 156 0074 E031      		cpi r30,lo8(16)
+ 157 0076 01F0      		breq .L11
+ 158 0078 E131      		cpi r30,lo8(17)
+ 159 007a 00F4      		brsh .L16
+ 160 007c E230      		cpi r30,lo8(2)
+ 161 007e 01F0      		breq .L8
+ 162 0080 E330      		cpi r30,lo8(3)
+ 163 0082 00F4      		brsh .L17
+ 164 0084 E130      		cpi r30,lo8(1)
+ 165 0086 01F4      		brne .L20
+ 166 0088 00C0      		rjmp .L21
+ 167               	.L17:
+ 168 008a E430      		cpi r30,lo8(4)
+ 169 008c 01F0      		breq .L9
+ 170 008e E830      		cpi r30,lo8(8)
+ 171 0090 01F4      		brne .L20
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 4
+
+
+ 172 0092 00C0      		rjmp .L22
+ 173               	.L16:
+ 174 0094 E038      		cpi r30,lo8(-128)
+ 175 0096 01F0      		breq .L13
+ 176 0098 E138      		cpi r30,lo8(-127)
+ 177 009a 00F4      		brsh .L18
+ 178 009c E032      		cpi r30,lo8(32)
+ 179 009e 01F0      		breq .+2
+ 180 00a0 00C0      		rjmp .L20
+ 181 00a2 00C0      		rjmp .L23
+ 182               	.L18:
+ 183 00a4 E138      		cpi r30,lo8(-127)
+ 184 00a6 01F0      		breq .L14
+ 185 00a8 E039      		cpi r30,lo8(-112)
+ 186 00aa 01F0      		breq .+2
+ 187 00ac 00C0      		rjmp .L20
+ 188 00ae 00C0      		rjmp .L24
+ 189               	.L8:
+ 190               	.LM27:
+ 191 00b0 82E0      		ldi r24,lo8(2)
+ 192 00b2 00D0      		rcall FrameMgr_dispatchEvent
+ 193               	.LVL7:
+ 194 00b4 00C0      		rjmp .L20
+ 195               	.LVL8:
+ 196               	.L13:
+ 197               	.LM28:
+ 198 00b6 80E8      		ldi r24,lo8(-128)
+ 199 00b8 00D0      		rcall FrameMgr_dispatchEvent
+ 200               	.LVL9:
+ 201 00ba 00C0      		rjmp .L20
+ 202               	.LVL10:
+ 203               	.L14:
+ 204               	.LM29:
+ 205 00bc 81E8      		ldi r24,lo8(-127)
+ 206 00be 00D0      		rcall FrameMgr_dispatchEvent
+ 207               	.LVL11:
+ 208 00c0 00C0      		rjmp .L20
+ 209               	.LVL12:
+ 210               	.L11:
+ 211               	.LM30:
+ 212 00c2 80E1      		ldi r24,lo8(16)
+ 213 00c4 00D0      		rcall FrameMgr_dispatchEvent
+ 214               	.LVL13:
+ 215               	.LM31:
+ 216 00c6 80E1      		ldi r24,lo8(16)
+ 217 00c8 00D0      		rcall UIMgr_dispatchEvent
+ 218 00ca 00C0      		rjmp .L20
+ 219               	.LVL14:
+ 220               	.L23:
+ 221               	.LM32:
+ 222 00cc 80E2      		ldi r24,lo8(32)
+ 223 00ce 00D0      		rcall FrameMgr_dispatchEvent
+ 224               	.LVL15:
+ 225 00d0 00C0      		rjmp .L20
+ 226               	.LVL16:
+ 227               	.L22:
+ 228               	.LM33:
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 5
+
+
+ 229 00d2 88E0      		ldi r24,lo8(8)
+ 230 00d4 00D0      		rcall FrameMgr_dispatchEvent
+ 231               	.LVL17:
+ 232 00d6 00C0      		rjmp .L20
+ 233               	.LVL18:
+ 234               	.L9:
+ 235               	.LM34:
+ 236 00d8 84E0      		ldi r24,lo8(4)
+ 237 00da 00D0      		rcall FrameMgr_dispatchEvent
+ 238               	.LVL19:
+ 239 00dc 00C0      		rjmp .L20
+ 240               	.LVL20:
+ 241               	.L21:
+ 242               	.LM35:
+ 243 00de 81E0      		ldi r24,lo8(1)
+ 244 00e0 00D0      		rcall UIMgr_dispatchEvent
+ 245               	.LVL21:
+ 246               	.LM36:
+ 247 00e2 81E0      		ldi r24,lo8(1)
+ 248 00e4 00D0      		rcall FrameMgr_dispatchEvent
+ 249 00e6 00C0      		rjmp .L20
+ 250               	.LVL22:
+ 251               	.L24:
+ 252               	.LM37:
+ 253 00e8 80E9      		ldi r24,lo8(-112)
+ 254 00ea 00D0      		rcall UIMgr_dispatchEvent
+ 255               	.LVL23:
+ 256 00ec 00C0      		rjmp .L20
+ 257               	.LFE2:
+ 258               		.size	Exec_run, .-Exec_run
+ 259               	.global	Exec_eventFifoHead
+ 260               	.global	Exec_eventFifoHead
+ 261               		.section .bss
+ 262               		.type	Exec_eventFifoHead, @object
+ 263               		.size	Exec_eventFifoHead, 1
+ 264               	Exec_eventFifoHead:
+ 265 0000 00        		.skip 1,0
+ 266               	.global	Exec_eventFifoTail
+ 267               	.global	Exec_eventFifoTail
+ 268               		.type	Exec_eventFifoTail, @object
+ 269               		.size	Exec_eventFifoTail, 1
+ 270               	Exec_eventFifoTail:
+ 271 0001 00        		.skip 1,0
+ 272               	.global	fastEventBitmask
+ 273               	.global	fastEventBitmask
+ 274               		.type	fastEventBitmask, @object
+ 275               		.size	fastEventBitmask, 1
+ 276               	fastEventBitmask:
+ 277 0002 00        		.skip 1,0
+ 278               		.comm Exec_eventFifo,8,1
+ 279               		.section	.debug_frame,"",@progbits
+ 280               	.Lframe0:
+ 281 0000 0C00 0000 		.long	.LECIE0-.LSCIE0
+ 282               	.LSCIE0:
+ 283 0004 FFFF FFFF 		.long	0xffffffff
+ 284 0008 01        		.byte	0x1
+ 285 0009 00        		.string	""
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 6
+
+
+ 286 000a 01        		.uleb128 0x1
+ 287 000b 7F        		.sleb128 -1
+ 288 000c 24        		.byte	0x24
+ 289 000d 0C        		.byte	0xc
+ 290 000e 20        		.uleb128 0x20
+ 291 000f 00        		.uleb128 0x0
+ 292               		.p2align	2
+ 293               	.LECIE0:
+ 294               	.LSFDE0:
+ 295 0010 0C00 0000 		.long	.LEFDE0-.LASFDE0
+ 296               	.LASFDE0:
+ 297 0014 0000 0000 		.long	.Lframe0
+ 298 0018 0000 0000 		.long	.LFB4
+ 299 001c 1C00 0000 		.long	.LFE4-.LFB4
+ 300               		.p2align	2
+ 301               	.LEFDE0:
+ 302               	.LSFDE2:
+ 303 0020 0C00 0000 		.long	.LEFDE2-.LASFDE2
+ 304               	.LASFDE2:
+ 305 0024 0000 0000 		.long	.Lframe0
+ 306 0028 0000 0000 		.long	.LFB2
+ 307 002c D200 0000 		.long	.LFE2-.LFB2
+ 308               		.p2align	2
+ 309               	.LEFDE2:
+ 310               		.text
+ 311               	.Letext0:
+ 312               		.section	.debug_loc,"",@progbits
+ 313               	.Ldebug_loc0:
+ 314               	.LLST2:
+ 315 0000 2400 0000 		.long	.LVL1-.Ltext0
+ 316 0004 3C00 0000 		.long	.LVL2-.Ltext0
+ 317 0008 0100      		.word	0x1
+ 318 000a 6E        		.byte	0x6e
+ 319 000b 3E00 0000 		.long	.LVL3-.Ltext0
+ 320 000f 5200 0000 		.long	.LVL4-.Ltext0
+ 321 0013 0100      		.word	0x1
+ 322 0015 6E        		.byte	0x6e
+ 323 0016 5200 0000 		.long	.LVL4-.Ltext0
+ 324 001a 6200 0000 		.long	.LVL5-.Ltext0
+ 325 001e 0100      		.word	0x1
+ 326 0020 6E        		.byte	0x6e
+ 327 0021 6800 0000 		.long	.LVL6-.Ltext0
+ 328 0025 B400 0000 		.long	.LVL7-.Ltext0
+ 329 0029 0100      		.word	0x1
+ 330 002b 6E        		.byte	0x6e
+ 331 002c B600 0000 		.long	.LVL8-.Ltext0
+ 332 0030 BA00 0000 		.long	.LVL9-.Ltext0
+ 333 0034 0100      		.word	0x1
+ 334 0036 6E        		.byte	0x6e
+ 335 0037 BC00 0000 		.long	.LVL10-.Ltext0
+ 336 003b C000 0000 		.long	.LVL11-.Ltext0
+ 337 003f 0100      		.word	0x1
+ 338 0041 6E        		.byte	0x6e
+ 339 0042 C200 0000 		.long	.LVL12-.Ltext0
+ 340 0046 C600 0000 		.long	.LVL13-.Ltext0
+ 341 004a 0100      		.word	0x1
+ 342 004c 6E        		.byte	0x6e
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 7
+
+
+ 343 004d CC00 0000 		.long	.LVL14-.Ltext0
+ 344 0051 D000 0000 		.long	.LVL15-.Ltext0
+ 345 0055 0100      		.word	0x1
+ 346 0057 6E        		.byte	0x6e
+ 347 0058 D200 0000 		.long	.LVL16-.Ltext0
+ 348 005c D600 0000 		.long	.LVL17-.Ltext0
+ 349 0060 0100      		.word	0x1
+ 350 0062 6E        		.byte	0x6e
+ 351 0063 D800 0000 		.long	.LVL18-.Ltext0
+ 352 0067 DC00 0000 		.long	.LVL19-.Ltext0
+ 353 006b 0100      		.word	0x1
+ 354 006d 6E        		.byte	0x6e
+ 355 006e DE00 0000 		.long	.LVL20-.Ltext0
+ 356 0072 E200 0000 		.long	.LVL21-.Ltext0
+ 357 0076 0100      		.word	0x1
+ 358 0078 6E        		.byte	0x6e
+ 359 0079 E800 0000 		.long	.LVL22-.Ltext0
+ 360 007d EC00 0000 		.long	.LVL23-.Ltext0
+ 361 0081 0100      		.word	0x1
+ 362 0083 6E        		.byte	0x6e
+ 363 0084 0000 0000 		.long	0x0
+ 364 0088 0000 0000 		.long	0x0
+ 365               		.section	.debug_info
+ 366 0000 5201 0000 		.long	0x152
+ 367 0004 0200      		.word	0x2
+ 368 0006 0000 0000 		.long	.Ldebug_abbrev0
+ 369 000a 04        		.byte	0x4
+ 370 000b 01        		.uleb128 0x1
+ 371 000c 0000 0000 		.long	.LASF16
+ 372 0010 01        		.byte	0x1
+ 373 0011 0000 0000 		.long	.LASF17
+ 374 0015 0000 0000 		.long	.LASF18
+ 375 0019 0000 0000 		.long	.Ltext0
+ 376 001d 0000 0000 		.long	.Letext0
+ 377 0021 0000 0000 		.long	.Ldebug_line0
+ 378 0025 02        		.uleb128 0x2
+ 379 0026 02        		.byte	0x2
+ 380 0027 07        		.byte	0x7
+ 381 0028 0000 0000 		.long	.LASF0
+ 382 002c 03        		.uleb128 0x3
+ 383 002d 02        		.byte	0x2
+ 384 002e 05        		.byte	0x5
+ 385 002f 696E 7400 		.string	"int"
+ 386 0033 02        		.uleb128 0x2
+ 387 0034 04        		.byte	0x4
+ 388 0035 05        		.byte	0x5
+ 389 0036 0000 0000 		.long	.LASF1
+ 390 003a 02        		.uleb128 0x2
+ 391 003b 01        		.byte	0x1
+ 392 003c 06        		.byte	0x6
+ 393 003d 0000 0000 		.long	.LASF2
+ 394 0041 02        		.uleb128 0x2
+ 395 0042 01        		.byte	0x1
+ 396 0043 08        		.byte	0x8
+ 397 0044 0000 0000 		.long	.LASF3
+ 398 0048 02        		.uleb128 0x2
+ 399 0049 04        		.byte	0x4
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 8
+
+
+ 400 004a 07        		.byte	0x7
+ 401 004b 0000 0000 		.long	.LASF4
+ 402 004f 02        		.uleb128 0x2
+ 403 0050 08        		.byte	0x8
+ 404 0051 05        		.byte	0x5
+ 405 0052 0000 0000 		.long	.LASF5
+ 406 0056 02        		.uleb128 0x2
+ 407 0057 08        		.byte	0x8
+ 408 0058 07        		.byte	0x7
+ 409 0059 0000 0000 		.long	.LASF6
+ 410 005d 04        		.uleb128 0x4
+ 411 005e 01        		.byte	0x1
+ 412 005f 0000 0000 		.long	.LASF10
+ 413 0063 01        		.byte	0x1
+ 414 0064 D0        		.byte	0xd0
+ 415 0065 01        		.byte	0x1
+ 416 0066 0000 0000 		.long	.LFB4
+ 417 006a 0000 0000 		.long	.LFE4
+ 418 006e 02        		.byte	0x2
+ 419 006f 90        		.byte	0x90
+ 420 0070 20        		.uleb128 0x20
+ 421 0071 8E00 0000 		.long	0x8e
+ 422 0075 05        		.uleb128 0x5
+ 423 0076 0000 0000 		.long	.LASF19
+ 424 007a 01        		.byte	0x1
+ 425 007b CF        		.byte	0xcf
+ 426 007c 4100 0000 		.long	0x41
+ 427 0080 01        		.byte	0x1
+ 428 0081 68        		.byte	0x68
+ 429 0082 06        		.uleb128 0x6
+ 430 0083 0000 0000 		.long	.LASF7
+ 431 0087 01        		.byte	0x1
+ 432 0088 D1        		.byte	0xd1
+ 433 0089 4100 0000 		.long	0x41
+ 434 008d 00        		.byte	0x0
+ 435 008e 07        		.uleb128 0x7
+ 436 008f 0000 0000 		.long	.LASF20
+ 437 0093 01        		.byte	0x1
+ 438 0094 BA        		.byte	0xba
+ 439 0095 01        		.byte	0x1
+ 440 0096 4100 0000 		.long	0x41
+ 441 009a 01        		.byte	0x1
+ 442 009b B600 0000 		.long	0xb6
+ 443 009f 06        		.uleb128 0x6
+ 444 00a0 0000 0000 		.long	.LASF8
+ 445 00a4 01        		.byte	0x1
+ 446 00a5 BB        		.byte	0xbb
+ 447 00a6 4100 0000 		.long	0x41
+ 448 00aa 06        		.uleb128 0x6
+ 449 00ab 0000 0000 		.long	.LASF9
+ 450 00af 01        		.byte	0x1
+ 451 00b0 BB        		.byte	0xbb
+ 452 00b1 4100 0000 		.long	0x41
+ 453 00b5 00        		.byte	0x0
+ 454 00b6 04        		.uleb128 0x4
+ 455 00b7 01        		.byte	0x1
+ 456 00b8 0000 0000 		.long	.LASF11
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 9
+
+
+ 457 00bc 01        		.byte	0x1
+ 458 00bd 5A        		.byte	0x5a
+ 459 00be 01        		.byte	0x1
+ 460 00bf 0000 0000 		.long	.LFB2
+ 461 00c3 0000 0000 		.long	.LFE2
+ 462 00c7 02        		.byte	0x2
+ 463 00c8 90        		.byte	0x90
+ 464 00c9 20        		.uleb128 0x20
+ 465 00ca FA00 0000 		.long	0xfa
+ 466 00ce 08        		.uleb128 0x8
+ 467 00cf 0000 0000 		.long	.LASF21
+ 468 00d3 01        		.byte	0x1
+ 469 00d4 5B        		.byte	0x5b
+ 470 00d5 4100 0000 		.long	0x41
+ 471 00d9 0000 0000 		.long	.LLST2
+ 472 00dd 09        		.uleb128 0x9
+ 473 00de 8E00 0000 		.long	0x8e
+ 474 00e2 0000 0000 		.long	.Ldebug_ranges0+0x0
+ 475 00e6 01        		.byte	0x1
+ 476 00e7 7F        		.byte	0x7f
+ 477 00e8 0A        		.uleb128 0xa
+ 478 00e9 0000 0000 		.long	.Ldebug_ranges0+0x18
+ 479 00ed 0B        		.uleb128 0xb
+ 480 00ee 9F00 0000 		.long	0x9f
+ 481 00f2 0B        		.uleb128 0xb
+ 482 00f3 AA00 0000 		.long	0xaa
+ 483 00f7 00        		.byte	0x0
+ 484 00f8 00        		.byte	0x0
+ 485 00f9 00        		.byte	0x0
+ 486 00fa 0C        		.uleb128 0xc
+ 487 00fb 0000 0000 		.long	.LASF12
+ 488 00ff 01        		.byte	0x1
+ 489 0100 4A        		.byte	0x4a
+ 490 0101 4100 0000 		.long	0x41
+ 491 0105 01        		.byte	0x1
+ 492 0106 05        		.byte	0x5
+ 493 0107 03        		.byte	0x3
+ 494 0108 0000 0000 		.long	fastEventBitmask
+ 495 010c 0D        		.uleb128 0xd
+ 496 010d 4100 0000 		.long	0x41
+ 497 0111 1C01 0000 		.long	0x11c
+ 498 0115 0E        		.uleb128 0xe
+ 499 0116 1C01 0000 		.long	0x11c
+ 500 011a 07        		.byte	0x7
+ 501 011b 00        		.byte	0x0
+ 502 011c 0F        		.uleb128 0xf
+ 503 011d 02        		.byte	0x2
+ 504 011e 07        		.byte	0x7
+ 505 011f 0C        		.uleb128 0xc
+ 506 0120 0000 0000 		.long	.LASF13
+ 507 0124 01        		.byte	0x1
+ 508 0125 3F        		.byte	0x3f
+ 509 0126 0C01 0000 		.long	0x10c
+ 510 012a 01        		.byte	0x1
+ 511 012b 05        		.byte	0x5
+ 512 012c 03        		.byte	0x3
+ 513 012d 0000 0000 		.long	Exec_eventFifo
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 10
+
+
+ 514 0131 0C        		.uleb128 0xc
+ 515 0132 0000 0000 		.long	.LASF14
+ 516 0136 01        		.byte	0x1
+ 517 0137 40        		.byte	0x40
+ 518 0138 4100 0000 		.long	0x41
+ 519 013c 01        		.byte	0x1
+ 520 013d 05        		.byte	0x5
+ 521 013e 03        		.byte	0x3
+ 522 013f 0000 0000 		.long	Exec_eventFifoHead
+ 523 0143 0C        		.uleb128 0xc
+ 524 0144 0000 0000 		.long	.LASF15
+ 525 0148 01        		.byte	0x1
+ 526 0149 41        		.byte	0x41
+ 527 014a 4100 0000 		.long	0x41
+ 528 014e 01        		.byte	0x1
+ 529 014f 05        		.byte	0x5
+ 530 0150 03        		.byte	0x3
+ 531 0151 0000 0000 		.long	Exec_eventFifoTail
+ 532 0155 00        		.byte	0x0
+ 533               		.section	.debug_abbrev
+ 534 0000 01        		.uleb128 0x1
+ 535 0001 11        		.uleb128 0x11
+ 536 0002 01        		.byte	0x1
+ 537 0003 25        		.uleb128 0x25
+ 538 0004 0E        		.uleb128 0xe
+ 539 0005 13        		.uleb128 0x13
+ 540 0006 0B        		.uleb128 0xb
+ 541 0007 03        		.uleb128 0x3
+ 542 0008 0E        		.uleb128 0xe
+ 543 0009 1B        		.uleb128 0x1b
+ 544 000a 0E        		.uleb128 0xe
+ 545 000b 11        		.uleb128 0x11
+ 546 000c 01        		.uleb128 0x1
+ 547 000d 12        		.uleb128 0x12
+ 548 000e 01        		.uleb128 0x1
+ 549 000f 10        		.uleb128 0x10
+ 550 0010 06        		.uleb128 0x6
+ 551 0011 00        		.byte	0x0
+ 552 0012 00        		.byte	0x0
+ 553 0013 02        		.uleb128 0x2
+ 554 0014 24        		.uleb128 0x24
+ 555 0015 00        		.byte	0x0
+ 556 0016 0B        		.uleb128 0xb
+ 557 0017 0B        		.uleb128 0xb
+ 558 0018 3E        		.uleb128 0x3e
+ 559 0019 0B        		.uleb128 0xb
+ 560 001a 03        		.uleb128 0x3
+ 561 001b 0E        		.uleb128 0xe
+ 562 001c 00        		.byte	0x0
+ 563 001d 00        		.byte	0x0
+ 564 001e 03        		.uleb128 0x3
+ 565 001f 24        		.uleb128 0x24
+ 566 0020 00        		.byte	0x0
+ 567 0021 0B        		.uleb128 0xb
+ 568 0022 0B        		.uleb128 0xb
+ 569 0023 3E        		.uleb128 0x3e
+ 570 0024 0B        		.uleb128 0xb
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 11
+
+
+ 571 0025 03        		.uleb128 0x3
+ 572 0026 08        		.uleb128 0x8
+ 573 0027 00        		.byte	0x0
+ 574 0028 00        		.byte	0x0
+ 575 0029 04        		.uleb128 0x4
+ 576 002a 2E        		.uleb128 0x2e
+ 577 002b 01        		.byte	0x1
+ 578 002c 3F        		.uleb128 0x3f
+ 579 002d 0C        		.uleb128 0xc
+ 580 002e 03        		.uleb128 0x3
+ 581 002f 0E        		.uleb128 0xe
+ 582 0030 3A        		.uleb128 0x3a
+ 583 0031 0B        		.uleb128 0xb
+ 584 0032 3B        		.uleb128 0x3b
+ 585 0033 0B        		.uleb128 0xb
+ 586 0034 27        		.uleb128 0x27
+ 587 0035 0C        		.uleb128 0xc
+ 588 0036 11        		.uleb128 0x11
+ 589 0037 01        		.uleb128 0x1
+ 590 0038 12        		.uleb128 0x12
+ 591 0039 01        		.uleb128 0x1
+ 592 003a 40        		.uleb128 0x40
+ 593 003b 0A        		.uleb128 0xa
+ 594 003c 01        		.uleb128 0x1
+ 595 003d 13        		.uleb128 0x13
+ 596 003e 00        		.byte	0x0
+ 597 003f 00        		.byte	0x0
+ 598 0040 05        		.uleb128 0x5
+ 599 0041 05        		.uleb128 0x5
+ 600 0042 00        		.byte	0x0
+ 601 0043 03        		.uleb128 0x3
+ 602 0044 0E        		.uleb128 0xe
+ 603 0045 3A        		.uleb128 0x3a
+ 604 0046 0B        		.uleb128 0xb
+ 605 0047 3B        		.uleb128 0x3b
+ 606 0048 0B        		.uleb128 0xb
+ 607 0049 49        		.uleb128 0x49
+ 608 004a 13        		.uleb128 0x13
+ 609 004b 02        		.uleb128 0x2
+ 610 004c 0A        		.uleb128 0xa
+ 611 004d 00        		.byte	0x0
+ 612 004e 00        		.byte	0x0
+ 613 004f 06        		.uleb128 0x6
+ 614 0050 34        		.uleb128 0x34
+ 615 0051 00        		.byte	0x0
+ 616 0052 03        		.uleb128 0x3
+ 617 0053 0E        		.uleb128 0xe
+ 618 0054 3A        		.uleb128 0x3a
+ 619 0055 0B        		.uleb128 0xb
+ 620 0056 3B        		.uleb128 0x3b
+ 621 0057 0B        		.uleb128 0xb
+ 622 0058 49        		.uleb128 0x49
+ 623 0059 13        		.uleb128 0x13
+ 624 005a 00        		.byte	0x0
+ 625 005b 00        		.byte	0x0
+ 626 005c 07        		.uleb128 0x7
+ 627 005d 2E        		.uleb128 0x2e
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 12
+
+
+ 628 005e 01        		.byte	0x1
+ 629 005f 03        		.uleb128 0x3
+ 630 0060 0E        		.uleb128 0xe
+ 631 0061 3A        		.uleb128 0x3a
+ 632 0062 0B        		.uleb128 0xb
+ 633 0063 3B        		.uleb128 0x3b
+ 634 0064 0B        		.uleb128 0xb
+ 635 0065 27        		.uleb128 0x27
+ 636 0066 0C        		.uleb128 0xc
+ 637 0067 49        		.uleb128 0x49
+ 638 0068 13        		.uleb128 0x13
+ 639 0069 20        		.uleb128 0x20
+ 640 006a 0B        		.uleb128 0xb
+ 641 006b 01        		.uleb128 0x1
+ 642 006c 13        		.uleb128 0x13
+ 643 006d 00        		.byte	0x0
+ 644 006e 00        		.byte	0x0
+ 645 006f 08        		.uleb128 0x8
+ 646 0070 34        		.uleb128 0x34
+ 647 0071 00        		.byte	0x0
+ 648 0072 03        		.uleb128 0x3
+ 649 0073 0E        		.uleb128 0xe
+ 650 0074 3A        		.uleb128 0x3a
+ 651 0075 0B        		.uleb128 0xb
+ 652 0076 3B        		.uleb128 0x3b
+ 653 0077 0B        		.uleb128 0xb
+ 654 0078 49        		.uleb128 0x49
+ 655 0079 13        		.uleb128 0x13
+ 656 007a 02        		.uleb128 0x2
+ 657 007b 06        		.uleb128 0x6
+ 658 007c 00        		.byte	0x0
+ 659 007d 00        		.byte	0x0
+ 660 007e 09        		.uleb128 0x9
+ 661 007f 1D        		.uleb128 0x1d
+ 662 0080 01        		.byte	0x1
+ 663 0081 31        		.uleb128 0x31
+ 664 0082 13        		.uleb128 0x13
+ 665 0083 55        		.uleb128 0x55
+ 666 0084 06        		.uleb128 0x6
+ 667 0085 58        		.uleb128 0x58
+ 668 0086 0B        		.uleb128 0xb
+ 669 0087 59        		.uleb128 0x59
+ 670 0088 0B        		.uleb128 0xb
+ 671 0089 00        		.byte	0x0
+ 672 008a 00        		.byte	0x0
+ 673 008b 0A        		.uleb128 0xa
+ 674 008c 0B        		.uleb128 0xb
+ 675 008d 01        		.byte	0x1
+ 676 008e 55        		.uleb128 0x55
+ 677 008f 06        		.uleb128 0x6
+ 678 0090 00        		.byte	0x0
+ 679 0091 00        		.byte	0x0
+ 680 0092 0B        		.uleb128 0xb
+ 681 0093 34        		.uleb128 0x34
+ 682 0094 00        		.byte	0x0
+ 683 0095 31        		.uleb128 0x31
+ 684 0096 13        		.uleb128 0x13
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 13
+
+
+ 685 0097 00        		.byte	0x0
+ 686 0098 00        		.byte	0x0
+ 687 0099 0C        		.uleb128 0xc
+ 688 009a 34        		.uleb128 0x34
+ 689 009b 00        		.byte	0x0
+ 690 009c 03        		.uleb128 0x3
+ 691 009d 0E        		.uleb128 0xe
+ 692 009e 3A        		.uleb128 0x3a
+ 693 009f 0B        		.uleb128 0xb
+ 694 00a0 3B        		.uleb128 0x3b
+ 695 00a1 0B        		.uleb128 0xb
+ 696 00a2 49        		.uleb128 0x49
+ 697 00a3 13        		.uleb128 0x13
+ 698 00a4 3F        		.uleb128 0x3f
+ 699 00a5 0C        		.uleb128 0xc
+ 700 00a6 02        		.uleb128 0x2
+ 701 00a7 0A        		.uleb128 0xa
+ 702 00a8 00        		.byte	0x0
+ 703 00a9 00        		.byte	0x0
+ 704 00aa 0D        		.uleb128 0xd
+ 705 00ab 01        		.uleb128 0x1
+ 706 00ac 01        		.byte	0x1
+ 707 00ad 49        		.uleb128 0x49
+ 708 00ae 13        		.uleb128 0x13
+ 709 00af 01        		.uleb128 0x1
+ 710 00b0 13        		.uleb128 0x13
+ 711 00b1 00        		.byte	0x0
+ 712 00b2 00        		.byte	0x0
+ 713 00b3 0E        		.uleb128 0xe
+ 714 00b4 21        		.uleb128 0x21
+ 715 00b5 00        		.byte	0x0
+ 716 00b6 49        		.uleb128 0x49
+ 717 00b7 13        		.uleb128 0x13
+ 718 00b8 2F        		.uleb128 0x2f
+ 719 00b9 0B        		.uleb128 0xb
+ 720 00ba 00        		.byte	0x0
+ 721 00bb 00        		.byte	0x0
+ 722 00bc 0F        		.uleb128 0xf
+ 723 00bd 24        		.uleb128 0x24
+ 724 00be 00        		.byte	0x0
+ 725 00bf 0B        		.uleb128 0xb
+ 726 00c0 0B        		.uleb128 0xb
+ 727 00c1 3E        		.uleb128 0x3e
+ 728 00c2 0B        		.uleb128 0xb
+ 729 00c3 00        		.byte	0x0
+ 730 00c4 00        		.byte	0x0
+ 731 00c5 00        		.byte	0x0
+ 732               		.section	.debug_pubnames,"",@progbits
+ 733 0000 8900 0000 		.long	0x89
+ 734 0004 0200      		.word	0x2
+ 735 0006 0000 0000 		.long	.Ldebug_info0
+ 736 000a 5601 0000 		.long	0x156
+ 737 000e 5D00 0000 		.long	0x5d
+ 738 0012 4578 6563 		.string	"Exec_writeEventFifo"
+ 738      5F77 7269 
+ 738      7465 4576 
+ 738      656E 7446 
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 14
+
+
+ 738      6966 6F00 
+ 739 0026 B600 0000 		.long	0xb6
+ 740 002a 4578 6563 		.string	"Exec_run"
+ 740      5F72 756E 
+ 740      00
+ 741 0033 FA00 0000 		.long	0xfa
+ 742 0037 6661 7374 		.string	"fastEventBitmask"
+ 742      4576 656E 
+ 742      7442 6974 
+ 742      6D61 736B 
+ 742      00
+ 743 0048 1F01 0000 		.long	0x11f
+ 744 004c 4578 6563 		.string	"Exec_eventFifo"
+ 744      5F65 7665 
+ 744      6E74 4669 
+ 744      666F 00
+ 745 005b 3101 0000 		.long	0x131
+ 746 005f 4578 6563 		.string	"Exec_eventFifoHead"
+ 746      5F65 7665 
+ 746      6E74 4669 
+ 746      666F 4865 
+ 746      6164 00
+ 747 0072 4301 0000 		.long	0x143
+ 748 0076 4578 6563 		.string	"Exec_eventFifoTail"
+ 748      5F65 7665 
+ 748      6E74 4669 
+ 748      666F 5461 
+ 748      696C 00
+ 749 0089 0000 0000 		.long	0x0
+ 750               		.section	.debug_aranges,"",@progbits
+ 751 0000 1C00 0000 		.long	0x1c
+ 752 0004 0200      		.word	0x2
+ 753 0006 0000 0000 		.long	.Ldebug_info0
+ 754 000a 04        		.byte	0x4
+ 755 000b 00        		.byte	0x0
+ 756 000c 0000      		.word	0x0
+ 757 000e 0000      		.word	0x0
+ 758 0010 0000 0000 		.long	.Ltext0
+ 759 0014 EE00 0000 		.long	.Letext0-.Ltext0
+ 760 0018 0000 0000 		.long	0x0
+ 761 001c 0000 0000 		.long	0x0
+ 762               		.section	.debug_ranges,"",@progbits
+ 763               	.Ldebug_ranges0:
+ 764 0000 2000 0000 		.long	.LBB4-.Ltext0
+ 765 0004 2400 0000 		.long	.LBE4-.Ltext0
+ 766 0008 5E00 0000 		.long	.LBB7-.Ltext0
+ 767 000c 7400 0000 		.long	.LBE7-.Ltext0
+ 768 0010 0000 0000 		.long	0x0
+ 769 0014 0000 0000 		.long	0x0
+ 770 0018 2000 0000 		.long	.LBB5-.Ltext0
+ 771 001c 2400 0000 		.long	.LBE5-.Ltext0
+ 772 0020 5E00 0000 		.long	.LBB6-.Ltext0
+ 773 0024 7400 0000 		.long	.LBE6-.Ltext0
+ 774 0028 0000 0000 		.long	0x0
+ 775 002c 0000 0000 		.long	0x0
+ 776               		.section	.debug_line
+ 777 0000 6001 0000 		.long	.LELT0-.LSLT0
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 15
+
+
+ 778               	.LSLT0:
+ 779 0004 0200      		.word	0x2
+ 780 0006 1F00 0000 		.long	.LELTP0-.LASLTP0
+ 781               	.LASLTP0:
+ 782 000a 01        		.byte	0x1
+ 783 000b 01        		.byte	0x1
+ 784 000c F6        		.byte	0xf6
+ 785 000d F5        		.byte	0xf5
+ 786 000e 0A        		.byte	0xa
+ 787 000f 00        		.byte	0x0
+ 788 0010 01        		.byte	0x1
+ 789 0011 01        		.byte	0x1
+ 790 0012 01        		.byte	0x1
+ 791 0013 01        		.byte	0x1
+ 792 0014 00        		.byte	0x0
+ 793 0015 00        		.byte	0x0
+ 794 0016 00        		.byte	0x0
+ 795 0017 01        		.byte	0x1
+ 796 0018 00        		.byte	0x0
+ 797 0019 4578 6563 		.string	"Executive.c"
+ 797      7574 6976 
+ 797      652E 6300 
+ 798 0025 00        		.uleb128 0x0
+ 799 0026 00        		.uleb128 0x0
+ 800 0027 00        		.uleb128 0x0
+ 801 0028 00        		.byte	0x0
+ 802               	.LELTP0:
+ 803 0029 00        		.byte	0x0
+ 804 002a 05        		.uleb128 0x5
+ 805 002b 02        		.byte	0x2
+ 806 002c 0000 0000 		.long	.LM1
+ 807 0030 E3        		.byte	0xe3
+ 808 0031 00        		.byte	0x0
+ 809 0032 05        		.uleb128 0x5
+ 810 0033 02        		.byte	0x2
+ 811 0034 0000 0000 		.long	.LM2
+ 812 0038 17        		.byte	0x17
+ 813 0039 00        		.byte	0x0
+ 814 003a 05        		.uleb128 0x5
+ 815 003b 02        		.byte	0x2
+ 816 003c 0000 0000 		.long	.LM3
+ 817 0040 15        		.byte	0x15
+ 818 0041 00        		.byte	0x0
+ 819 0042 05        		.uleb128 0x5
+ 820 0043 02        		.byte	0x2
+ 821 0044 0000 0000 		.long	.LM4
+ 822 0048 18        		.byte	0x18
+ 823 0049 00        		.byte	0x0
+ 824 004a 05        		.uleb128 0x5
+ 825 004b 02        		.byte	0x2
+ 826 004c 0000 0000 		.long	.LM5
+ 827 0050 15        		.byte	0x15
+ 828 0051 00        		.byte	0x0
+ 829 0052 05        		.uleb128 0x5
+ 830 0053 02        		.byte	0x2
+ 831 0054 0000 0000 		.long	.LM6
+ 832 0058 15        		.byte	0x15
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 16
+
+
+ 833 0059 00        		.byte	0x0
+ 834 005a 05        		.uleb128 0x5
+ 835 005b 02        		.byte	0x2
+ 836 005c 0000 0000 		.long	.LM7
+ 837 0060 03        		.byte	0x3
+ 838 0061 807F      		.sleb128 -128
+ 839 0063 01        		.byte	0x1
+ 840 0064 00        		.byte	0x0
+ 841 0065 05        		.uleb128 0x5
+ 842 0066 02        		.byte	0x2
+ 843 0067 0000 0000 		.long	.LM8
+ 844 006b 79        		.byte	0x79
+ 845 006c 00        		.byte	0x0
+ 846 006d 05        		.uleb128 0x5
+ 847 006e 02        		.byte	0x2
+ 848 006f 0000 0000 		.long	.LM9
+ 849 0073 03        		.byte	0x3
+ 850 0074 A07F      		.sleb128 -96
+ 851 0076 01        		.byte	0x1
+ 852 0077 00        		.byte	0x0
+ 853 0078 05        		.uleb128 0x5
+ 854 0079 02        		.byte	0x2
+ 855 007a 0000 0000 		.long	.LM10
+ 856 007e 19        		.byte	0x19
+ 857 007f 00        		.byte	0x0
+ 858 0080 05        		.uleb128 0x5
+ 859 0081 02        		.byte	0x2
+ 860 0082 0000 0000 		.long	.LM11
+ 861 0086 16        		.byte	0x16
+ 862 0087 00        		.byte	0x0
+ 863 0088 05        		.uleb128 0x5
+ 864 0089 02        		.byte	0x2
+ 865 008a 0000 0000 		.long	.LM12
+ 866 008e 15        		.byte	0x15
+ 867 008f 00        		.byte	0x0
+ 868 0090 05        		.uleb128 0x5
+ 869 0091 02        		.byte	0x2
+ 870 0092 0000 0000 		.long	.LM13
+ 871 0096 15        		.byte	0x15
+ 872 0097 00        		.byte	0x0
+ 873 0098 05        		.uleb128 0x5
+ 874 0099 02        		.byte	0x2
+ 875 009a 0000 0000 		.long	.LM14
+ 876 009e 15        		.byte	0x15
+ 877 009f 00        		.byte	0x0
+ 878 00a0 05        		.uleb128 0x5
+ 879 00a1 02        		.byte	0x2
+ 880 00a2 0000 0000 		.long	.LM15
+ 881 00a6 18        		.byte	0x18
+ 882 00a7 00        		.byte	0x0
+ 883 00a8 05        		.uleb128 0x5
+ 884 00a9 02        		.byte	0x2
+ 885 00aa 0000 0000 		.long	.LM16
+ 886 00ae 1B        		.byte	0x1b
+ 887 00af 00        		.byte	0x0
+ 888 00b0 05        		.uleb128 0x5
+ 889 00b1 02        		.byte	0x2
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 17
+
+
+ 890 00b2 0000 0000 		.long	.LM17
+ 891 00b6 16        		.byte	0x16
+ 892 00b7 00        		.byte	0x0
+ 893 00b8 05        		.uleb128 0x5
+ 894 00b9 02        		.byte	0x2
+ 895 00ba 0000 0000 		.long	.LM18
+ 896 00be 15        		.byte	0x15
+ 897 00bf 00        		.byte	0x0
+ 898 00c0 05        		.uleb128 0x5
+ 899 00c1 02        		.byte	0x2
+ 900 00c2 0000 0000 		.long	.LM19
+ 901 00c6 15        		.byte	0x15
+ 902 00c7 00        		.byte	0x0
+ 903 00c8 05        		.uleb128 0x5
+ 904 00c9 02        		.byte	0x2
+ 905 00ca 0000 0000 		.long	.LM20
+ 906 00ce 15        		.byte	0x15
+ 907 00cf 00        		.byte	0x0
+ 908 00d0 05        		.uleb128 0x5
+ 909 00d1 02        		.byte	0x2
+ 910 00d2 0000 0000 		.long	.LM21
+ 911 00d6 18        		.byte	0x18
+ 912 00d7 00        		.byte	0x0
+ 913 00d8 05        		.uleb128 0x5
+ 914 00d9 02        		.byte	0x2
+ 915 00da 0000 0000 		.long	.LM22
+ 916 00de 54        		.byte	0x54
+ 917 00df 00        		.byte	0x0
+ 918 00e0 05        		.uleb128 0x5
+ 919 00e1 02        		.byte	0x2
+ 920 00e2 0000 0000 		.long	.LM23
+ 921 00e6 16        		.byte	0x16
+ 922 00e7 00        		.byte	0x0
+ 923 00e8 05        		.uleb128 0x5
+ 924 00e9 02        		.byte	0x2
+ 925 00ea 0000 0000 		.long	.LM24
+ 926 00ee 16        		.byte	0x16
+ 927 00ef 00        		.byte	0x0
+ 928 00f0 05        		.uleb128 0x5
+ 929 00f1 02        		.byte	0x2
+ 930 00f2 0000 0000 		.long	.LM25
+ 931 00f6 15        		.byte	0x15
+ 932 00f7 00        		.byte	0x0
+ 933 00f8 05        		.uleb128 0x5
+ 934 00f9 02        		.byte	0x2
+ 935 00fa 0000 0000 		.long	.LM26
+ 936 00fe 03        		.byte	0x3
+ 937 00ff BE7F      		.sleb128 -66
+ 938 0101 01        		.byte	0x1
+ 939 0102 00        		.byte	0x0
+ 940 0103 05        		.uleb128 0x5
+ 941 0104 02        		.byte	0x2
+ 942 0105 0000 0000 		.long	.LM27
+ 943 0109 17        		.byte	0x17
+ 944 010a 00        		.byte	0x0
+ 945 010b 05        		.uleb128 0x5
+ 946 010c 02        		.byte	0x2
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 18
+
+
+ 947 010d 0000 0000 		.long	.LM28
+ 948 0111 18        		.byte	0x18
+ 949 0112 00        		.byte	0x0
+ 950 0113 05        		.uleb128 0x5
+ 951 0114 02        		.byte	0x2
+ 952 0115 0000 0000 		.long	.LM29
+ 953 0119 18        		.byte	0x18
+ 954 011a 00        		.byte	0x0
+ 955 011b 05        		.uleb128 0x5
+ 956 011c 02        		.byte	0x2
+ 957 011d 0000 0000 		.long	.LM30
+ 958 0121 18        		.byte	0x18
+ 959 0122 00        		.byte	0x0
+ 960 0123 05        		.uleb128 0x5
+ 961 0124 02        		.byte	0x2
+ 962 0125 0000 0000 		.long	.LM31
+ 963 0129 15        		.byte	0x15
+ 964 012a 00        		.byte	0x0
+ 965 012b 05        		.uleb128 0x5
+ 966 012c 02        		.byte	0x2
+ 967 012d 0000 0000 		.long	.LM32
+ 968 0131 18        		.byte	0x18
+ 969 0132 00        		.byte	0x0
+ 970 0133 05        		.uleb128 0x5
+ 971 0134 02        		.byte	0x2
+ 972 0135 0000 0000 		.long	.LM33
+ 973 0139 18        		.byte	0x18
+ 974 013a 00        		.byte	0x0
+ 975 013b 05        		.uleb128 0x5
+ 976 013c 02        		.byte	0x2
+ 977 013d 0000 0000 		.long	.LM34
+ 978 0141 18        		.byte	0x18
+ 979 0142 00        		.byte	0x0
+ 980 0143 05        		.uleb128 0x5
+ 981 0144 02        		.byte	0x2
+ 982 0145 0000 0000 		.long	.LM35
+ 983 0149 18        		.byte	0x18
+ 984 014a 00        		.byte	0x0
+ 985 014b 05        		.uleb128 0x5
+ 986 014c 02        		.byte	0x2
+ 987 014d 0000 0000 		.long	.LM36
+ 988 0151 15        		.byte	0x15
+ 989 0152 00        		.byte	0x0
+ 990 0153 05        		.uleb128 0x5
+ 991 0154 02        		.byte	0x2
+ 992 0155 0000 0000 		.long	.LM37
+ 993 0159 18        		.byte	0x18
+ 994 015a 00        		.byte	0x0
+ 995 015b 05        		.uleb128 0x5
+ 996 015c 02        		.byte	0x2
+ 997 015d 0000 0000 		.long	.Letext0
+ 998 0161 00        		.byte	0x0
+ 999 0162 01        		.uleb128 0x1
+ 1000 0163 01        		.byte	0x1
+ 1001               	.LELT0:
+ 1002 0164 1600 0000 		.section	.debug_str,"MS",@progbits,1
+ 1002      0200 1000 
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 19
+
+
+ 1002      0000 0101 
+ 1002      FB0E 0A00 
+ 1002      0101 0101 
+ 1003               	.LASF18:
+ 1004 0000 433A 5C44 		.ascii	"C:\\Documents and Setti"
+ 1004      6F63 756D 
+ 1004      656E 7473 
+ 1004      2061 6E64 
+ 1004      2053 6574 
+ 1005 0016 6E67 735C 		.string	"ngs\\Michael Shimniok\\My Documents\\Projects\\AVRcam\\AVRcam_rel_1_4"
+ 1005      4D69 6368 
+ 1005      6165 6C20 
+ 1005      5368 696D 
+ 1005      6E69 6F6B 
+ 1006               	.LASF13:
+ 1007 0057 4578 6563 		.string	"Exec_eventFifo"
+ 1007      5F65 7665 
+ 1007      6E74 4669 
+ 1007      666F 00
+ 1008               	.LASF15:
+ 1009 0066 4578 6563 		.string	"Exec_eventFifoTail"
+ 1009      5F65 7665 
+ 1009      6E74 4669 
+ 1009      666F 5461 
+ 1009      696C 00
+ 1010               	.LASF12:
+ 1011 0079 6661 7374 		.string	"fastEventBitmask"
+ 1011      4576 656E 
+ 1011      7442 6974 
+ 1011      6D61 736B 
+ 1011      00
+ 1012               	.LASF3:
+ 1013 008a 756E 7369 		.string	"unsigned char"
+ 1013      676E 6564 
+ 1013      2063 6861 
+ 1013      7200 
+ 1014               	.LASF17:
+ 1015 0098 4578 6563 		.string	"Executive.c"
+ 1015      7574 6976 
+ 1015      652E 6300 
+ 1016               	.LASF16:
+ 1017 00a4 474E 5520 		.string	"GNU C 4.3.3"
+ 1017      4320 342E 
+ 1017      332E 3300 
+ 1018               	.LASF8:
+ 1019 00b0 6461 7461 		.string	"dataByte"
+ 1019      4279 7465 
+ 1019      00
+ 1020               	.LASF4:
+ 1021 00b9 6C6F 6E67 		.string	"long unsigned int"
+ 1021      2075 6E73 
+ 1021      6967 6E65 
+ 1021      6420 696E 
+ 1021      7400 
+ 1022               	.LASF19:
+ 1023 00cb 6576 656E 		.string	"event"
+ 1023      7400 
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 20
+
+
+ 1024               	.LASF20:
+ 1025 00d1 4578 6563 		.string	"Exec_readEventFifo"
+ 1025      5F72 6561 
+ 1025      6445 7665 
+ 1025      6E74 4669 
+ 1025      666F 00
+ 1026               	.LASF0:
+ 1027 00e4 756E 7369 		.string	"unsigned int"
+ 1027      676E 6564 
+ 1027      2069 6E74 
+ 1027      00
+ 1028               	.LASF11:
+ 1029 00f1 4578 6563 		.string	"Exec_run"
+ 1029      5F72 756E 
+ 1029      00
+ 1030               	.LASF6:
+ 1031 00fa 6C6F 6E67 		.string	"long long unsigned int"
+ 1031      206C 6F6E 
+ 1031      6720 756E 
+ 1031      7369 676E 
+ 1031      6564 2069 
+ 1032               	.LASF10:
+ 1033 0111 4578 6563 		.string	"Exec_writeEventFifo"
+ 1033      5F77 7269 
+ 1033      7465 4576 
+ 1033      656E 7446 
+ 1033      6966 6F00 
+ 1034               	.LASF21:
+ 1035 0125 6576 656E 		.string	"eventGenerated"
+ 1035      7447 656E 
+ 1035      6572 6174 
+ 1035      6564 00
+ 1036               	.LASF5:
+ 1037 0134 6C6F 6E67 		.string	"long long int"
+ 1037      206C 6F6E 
+ 1037      6720 696E 
+ 1037      7400 
+ 1038               	.LASF14:
+ 1039 0142 4578 6563 		.string	"Exec_eventFifoHead"
+ 1039      5F65 7665 
+ 1039      6E74 4669 
+ 1039      666F 4865 
+ 1039      6164 00
+ 1040               	.LASF7:
+ 1041 0155 746D 7048 		.string	"tmpHead"
+ 1041      6561 6400 
+ 1042               	.LASF1:
+ 1043 015d 6C6F 6E67 		.string	"long int"
+ 1043      2069 6E74 
+ 1043      00
+ 1044               	.LASF9:
+ 1045 0166 746D 7054 		.string	"tmpTail"
+ 1045      6169 6C00 
+ 1046               	.LASF2:
+ 1047 016e 7369 676E 		.string	"signed char"
+ 1047      6564 2063 
+ 1047      6861 7200 
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 21
+
+
+ 1048               	.global __do_clear_bss
+GAS LISTING C:\cygwin\tmp/cchAIECb.s 			page 22
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 Executive.c
+C:\cygwin\tmp/cchAIECb.s:2      *ABS*:0000003f __SREG__
+C:\cygwin\tmp/cchAIECb.s:3      *ABS*:0000003e __SP_H__
+C:\cygwin\tmp/cchAIECb.s:4      *ABS*:0000003d __SP_L__
+C:\cygwin\tmp/cchAIECb.s:5      *ABS*:00000034 __CCP__
+C:\cygwin\tmp/cchAIECb.s:6      *ABS*:00000000 __tmp_reg__
+C:\cygwin\tmp/cchAIECb.s:7      *ABS*:00000001 __zero_reg__
+C:\cygwin\tmp/cchAIECb.s:18     .text:00000000 Exec_writeEventFifo
+C:\cygwin\tmp/cchAIECb.s:264    .bss:00000000 Exec_eventFifoHead
+                            *COM*:00000008 Exec_eventFifo
+C:\cygwin\tmp/cchAIECb.s:54     .text:0000001c Exec_run
+C:\cygwin\tmp/cchAIECb.s:276    .bss:00000002 fastEventBitmask
+C:\cygwin\tmp/cchAIECb.s:270    .bss:00000001 Exec_eventFifoTail
+
+UNDEFINED SYMBOLS
+FrameMgr_processLine
+UIMgr_transmitPendingData
+FrameMgr_acquireLine
+FrameMgr_dispatchEvent
+UIMgr_dispatchEvent
+__do_clear_bss

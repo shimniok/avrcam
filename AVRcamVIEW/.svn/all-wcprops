@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/svn/!svn/ver/5/trunk/AVRcamVIEW
+END
+build.win32.xml
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/5/trunk/AVRcamVIEW/build.win32.xml
+END
+AVRcam.spec
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/5/trunk/AVRcamVIEW/AVRcam.spec
+END
+manifest.mf
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/5/trunk/AVRcamVIEW/manifest.mf
+END
+build.linux.xml
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/5/trunk/AVRcamVIEW/build.linux.xml
+END
+AVRcamVIEW.sh
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/5/trunk/AVRcamVIEW/AVRcamVIEW.sh
+END
+build.xml
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/5/trunk/AVRcamVIEW/build.xml
+END

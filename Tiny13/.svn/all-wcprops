@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 28
+/svn/!svn/ver/3/trunk/Tiny13
+END
+AVRCamTiny.aps
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/3/trunk/Tiny13/AVRCamTiny.aps
+END
+AVRCamTiny.hex
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/3/trunk/Tiny13/AVRCamTiny.hex
+END
+labels.tmp
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/3/trunk/Tiny13/labels.tmp
+END
+AVRCamTiny.obj
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/3/trunk/Tiny13/AVRCamTiny.obj
+END
+avrcamtiny.aws
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/3/trunk/Tiny13/avrcamtiny.aws
+END
+AVRCamTiny.map
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/3/trunk/Tiny13/AVRCamTiny.map
+END
+AVRCamTiny.asm
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/3/trunk/Tiny13/AVRCamTiny.asm
+END
+AvrBuild.bat
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/3/trunk/Tiny13/AvrBuild.bat
+END

@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/5/trunk/AVRcamVIEW/src/avr/serial
+END
+rxtxSerial.dll
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/5/trunk/AVRcamVIEW/src/avr/serial/rxtxSerial.dll
+END
+RXTXcomm.jar
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/5/trunk/AVRcamVIEW/src/avr/serial/RXTXcomm.jar
+END

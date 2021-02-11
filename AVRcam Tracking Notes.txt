@@ -1,0 +1,13 @@
+AVRcam tracking packet
+
+Data sent in binary
+
+1 byte -- 0x0A -- indicates start
+1 byte -- number of objects
+REPEAT nn times
+1 byte -- 0x00 -- start of object
+1 byte -- x
+1 byte -- y
+1 byte -- width
+1 byte -- height
+

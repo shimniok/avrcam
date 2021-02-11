@@ -1,0 +1,32 @@
+Thing to check to get the ATmega328P working
+
+1. Makefile specifies color map at particular 256-byte boundary; recompile with Makefile?
+	Makefile had --section-start=.noinit=0x800300 but reported overlap:
+
+section .noinit [00800300 -> 0080032f] overlaps section .bss [00800110 -> 00800383]
+
+	So I set it to 800400 and it compiled but cam won't stop blinking (crashing?)
+
+Can instead set in configuration within AVRStudio, so set to 0x800400:
+
+-Wl,-section-start=.noinit=0x800400
+
+Now MCU doesn't crash. *shrug*
+
+CameraInterface.c has:
+unsigned char colorMap[NUM_ELEMENTS_IN_COLOR_MAP] __attribute__ ((section (".noinit")));
+
+2. Ensure timer initializations are correct
+	Timer0 -- appears ok and working
+	Timer1 -- not sure yet
+
+3. Ensure interrupts are correct
+
+	Need to verify interrupts are being enabled
+
+4. Ensure interrupt handlers are working
+	Timer0 overflow -- why is the overflow handler commented out in CamInterfaceAsm.S ? Don't know; is same in orig.
+
+	Have fixed all the handlers, should be working according to list output
+
+	MCU appears to be crashing? LED turns off after a few seconds and no more response on UART

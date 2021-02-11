@@ -1,0 +1,299 @@
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4
+END
+FrameMgr.c
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/FrameMgr.c
+END
+FrameMgr.d
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/FrameMgr.d
+END
+CamInterface.lst
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/CamInterface.lst
+END
+CamInterfaceAsm.lst
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/CamInterfaceAsm.lst
+END
+Utility.c
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/Utility.c
+END
+Utility.d
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/Utility.d
+END
+FrameMgr.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/FrameMgr.h
+END
+Utility.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/Utility.h
+END
+Events.h
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/Events.h
+END
+FrameMgr.lst
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/FrameMgr.lst
+END
+UIMgr.c
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/UIMgr.c
+END
+Main.c
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/Main.c
+END
+UIMgr.d
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/UIMgr.d
+END
+Main.d
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/Main.d
+END
+CamConfig.c
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/CamConfig.c
+END
+CamConfig.d
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/CamConfig.d
+END
+UIMgr.h
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/UIMgr.h
+END
+AVRcam_mega8.aps
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/AVRcam_mega8.aps
+END
+CamConfig.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/CamConfig.h
+END
+UartInterface.c
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/UartInterface.c
+END
+UartInterface.d
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/UartInterface.d
+END
+I2CInterface.c
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/I2CInterface.c
+END
+I2CInterface.d
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/I2CInterface.d
+END
+CommonDefs.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/CommonDefs.h
+END
+Executive.c
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/Executive.c
+END
+CamInterface.S
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/CamInterface.S
+END
+UartInterface.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/UartInterface.h
+END
+Executive.d
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/Executive.d
+END
+CamInterfaceAsm.S
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/CamInterfaceAsm.S
+END
+avrcam_mega8.aws
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/avrcam_mega8.aws
+END
+I2CInterface.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/I2CInterface.h
+END
+UIMgr.lst
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/UIMgr.lst
+END
+AVRcam.map
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/AVRcam.map
+END
+Main.lst
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/Main.lst
+END
+Executive.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/Executive.h
+END
+DebugInterface.c
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/DebugInterface.c
+END
+DebugInterface.d
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/DebugInterface.d
+END
+AVRcam.hex
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/AVRcam.hex
+END
+DebugInterface.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/DebugInterface.h
+END
+UartInterface.lst
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/UartInterface.lst
+END
+Executive.lst
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/Executive.lst
+END
+CamInterface.c
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/CamInterface.c
+END
+CamInterface.d
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/CamInterface.d
+END
+CamInterface.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/CamInterface.h
+END
+DebugInterface.lst
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/DebugInterface.lst
+END
+AVRcam.lss
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/AVRcam.lss
+END
+README.txt
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/README.txt
+END
+makefile
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/makefile
+END
+AVRcam.elf
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/4/trunk/AVRcam_rel_1_4/AVRcam.elf
+END

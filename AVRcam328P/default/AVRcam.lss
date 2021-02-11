@@ -1,0 +1,4022 @@
+
+AVRcam.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         00000010  00800100  00001106  000011ba  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         00001106  00000000  00000000  000000b4  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .noinit       00000030  00800400  00800400  000011ca  2**0
+                  ALLOC
+  3 .bss          00000274  00800110  00800110  000011ca  2**0
+                  ALLOC
+  4 .debug_aranges 00000180  00000000  00000000  000011d0  2**3
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_pubnames 000004be  00000000  00000000  00001350  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   0000153b  00000000  00000000  0000180e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 000008f8  00000000  00000000  00002d49  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   00001536  00000000  00000000  00003641  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  000002d0  00000000  00000000  00004b78  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    00000977  00000000  00000000  00004e48  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    000007f1  00000000  00000000  000057bf  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 00000198  00000000  00000000  00005fb0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+       0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
+       4:	0c 94 95 01 	jmp	0x32a	; 0x32a <__vector_1>
+       8:	0c 94 96 01 	jmp	0x32c	; 0x32c <__vector_2>
+       c:	0c 94 9e 01 	jmp	0x33c	; 0x33c <__vector_3>
+      10:	0c 94 9f 01 	jmp	0x33e	; 0x33e <__vector_4>
+      14:	0c 94 a0 01 	jmp	0x340	; 0x340 <__vector_5>
+      18:	0c 94 a1 01 	jmp	0x342	; 0x342 <__vector_6>
+      1c:	0c 94 a2 01 	jmp	0x344	; 0x344 <__vector_7>
+      20:	0c 94 a3 01 	jmp	0x346	; 0x346 <__vector_8>
+      24:	0c 94 a4 01 	jmp	0x348	; 0x348 <__vector_9>
+      28:	0c 94 a5 01 	jmp	0x34a	; 0x34a <__vector_10>
+      2c:	0c 94 a6 01 	jmp	0x34c	; 0x34c <__vector_11>
+      30:	0c 94 a7 01 	jmp	0x34e	; 0x34e <__vector_12>
+      34:	0c 94 97 01 	jmp	0x32e	; 0x32e <__vector_13>
+      38:	0c 94 a8 01 	jmp	0x350	; 0x350 <__vector_14>
+      3c:	0c 94 a9 01 	jmp	0x352	; 0x352 <__vector_15>
+      40:	0c 94 aa 01 	jmp	0x354	; 0x354 <__vector_16>
+      44:	0c 94 ab 01 	jmp	0x356	; 0x356 <__vector_17>
+      48:	0c 94 92 05 	jmp	0xb24	; 0xb24 <__vector_18>
+      4c:	0c 94 ac 01 	jmp	0x358	; 0x358 <__vector_19>
+      50:	0c 94 ad 01 	jmp	0x35a	; 0x35a <__vector_20>
+      54:	0c 94 ae 01 	jmp	0x35c	; 0x35c <__vector_21>
+      58:	0c 94 af 01 	jmp	0x35e	; 0x35e <__vector_22>
+      5c:	0c 94 b0 01 	jmp	0x360	; 0x360 <__vector_23>
+      60:	0c 94 b3 04 	jmp	0x966	; 0x966 <__vector_24>
+      64:	0c 94 b1 01 	jmp	0x362	; 0x362 <__vector_25>
+
+00000068 <__ctors_end>:
+      68:	11 24       	eor	r1, r1
+      6a:	1f be       	out	0x3f, r1	; 63
+      6c:	cf ef       	ldi	r28, 0xFF	; 255
+      6e:	d8 e0       	ldi	r29, 0x08	; 8
+      70:	de bf       	out	0x3e, r29	; 62
+      72:	cd bf       	out	0x3d, r28	; 61
+
+00000074 <__do_copy_data>:
+      74:	11 e0       	ldi	r17, 0x01	; 1
+      76:	a0 e0       	ldi	r26, 0x00	; 0
+      78:	b1 e0       	ldi	r27, 0x01	; 1
+      7a:	e6 e0       	ldi	r30, 0x06	; 6
+      7c:	f1 e1       	ldi	r31, 0x11	; 17
+      7e:	02 c0       	rjmp	.+4      	; 0x84 <.do_copy_data_start>
+
+00000080 <.do_copy_data_loop>:
+      80:	05 90       	lpm	r0, Z+
+      82:	0d 92       	st	X+, r0
+
+00000084 <.do_copy_data_start>:
+      84:	a0 31       	cpi	r26, 0x10	; 16
+      86:	b1 07       	cpc	r27, r17
+      88:	d9 f7       	brne	.-10     	; 0x80 <.do_copy_data_loop>
+
+0000008a <__do_clear_bss>:
+      8a:	13 e0       	ldi	r17, 0x03	; 3
+      8c:	a0 e1       	ldi	r26, 0x10	; 16
+      8e:	b1 e0       	ldi	r27, 0x01	; 1
+      90:	01 c0       	rjmp	.+2      	; 0x94 <.do_clear_bss_start>
+
+00000092 <.do_clear_bss_loop>:
+      92:	1d 92       	st	X+, r1
+
+00000094 <.do_clear_bss_start>:
+      94:	a4 38       	cpi	r26, 0x84	; 132
+      96:	b1 07       	cpc	r27, r17
+      98:	e1 f7       	brne	.-8      	; 0x92 <.do_clear_bss_loop>
+      9a:	0e 94 5b 05 	call	0xab6	; 0xab6 <main>
+      9e:	0c 94 81 08 	jmp	0x1102	; 0x1102 <_exit>
+
+000000a2 <__bad_interrupt>:
+      a2:	0c 94 1b 01 	jmp	0x236	; 0x236 <__vector_default>
+
+000000a6 <Utility_delay>:
+	in avr/delay.h provide accurate 3 and 4 cycle delay loops
+	if needed...this isn't really a millisecond, so DON'T
+    depend on it for exact timing...
+***********************************************************/	
+void Utility_delay(unsigned short numMs)
+{
+      a6:	df 93       	push	r29
+      a8:	cf 93       	push	r28
+      aa:	00 d0       	rcall	.+0      	; 0xac <Utility_delay+0x6>
+      ac:	00 d0       	rcall	.+0      	; 0xae <Utility_delay+0x8>
+      ae:	cd b7       	in	r28, 0x3d	; 61
+      b0:	de b7       	in	r29, 0x3e	; 62
+      b2:	9c 01       	movw	r18, r24
+	volatile unsigned short i=0,j=0;
+      b4:	1a 82       	std	Y+2, r1	; 0x02
+      b6:	19 82       	std	Y+1, r1	; 0x01
+      b8:	1c 82       	std	Y+4, r1	; 0x04
+      ba:	1b 82       	std	Y+3, r1	; 0x03
+#ifndef SIMULATION
+	for (i=0; i<numMs; i++)
+      bc:	1a 82       	std	Y+2, r1	; 0x02
+      be:	19 82       	std	Y+1, r1	; 0x01
+      c0:	13 c0       	rjmp	.+38     	; 0xe8 <Utility_delay+0x42>
+	{
+		for (j=0; j<1000; j++)
+      c2:	1c 82       	std	Y+4, r1	; 0x04
+      c4:	1b 82       	std	Y+3, r1	; 0x03
+      c6:	06 c0       	rjmp	.+12     	; 0xd4 <Utility_delay+0x2e>
+		{
+			asm volatile("nop"::);
+      c8:	00 00       	nop
+{
+	volatile unsigned short i=0,j=0;
+#ifndef SIMULATION
+	for (i=0; i<numMs; i++)
+	{
+		for (j=0; j<1000; j++)
+      ca:	8b 81       	ldd	r24, Y+3	; 0x03
+      cc:	9c 81       	ldd	r25, Y+4	; 0x04
+      ce:	01 96       	adiw	r24, 0x01	; 1
+      d0:	9c 83       	std	Y+4, r25	; 0x04
+      d2:	8b 83       	std	Y+3, r24	; 0x03
+      d4:	8b 81       	ldd	r24, Y+3	; 0x03
+      d6:	9c 81       	ldd	r25, Y+4	; 0x04
+      d8:	88 5e       	subi	r24, 0xE8	; 232
+      da:	93 40       	sbci	r25, 0x03	; 3
+      dc:	a8 f3       	brcs	.-22     	; 0xc8 <Utility_delay+0x22>
+***********************************************************/	
+void Utility_delay(unsigned short numMs)
+{
+	volatile unsigned short i=0,j=0;
+#ifndef SIMULATION
+	for (i=0; i<numMs; i++)
+      de:	89 81       	ldd	r24, Y+1	; 0x01
+      e0:	9a 81       	ldd	r25, Y+2	; 0x02
+      e2:	01 96       	adiw	r24, 0x01	; 1
+      e4:	9a 83       	std	Y+2, r25	; 0x02
+      e6:	89 83       	std	Y+1, r24	; 0x01
+      e8:	89 81       	ldd	r24, Y+1	; 0x01
+      ea:	9a 81       	ldd	r25, Y+2	; 0x02
+      ec:	82 17       	cp	r24, r18
+      ee:	93 07       	cpc	r25, r19
+      f0:	40 f3       	brcs	.-48     	; 0xc2 <Utility_delay+0x1c>
+		{
+			asm volatile("nop"::);
+		}
+	}
+#endif	
+}
+      f2:	0f 90       	pop	r0
+      f4:	0f 90       	pop	r0
+      f6:	0f 90       	pop	r0
+      f8:	0f 90       	pop	r0
+      fa:	cf 91       	pop	r28
+      fc:	df 91       	pop	r29
+      fe:	08 95       	ret
+
+00000100 <CamConfig_writeTxFifo>:
+bool_t CamConfig_writeTxFifo(i2cCmd_t cmd)
+{
+	unsigned char tmpHead;
+	bool_t retVal = TRUE;
+ 	
+	CamConfig_txFifo[CamConfig_txFifoHead] = cmd;
+     100:	20 91 10 01 	lds	r18, 0x0110
+     104:	e2 2f       	mov	r30, r18
+     106:	f0 e0       	ldi	r31, 0x00	; 0
+     108:	ee 0f       	add	r30, r30
+     10a:	ff 1f       	adc	r31, r31
+     10c:	e4 55       	subi	r30, 0x54	; 84
+     10e:	fe 4f       	sbci	r31, 0xFE	; 254
+     110:	91 83       	std	Z+1, r25	; 0x01
+     112:	80 83       	st	Z, r24
+		
+	/* see if we need to wrap */
+	tmpHead = (CamConfig_txFifoHead+1) & (CAM_CONFIG_TX_FIFO_MASK);
+     114:	2f 5f       	subi	r18, 0xFF	; 255
+     116:	27 70       	andi	r18, 0x07	; 7
+	CamConfig_txFifoHead = tmpHead;
+     118:	20 93 10 01 	sts	0x0110, r18
+     11c:	90 e0       	ldi	r25, 0x00	; 0
+     11e:	80 91 11 01 	lds	r24, 0x0111
+     122:	28 13       	cpse	r18, r24
+     124:	91 e0       	ldi	r25, 0x01	; 1
+	{
+		/* we wrapped the fifo...return false */
+		retVal = FALSE;
+	}
+	return(retVal);
+}
+     126:	89 2f       	mov	r24, r25
+     128:	08 95       	ret
+
+0000012a <CamConfig_setCamReg>:
+	Inputs:  reg - the register to modify
+	         val - the new value of the register
+	Outputs: none
+***********************************************************/	
+void CamConfig_setCamReg(unsigned char reg, unsigned char val)
+{
+     12a:	96 2f       	mov	r25, r22
+	i2cCmd_t cmd;
+	
+	cmd.configReg = reg;
+	cmd.data = val;
+#ifndef SIMULATION	
+	CamConfig_writeTxFifo(cmd);
+     12c:	0e 94 80 00 	call	0x100	; 0x100 <CamConfig_writeTxFifo>
+#endif	
+}
+     130:	08 95       	ret
+
+00000132 <CamConfig_sendFifoCmds>:
+	having to trash the frame that we are executing this
+	slave write in anyway (since we can't meet the strict
+	timing requirements and write i2c at the same time).
+***********************************************************/	
+void CamConfig_sendFifoCmds(void)
+{
+     132:	0f 93       	push	r16
+     134:	1f 93       	push	r17
+     136:	df 93       	push	r29
+     138:	cf 93       	push	r28
+     13a:	00 d0       	rcall	.+0      	; 0x13c <CamConfig_sendFifoCmds+0xa>
+     13c:	cd b7       	in	r28, 0x3d	; 61
+     13e:	de b7       	in	r29, 0x3e	; 62
+	i2cCmd_t cmd;
+	
+	while (CamConfig_txFifoHead != CamConfig_txFifoTail)
+	{
+		cmd = CamConfig_readTxFifo();
+		I2CInt_writeData(CAM_ADDRESS,&cmd.configReg,SIZE_OF_I2C_CMD);
+     140:	8e 01       	movw	r16, r28
+     142:	0f 5f       	subi	r16, 0xFF	; 255
+     144:	1f 4f       	sbci	r17, 0xFF	; 255
+     146:	1b c0       	rjmp	.+54     	; 0x17e <CamConfig_sendFifoCmds+0x4c>
+{
+	i2cCmd_t cmd;
+	unsigned char tmpTail;
+	
+	/* just return the current tail from the rx fifo */
+	cmd = CamConfig_txFifo[CamConfig_txFifoTail];	
+     148:	e2 2f       	mov	r30, r18
+     14a:	f0 e0       	ldi	r31, 0x00	; 0
+     14c:	ee 0f       	add	r30, r30
+     14e:	ff 1f       	adc	r31, r31
+     150:	e4 55       	subi	r30, 0x54	; 84
+     152:	fe 4f       	sbci	r31, 0xFE	; 254
+     154:	81 81       	ldd	r24, Z+1	; 0x01
+     156:	90 81       	ld	r25, Z
+	tmpTail = (CamConfig_txFifoTail+1) & (CAM_CONFIG_TX_FIFO_MASK);
+	CamConfig_txFifoTail = tmpTail;
+     158:	2f 5f       	subi	r18, 0xFF	; 255
+     15a:	27 70       	andi	r18, 0x07	; 7
+     15c:	20 93 11 01 	sts	0x0111, r18
+{
+	i2cCmd_t cmd;
+	
+	while (CamConfig_txFifoHead != CamConfig_txFifoTail)
+	{
+		cmd = CamConfig_readTxFifo();
+     160:	8a 83       	std	Y+2, r24	; 0x02
+     162:	99 83       	std	Y+1, r25	; 0x01
+		I2CInt_writeData(CAM_ADDRESS,&cmd.configReg,SIZE_OF_I2C_CMD);
+     164:	80 e6       	ldi	r24, 0x60	; 96
+     166:	b8 01       	movw	r22, r16
+     168:	42 e0       	ldi	r20, 0x02	; 2
+     16a:	0e 94 74 04 	call	0x8e8	; 0x8e8 <I2CInt_writeData>
+		Utility_delay(100);		
+     16e:	84 e6       	ldi	r24, 0x64	; 100
+     170:	90 e0       	ldi	r25, 0x00	; 0
+     172:	0e 94 53 00 	call	0xa6	; 0xa6 <Utility_delay>
+		/* wait for the I2C transaction to complete */
+		while(I2CInt_isI2cBusy() == TRUE);
+     176:	0e 94 ad 04 	call	0x95a	; 0x95a <I2CInt_isI2cBusy>
+     17a:	81 30       	cpi	r24, 0x01	; 1
+     17c:	e1 f3       	breq	.-8      	; 0x176 <CamConfig_sendFifoCmds+0x44>
+***********************************************************/	
+void CamConfig_sendFifoCmds(void)
+{
+	i2cCmd_t cmd;
+	
+	while (CamConfig_txFifoHead != CamConfig_txFifoTail)
+     17e:	20 91 11 01 	lds	r18, 0x0111
+     182:	80 91 10 01 	lds	r24, 0x0110
+     186:	82 17       	cp	r24, r18
+     188:	f9 f6       	brne	.-66     	; 0x148 <CamConfig_sendFifoCmds+0x16>
+		I2CInt_writeData(CAM_ADDRESS,&cmd.configReg,SIZE_OF_I2C_CMD);
+		Utility_delay(100);		
+		/* wait for the I2C transaction to complete */
+		while(I2CInt_isI2cBusy() == TRUE);
+	} 
+}
+     18a:	0f 90       	pop	r0
+     18c:	0f 90       	pop	r0
+     18e:	cf 91       	pop	r28
+     190:	df 91       	pop	r29
+     192:	1f 91       	pop	r17
+     194:	0f 91       	pop	r16
+     196:	08 95       	ret
+
+00000198 <CamConfig_init>:
+	Inputs:  none
+	Outputs: none
+***********************************************************/	
+void CamConfig_init(void)
+{
+	CamConfig_setCamReg(0x14,0x20);  /* reduce frame size */
+     198:	84 e1       	ldi	r24, 0x14	; 20
+     19a:	60 e2       	ldi	r22, 0x20	; 32
+     19c:	0e 94 95 00 	call	0x12a	; 0x12a <CamConfig_setCamReg>
+	CamConfig_setCamReg(0x39,0x40);  /* gate PCLK with HREF */
+     1a0:	89 e3       	ldi	r24, 0x39	; 57
+     1a2:	60 e4       	ldi	r22, 0x40	; 64
+     1a4:	0e 94 95 00 	call	0x12a	; 0x12a <CamConfig_setCamReg>
+	CamConfig_setCamReg(0x12,0x28);  /* set RGB mode, with no AWB */
+     1a8:	82 e1       	ldi	r24, 0x12	; 18
+     1aa:	68 e2       	ldi	r22, 0x28	; 40
+     1ac:	0e 94 95 00 	call	0x12a	; 0x12a <CamConfig_setCamReg>
+	CamConfig_setCamReg(0x28,0x05);  /* set color sequencer */
+     1b0:	88 e2       	ldi	r24, 0x28	; 40
+     1b2:	65 e0       	ldi	r22, 0x05	; 5
+     1b4:	0e 94 95 00 	call	0x12a	; 0x12a <CamConfig_setCamReg>
+    CamConfig_setCamReg(0x13,0x01);  /* un-tri-state the Y/UV lines */
+     1b8:	83 e1       	ldi	r24, 0x13	; 19
+     1ba:	61 e0       	ldi	r22, 0x01	; 1
+     1bc:	0e 94 95 00 	call	0x12a	; 0x12a <CamConfig_setCamReg>
+	
+	/* send the first four cmds in the I2C fifo */
+	CamConfig_sendFifoCmds();	
+     1c0:	0e 94 99 00 	call	0x132	; 0x132 <CamConfig_sendFifoCmds>
+}
+     1c4:	08 95       	ret
+
+000001c6 <CamInt_resetCam>:
+	CAM_CONTROL_PORT |= (1<<CAM_RESET_LINE); /* cam reset line high */
+	Utility_delay(500);
+	CAM_CONTROL_PORT &= (0<<CAM_RESET_LINE); /* cam reset line low */
+	Utility_delay(100);
+#endif    
+}
+     1c6:	08 95       	ret
+
+000001c8 <CamInt_init>:
+    unsigned char i;
+#endif    
+    
+	/* set up the mega8 ports that will be interfacing
+	with the camera */	
+	CAM_CONTROL_PORT_DIR |= (1<<CAM_RESET_LINE); /* cam reset is output */
+     1c8:	57 9a       	sbi	0x0a, 7	; 10
+	CAM_CONTROL_PORT_DIR |= 0x80;   /* set just the MSB as an output */
+     1ca:	57 9a       	sbi	0x0a, 7	; 10
+	CAM_CONTROL_PORT_DIR &= 0xFB;   /* make sure bit2 is clear (input) */
+     1cc:	52 98       	cbi	0x0a, 2	; 10
+	CAM_CONTROL_PORT &= 0x7F;   /* set reset line low */
+     1ce:	5f 98       	cbi	0x0b, 7	; 11
+	CAM_G_BUS_DIR &= 0xF0;  /* 4-bit G bus all inputs */
+     1d0:	84 b1       	in	r24, 0x04	; 4
+     1d2:	80 7f       	andi	r24, 0xF0	; 240
+     1d4:	84 b9       	out	0x04, r24	; 4
+    CAM_G_BUS_DIR |= 0xF0;  /* disable the pull-up on PB4 and PB5 */
+     1d6:	84 b1       	in	r24, 0x04	; 4
+     1d8:	80 6f       	ori	r24, 0xF0	; 240
+     1da:	84 b9       	out	0x04, r24	; 4
+	CAM_RB_BUS_DIR &= 0xF0;  /* 4-bit RB bus all inputs */
+     1dc:	87 b1       	in	r24, 0x07	; 7
+     1de:	80 7f       	andi	r24, 0xF0	; 240
+     1e0:	87 b9       	out	0x07, r24	; 7
+
+    /* ensure that timer1 is disabled to start...eventually, when PCLK needs
+    to feed timer1 through the external counter, it will be enabled on an
+    "as needed" basis...*/
+	TCCR1B &= ~( (1<<CS12)|(1<<CS11)|(1<<CS10) );
+     1e2:	e1 e8       	ldi	r30, 0x81	; 129
+     1e4:	f0 e0       	ldi	r31, 0x00	; 0
+     1e6:	80 81       	ld	r24, Z
+     1e8:	88 7f       	andi	r24, 0xF8	; 248
+     1ea:	80 83       	st	Z, r24
+	/* we'll turn on the interrupt after we assign the initial TCNT value */
+	
+#if defined (__AVR_ATmega328P__) || defined (__AVR_ATmega328__)
+
+	/* see comments in ATmega8 section */
+	EICRA |= (1<<ISC11) | (1<<ISC10);		/* HREF: rising edge interrupt, INT1 */
+     1ec:	e9 e6       	ldi	r30, 0x69	; 105
+     1ee:	f0 e0       	ldi	r31, 0x00	; 0
+     1f0:	80 81       	ld	r24, Z
+     1f2:	8c 60       	ori	r24, 0x0C	; 12
+     1f4:	80 83       	st	Z, r24
+	EICRA |= (1<<ISC01) | (1<<ISC00);		/* VSYNC: rising edge interrupt, INT0 */ 
+     1f6:	80 81       	ld	r24, Z
+     1f8:	83 60       	ori	r24, 0x03	; 3
+     1fa:	80 83       	st	Z, r24
+	EIMSK |= (1<<INT0); 					/* INT0 interrupt request enabled */
+     1fc:	e8 9a       	sbi	0x1d, 0	; 29
+	TCCR0B = (1<<CS02)|(1<<CS01)|(0<<CS00);	/* Timer0, count falling HREF pulses */
+     1fe:	86 e0       	ldi	r24, 0x06	; 6
+     200:	85 bd       	out	0x25, r24	; 37
+	SMCR = 0x01; 							/* enable sleep mode, set SLEEP_MODE_IDLE */
+     202:	81 e0       	ldi	r24, 0x01	; 1
+     204:	83 bf       	out	0x33, r24	; 51
+#else
+#warning Processor unsupported!
+#endif
+
+	/* initialize the memLookup table */
+	memset(colorMap,0x00,NUM_ELEMENTS_IN_COLOR_MAP);   
+     206:	e0 e0       	ldi	r30, 0x00	; 0
+     208:	f4 e0       	ldi	r31, 0x04	; 4
+     20a:	80 e3       	ldi	r24, 0x30	; 48
+     20c:	df 01       	movw	r26, r30
+     20e:	1d 92       	st	X+, r1
+     210:	8a 95       	dec	r24
+     212:	e9 f7       	brne	.-6      	; 0x20e <CamInt_init+0x46>
+	
+	/* read the color map out of EEPROM */
+	eeprom_read_block(colorMap, (unsigned char*)0x01,NUM_ELEMENTS_IN_COLOR_MAP);
+     214:	cf 01       	movw	r24, r30
+     216:	61 e0       	ldi	r22, 0x01	; 1
+     218:	70 e0       	ldi	r23, 0x00	; 0
+     21a:	40 e3       	ldi	r20, 0x30	; 48
+     21c:	50 e0       	ldi	r21, 0x00	; 0
+     21e:	0e 94 5b 08 	call	0x10b6	; 0x10b6 <__eerd_block_m328p>
+#endif    
+
+#ifndef NO_CRYSTAL
+	CamInt_resetCam();	
+#endif    
+}
+     222:	08 95       	ret
+
+00000224 <CamInt_waitForNewFrame>:
+;       floats into the acquireLine function after the "VSYNC sleep"
+;       is awoken.
+;*****************************************************************
+		
+CamInt_waitForNewFrame:
+		sleep     			; sleep mode already set to sleep idle
+     224:	88 95       	sleep
+
+00000226 <CamInt_acquireLine>:
+
+CamInt_acquireLine:
+		in 	r16,_SFR_IO_ADDR(EIMSK)  ;enable the PCLK interrupt
+     226:	0d b3       	in	r16, 0x1d	; 29
+		ori	r16,(1<<PCLK_IE)
+     228:	01 60       	ori	r16, 0x01	; 1
+		out	_SFR_IO_ADDR(EIMSK),r1
+     22a:	1d ba       	out	0x1d, r1	; 29
+		; should probably enable sleep just prior to this (see CamInterface.c)
+		sleep
+     22c:	88 95       	sleep
+		
+		in r16,_SFR_IO_ADDR(EIMSK)  ;disable the PCLK interrupt
+     22e:	0d b3       	in	r16, 0x1d	; 29
+		andi r16,(1<<PCLK_IE)
+     230:	01 70       	andi	r16, 0x01	; 1
+		out _SFR_IO_ADDR(EIMSK),r1
+     232:	1d ba       	out	0x1d, r1	; 29
+
+00000234 <_acquirePixelBlock>:
+		
+_acquirePixelBlock:		
+
+
+_exit:
+		ret
+     234:	08 95       	ret
+
+00000236 <__vector_default>:
+
+
+
+        .global __vector_default                ; Note [10]
+__vector_default:
+        reti
+     236:	18 95       	reti
+
+00000238 <CamIntAsm_waitForNewTrackingFrame>:
+;		an interrupt will occur, the 'T' bit in the SREG will be
+;		set, and the function will return.
+;*****************************************************************
+		
+CamIntAsm_waitForNewTrackingFrame:
+		sbi		_SFR_IO_ADDR(PORTD),PD6  ; For testing...
+     238:	5e 9a       	sbi	0x0b, 6	; 11
+		cbi		_SFR_IO_ADDR(PORTD),PD6		
+     23a:	5e 98       	cbi	0x0b, 6	; 11
+		sleep
+     23c:	88 95       	sleep
+
+0000023e <CamIntAsm_acquireTrackingLine>:
+; REMEMBER...everything from here on out is critically timed to be
+; synchronized with the flow of pixel data from the camera...
+;*****************************************************************
+
+CamIntAsm_acquireTrackingLine:
+		rjmp	_cleanUp
+     23e:	43 c0       	rjmp	.+134    	; 0x2c6 <_cleanUp>
+		;sbi		_SFR_IO_ADDR(PORTD),PD6 ; For testing...
+		;cbi		_SFR_IO_ADDR(PORTD),PD6
+        
+        lds     tmp1,_SFR_IO_ADDR(TCCR1B) ; Enable the PCLK line to feed Timer1
+     240:	30 91 61 00 	lds	r19, 0x0061
+		ori     tmp1, _BV(CS12)|_BV(CS11)|_BV(CS10)	; rising edge
+     244:	37 60       	ori	r19, 0x07	; 7
+        sts     _SFR_IO_ADDR(TCCR1B),tmp1 
+     246:	30 93 61 00 	sts	0x0061, r19
+										; The line is about to start...		
+		ldi     pixelCount,0			; Initialize the RLE stats...
+     24a:	00 e0       	ldi	r16, 0x00	; 0
+		ldi		pixelRunStart,PIXEL_RUN_START_INITIAL  	; Remember, we always calculate
+     24c:	10 e5       	ldi	r17, 0x50	; 80
+														; the pixel run length as
+														; TCNT1L - pixelRunStart
+		
+		ldi		lastColor,0x00				; clear out the last color before we start
+     24e:	20 e0       	ldi	r18, 0x00	; 0
+		
+		mov   	XH,currLineBuffHigh    	; Load the pointer to the current line
+     250:	b9 2f       	mov	r27, r25
+		mov		XL,currLineBuffLow		; buffer into the X pointer regs		 
+     252:	a8 2f       	mov	r26, r24
+		
+		mov   	ZH,colorMapHigh      	; Load the pointers to the membership
+     254:	f7 2f       	mov	r31, r23
+		mov		ZL,colorMapLow			; lookup tables (ZL and YL will be overwritten
+     256:	e6 2f       	mov	r30, r22
+		mov 	YH,colorMapHigh	 		; as soon as we start reading data) to Z and Y
+     258:	d7 2f       	mov	r29, r23
+		
+		lds		tmp1, _SFR_IO_ADDR(TIMSK1)			; enable TIMER1 to start counting
+     25a:	30 91 4f 00 	lds	r19, 0x004F
+		ori		tmp1, ENABLE_PCLK_TIMER1_OVERFLOW_BITMASK 	; external PCLK pulses and interrupt on 
+     25e:	34 60       	ori	r19, 0x04	; 4
+		sts		_SFR_IO_ADDR(TIMSK1),tmp1			; overflow
+     260:	30 93 4f 00 	sts	0x004F, r19
+		
+		ldi 	tmp1,PIXEL_RUN_START_INITIAL	; set up the TCNT1 to overflow (and
+     264:	30 e5       	ldi	r19, 0x50	; 80
+		ldi 	tmp2,0xFF 						; interrupts) after 176 pixels		
+     266:	4f ef       	ldi	r20, 0xFF	; 255
+		sts 	_SFR_IO_ADDR(TCNT1H),tmp2		
+     268:	40 93 65 00 	sts	0x0065, r20
+		sts 	_SFR_IO_ADDR(TCNT1L),tmp1				
+     26c:	30 93 64 00 	sts	0x0064, r19
+		
+		mov		YL,colorMapLow		
+     270:	c6 2f       	mov	r28, r22
+		
+		in 		tmp1, _SFR_IO_ADDR(EIMSK)	; enable the HREF interrupt...remember, we
+     272:	3d b3       	in	r19, 0x1d	; 29
+											; only use this interrupt to synchronize
+											; the beginning of the line
+		ori 	tmp1, HREF_INTERRUPT_ENABLE_MASK
+     274:	30 68       	ori	r19, 0x80	; 128
+		out		_SFR_IO_ADDR(EIMSK), tmp1
+     276:	3d bb       	out	0x1d, r19	; 29
+
+00000278 <_trackFrame>:
+;*******************************************************************************************
+;   Track Frame handler 
+;*******************************************************************************************		
+		
+_trackFrame:		
+		sbi		_SFR_IO_ADDR(PORTD),PD6
+     278:	5e 9a       	sbi	0x0b, 6	; 11
+		sleep   ; ...And we wait...
+     27a:	88 95       	sleep
+		
+	; Returning from the interrupt/sleep wakeup will consume
+	; 14 clock cycles (7 to wakeup from idle sleep, 3 to vector, and 4 to return)	
+
+	; Disable the HREF interrupt
+		cbi		_SFR_IO_ADDR(PORTD),PD6
+     27c:	5e 98       	cbi	0x0b, 6	; 11
+		in 		tmp1, _SFR_IO_ADDR(EIMSK)
+     27e:	3d b3       	in	r19, 0x1d	; 29
+		andi 	tmp1, HREF_INTERRUPT_DISABLE_MASK
+     280:	3f 77       	andi	r19, 0x7F	; 127
+		out		_SFR_IO_ADDR(EIMSK), tmp1
+     282:	3d bb       	out	0x1d, r19	; 29
+		
+	; A couple of NOPs are needed here to sync up the pixel data...the number (2)
+	; of NOPs was determined emperically by trial and error.
+		nop
+     284:	00 00       	nop
+		nop
+     286:	00 00       	nop
+
+00000288 <_acquirePixelBlock>:
+_acquirePixelBlock:							;							Clock Cycle Count
+		in		ZL,RB_PORT         			; sample the red value (PINB)		(1)
+     288:	e3 b1       	in	r30, 0x03	; 3
+		in		YL,G_PORT         			; sample the green value (PINC)		(1)
+     28a:	c6 b1       	in	r28, 0x06	; 6
+		andi	YL,0x0F            			; clear the high nibble				(1)
+     28c:	cf 70       	andi	r28, 0x0F	; 15
+		ldd		color,Z+RED_MEM_OFFSET  	; lookup the red membership			(2)
+     28e:	30 81       	ld	r19, Z
+		in		ZL,RB_PORT         			; sample the blue value (PINB)		(1)
+     290:	e3 b1       	in	r30, 0x03	; 3
+		ldd		greenData,Y+GREEN_MEM_OFFSET; lookup the green membership		(2)
+     292:	48 89       	ldd	r20, Y+16	; 0x10
+		ldd		blueData,Z+BLUE_MEM_OFFSET	; lookup the blue membership		(2)
+     294:	50 a1       	ldd	r21, Z+32	; 0x20
+		and		color,greenData 			; mask memberships together			(1)
+     296:	34 23       	and	r19, r20
+		and		color,blueData  			; to produce the final color		(1)
+     298:	35 23       	and	r19, r21
+		brts    _cleanUpTrackingLine		; if some interrupt routine has		(1...not set)
+     29a:	7e f0       	brts	.+30     	; 0x2ba <_cleanUpTrackingLine>
+											; come in and set our T flag in 
+											; SREG, then we need to hop out
+											; and blow away this frames data (common cleanup)									
+		cp		color,lastColor     		; check to see if the run continues	(1)
+     29c:	32 17       	cp	r19, r18
+		breq    _acquirePixelBlock  		;									(2...equal)
+     29e:	a1 f3       	breq	.-24     	; 0x288 <_acquirePixelBlock>
+											;									___________
+											;								16 clock cycles 		
+											; (16 clock cycles = 1 uS = 1 pixelBlock time)
+		
+		; Toggle the debug line to indicate a color change
+		sbi     _SFR_IO_ADDR(PORTD),PD6
+     2a0:	5e 9a       	sbi	0x0b, 6	; 11
+		nop
+     2a2:	00 00       	nop
+		cbi		_SFR_IO_ADDR(PORTD),PD6
+     2a4:	5e 98       	cbi	0x0b, 6	; 11
+		
+		mov		tmp2,pixelRunStart				; get the count value of the
+     2a6:	41 2f       	mov	r20, r17
+												; current pixel run
+		lds		pixelCount,_SFR_IO_ADDR(TCNT1L)	; get the current TCNT1 value 
+     2a8:	00 91 64 00 	lds	r16, 0x0064
+		mov   	pixelRunStart,pixelCount		; reload pixelRunStart for the
+     2ac:	10 2f       	mov	r17, r16
+												; next run
+		sub		pixelCount,tmp2     			; pixelCount = TCNT1L - pixelRunStart
+     2ae:	04 1b       	sub	r16, r20
+										
+		st		X+,lastColor			; record the color run in the current line buffer
+     2b0:	2d 93       	st	X+, r18
+		st		X+,pixelCount			; with its length
+     2b2:	0d 93       	st	X+, r16
+		mov		lastColor,color			; set lastColor so we can figure out when it changes
+     2b4:	23 2f       	mov	r18, r19
+		
+		nop								; waste one more cycle for a total of 16
+     2b6:	00 00       	nop
+		rjmp	_acquirePixelBlock	
+     2b8:	e7 cf       	rjmp	.-50     	; 0x288 <_acquirePixelBlock>
+
+000002ba <_cleanUpTrackingLine>:
+		
+; _cleanUpTrackingLine is used to write the last run length block off to the currentLineBuffer so
+; that all 176 pixels in the line are accounted for.
+_cleanUpTrackingLine:		
+		ldi		pixelCount,0xFF		; the length of the last run is ALWAYS 0xFF minus the last
+     2ba:	0f ef       	ldi	r16, 0xFF	; 255
+		sub		pixelCount,pixelRunStart  	; pixelRunStart
+     2bc:	01 1b       	sub	r16, r17
+		
+		inc		pixelCount				; increment pixelCount since we actually need to account
+     2be:	03 95       	inc	r16
+										; for the overflow of TCNT1
+										
+		st		X+,color				; record the color run in the current line buffer
+     2c0:	3d 93       	st	X+, r19
+		st		X,pixelCount		
+     2c2:	0c 93       	st	X, r16
+		rjmp	_cleanUp
+     2c4:	00 c0       	rjmp	.+0      	; 0x2c6 <_cleanUp>
+
+000002c6 <_cleanUp>:
+		;andi	tmp1, DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK 	; external PCLK pulses
+		;out		_SFR_IO_ADDR(TIMSK),tmp1
+
+_cleanUp:
+        ; Disable the external clocking of the Timer1 counter 
+        lds      tmp1, _SFR_IO_ADDR(TCCR1B)
+     2c6:	30 91 61 00 	lds	r19, 0x0061
+        andi    tmp1, 0xF8
+     2ca:	38 7f       	andi	r19, 0xF8	; 248
+        sts     _SFR_IO_ADDR(TCCR1B),tmp1
+     2cc:	30 93 61 00 	sts	0x0061, r19
+		
+		; Toggle the debug line to indicate the line is complete
+		sbi     _SFR_IO_ADDR(PORTD),PD6
+     2d0:	5e 9a       	sbi	0x0b, 6	; 11
+		cbi		_SFR_IO_ADDR(PORTD),PD6
+     2d2:	5e 98       	cbi	0x0b, 6	; 11
+		clt				; clear out the T bit since we have detected
+     2d4:	e8 94       	clt
+
+000002d6 <_exit>:
+						; the interruption and are exiting to handle it
+_exit:
+		ret
+     2d6:	08 95       	ret
+
+000002d8 <CamIntAsm_waitForNewDumpFrame>:
+;       NOTES: This function doesn't really return...it sorta just
+;       floats into the acquireDumpLine function after the "VSYNC sleep"
+;       is awoken.
+;*****************************************************************		
+CamIntAsm_waitForNewDumpFrame:
+		sbi		_SFR_IO_ADDR(PORTD),PD6  ; For testing...
+     2d8:	5e 9a       	sbi	0x0b, 6	; 11
+		cbi		_SFR_IO_ADDR(PORTD),PD6
+     2da:	5e 98       	cbi	0x0b, 6	; 11
+		sleep
+     2dc:	88 95       	sleep
+
+000002de <CamIntAsm_acquireDumpLine>:
+; REMEMBER...everything from here on out is critically timed to be
+; synchronized with the flow of pixel data from the camera...
+;*****************************************************************
+
+CamIntAsm_acquireDumpLine:
+		brts	_cleanUp
+     2de:	9e f3       	brts	.-26     	; 0x2c6 <_cleanUp>
+		;sbi		_SFR_IO_ADDR(PORTD),PD6 ; For testing...
+		;cbi		_SFR_IO_ADDR(PORTD),PD6
+		
+		mov   	XH,currLineBuffHigh    	; Load the pointer to the current line
+     2e0:	b9 2f       	mov	r27, r25
+		mov		XL,currLineBuffLow		; buffer into the X pointer regs
+     2e2:	a8 2f       	mov	r26, r24
+
+		mov		YH,prevLineBuffHigh		; Load the pointer to the previous line
+     2e4:	d7 2f       	mov	r29, r23
+		mov		YL,prevLineBuffLow  	; buffer into the Y pointer regs
+     2e6:	c6 2f       	mov	r28, r22
+		
+		ldi 	tmp1,PIXEL_RUN_START_INITIAL	; set up the TCNT1 to overflow (and
+     2e8:	30 e5       	ldi	r19, 0x50	; 80
+		ldi 	tmp2,0xFF 						; interrupts) after 176 pixels		
+     2ea:	4f ef       	ldi	r20, 0xFF	; 255
+		sts 	_SFR_IO_ADDR(TCNT1H),tmp2		
+     2ec:	40 93 65 00 	sts	0x0065, r20
+		sts 	_SFR_IO_ADDR(TCNT1L),tmp1		
+     2f0:	30 93 64 00 	sts	0x0064, r19
+		
+        lds      tmp1, _SFR_IO_ADDR(TCCR1B) ; Enable the PCLK line to actually
+     2f4:	30 91 61 00 	lds	r19, 0x0061
+        ori     tmp1, 0x07                 ; feed Timer1
+     2f8:	37 60       	ori	r19, 0x07	; 7
+        sts     _SFR_IO_ADDR(TCCR1B),tmp1
+     2fa:	30 93 61 00 	sts	0x0061, r19
+        nop
+     2fe:	00 00       	nop
+
+		lds		tmp1, _SFR_IO_ADDR(TIMSK1)			; enable TIMER1 to start counting
+     300:	30 91 4f 00 	lds	r19, 0x004F
+		ori		tmp1, ENABLE_PCLK_TIMER1_OVERFLOW_BITMASK 	; external PCLK pulses and interrupt on 
+     304:	34 60       	ori	r19, 0x04	; 4
+		sts		_SFR_IO_ADDR(TIMSK1),tmp1			; overflow			
+     306:	30 93 4f 00 	sts	0x004F, r19
+		
+		in 		tmp1, _SFR_IO_ADDR(EIMSK)	; enable the HREF interrupt...remember, we
+     30a:	3d b3       	in	r19, 0x1d	; 29
+											; only use this interrupt to synchronize
+											; the beginning of the line
+		ori 	tmp1, HREF_INTERRUPT_ENABLE_MASK
+     30c:	30 68       	ori	r19, 0x80	; 128
+		out		_SFR_IO_ADDR(EIMSK), tmp1
+     30e:	3d bb       	out	0x1d, r19	; 29
+
+00000310 <_dumpFrame>:
+;*******************************************************************************************
+;   Dump Frame handler 
+;*******************************************************************************************		
+		
+_dumpFrame:		
+		sbi		_SFR_IO_ADDR(PORTD),PD6
+     310:	5e 9a       	sbi	0x0b, 6	; 11
+		sleep   ; ...And we wait...
+     312:	88 95       	sleep
+
+		cbi		_SFR_IO_ADDR(PORTD),PD6
+     314:	5e 98       	cbi	0x0b, 6	; 11
+		in 		tmp1, _SFR_IO_ADDR(EIMSK)			; disable the HREF interrupt
+     316:	3d b3       	in	r19, 0x1d	; 29
+		andi 	tmp1, HREF_INTERRUPT_DISABLE_MASK  	; so we don't get interrupted
+     318:	3f 77       	andi	r19, 0x7F	; 127
+		out		_SFR_IO_ADDR(EIMSK), tmp1			; while dumping the line
+     31a:	3d bb       	out	0x1d, r19	; 29
+	
+		nop		; Remember...if we ever remove the "cbi" instruction above,
+     31c:	00 00       	nop
+
+0000031e <_sampleDumpPixel>:
+; it is assumed that we will have to do some minor processing on the data right
+; before we send it out, like mask off the top 4-bits of each, and then pack both
+; low nibbles into a single byte for transmission...we just don't have time to
+; do that here (only 8 instruction cycles :-)  )
+_sampleDumpPixel:
+		in		tmp1,G_PORT				; sample the G value					(1)
+     31e:	36 b1       	in	r19, 0x06	; 6
+		in		tmp2,RB_PORT			; sample the R/B value					(1)
+     320:	43 b1       	in	r20, 0x03	; 3
+		st		X+,tmp1					; store to the currLineBuff and inc ptrs(2)
+     322:	3d 93       	st	X+, r19
+		st		Y+,tmp2					; store to the prevLineBuff and inc ptrs(2)
+     324:	49 93       	st	Y+, r20
+		brtc	_sampleDumpPixel		; loop back unless flag is set			(2...if not set)
+     326:	de f7       	brtc	.-10     	; 0x31e <_sampleDumpPixel>
+										;									___________
+										;									8 cycles normally
+																			
+		; if we make it here, it means the T flag is set, and we must have been interrupted
+		; so we need to exit (what if we were interrupted for serial? should we disable it?)
+		rjmp	_cleanUpDumpLine
+     328:	ce cf       	rjmp	.-100    	; 0x2c6 <_cleanUp>
+
+0000032a <__vector_1>:
+;	Inputs:  none
+;	Outputs: none
+;***********************************************************
+INT0_vect:
+; This will wake us up when VSYNC transitions high...we just want to return
+		reti
+     32a:	18 95       	reti
+
+0000032c <__vector_2>:
+;	Inputs:  none
+;	Outputs: none
+;***********************************************************	
+INT1_vect:
+; This will wake us up when HREF transitions high...we just want to return
+		reti
+     32c:	18 95       	reti
+
+0000032e <__vector_13>:
+;	pixels).  This routine generates an acquire line complete
+;	event in the fastEventBitmask, which is streamlined for
+;	efficiency reasons.
+;***********************************************************
+TIMER1_OVF_vect:
+		lds		tmp1,fastEventBitmask   		; set a flag indicating
+     32e:	30 91 14 01 	lds	r19, 0x0114
+		ori		tmp1,FEV_ACQUIRE_LINE_COMPLETE	; a line is complete
+     332:	31 60       	ori	r19, 0x01	; 1
+		sts		fastEventBitmask,tmp1
+     334:	30 93 14 01 	sts	0x0114, r19
+		set		; set the T bit in SREG 
+     338:	68 94       	set
+		;sbi		_SFR_IO_ADDR(PORTD),PD6 ; For testing...
+		;cbi		_SFR_IO_ADDR(PORTD),PD6 ; For testing...
+
+		reti
+     33a:	18 95       	reti
+
+0000033c <__vector_3>:
+.global EE_READY_vect
+.global ANALOG_COMP_vect
+.global SPM_READY_vect
+
+PCINT0_vect:
+		reti
+     33c:	18 95       	reti
+
+0000033e <__vector_4>:
+
+PCINT1_vect:
+		reti
+     33e:	18 95       	reti
+
+00000340 <__vector_5>:
+
+PCINT2_vect:
+		reti
+     340:	18 95       	reti
+
+00000342 <__vector_6>:
+
+WDT_vect:
+		reti
+     342:	18 95       	reti
+
+00000344 <__vector_7>:
+
+TIMER2_COMPA_vect:
+		reti
+     344:	18 95       	reti
+
+00000346 <__vector_8>:
+
+TIMER2_COMPB_vect:
+		reti
+     346:	18 95       	reti
+
+00000348 <__vector_9>:
+
+TIMER2_OVF_vect:
+		reti
+     348:	18 95       	reti
+
+0000034a <__vector_10>:
+
+TIMER1_CAPT_vect:
+		reti
+     34a:	18 95       	reti
+
+0000034c <__vector_11>:
+
+TIMER1_COMPA_vect:
+		reti
+     34c:	18 95       	reti
+
+0000034e <__vector_12>:
+
+TIMER1_COMPB_vect:
+		reti
+     34e:	18 95       	reti
+
+00000350 <__vector_14>:
+
+TIMER0_COMPA_vect:
+		reti
+     350:	18 95       	reti
+
+00000352 <__vector_15>:
+
+TIMER0_COMPB_vect:
+		reti
+     352:	18 95       	reti
+
+00000354 <__vector_16>:
+
+TIMER0_OVF_vect:
+		reti
+     354:	18 95       	reti
+
+00000356 <__vector_17>:
+
+SPI_STC_vect:
+		reti
+     356:	18 95       	reti
+
+00000358 <__vector_19>:
+
+USART_UDRE_vect:
+		reti
+     358:	18 95       	reti
+
+0000035a <__vector_20>:
+
+USART_TX_vect:
+		reti
+     35a:	18 95       	reti
+
+0000035c <__vector_21>:
+
+ADC_vect:
+		reti
+     35c:	18 95       	reti
+
+0000035e <__vector_22>:
+
+EE_READY_vect:
+		reti
+     35e:	18 95       	reti
+
+00000360 <__vector_23>:
+
+ANALOG_COMP_vect:
+		reti
+     360:	18 95       	reti
+
+00000362 <__vector_25>:
+
+SPM_READY_vect:
+		reti
+     362:	18 95       	reti
+
+00000364 <DebugInt_init>:
+    be for long after this function returns.
+	Inputs:  none
+	Outputs: none
+***********************************************************/	
+void DebugInt_init(void)
+{
+     364:	cf 93       	push	r28
+     366:	df 93       	push	r29
+	int i;
+
+	/* set PortD pin6 for output */
+	DDRD  |= 0x40;
+     368:	56 9a       	sbi	0x0a, 6	; 10
+     36a:	c0 e0       	ldi	r28, 0x00	; 0
+     36c:	d0 e0       	ldi	r29, 0x00	; 0
+
+	for (i=0; i < 5; i++) {
+		PORTD |= 0x40;	/* turn on LED */
+     36e:	5e 9a       	sbi	0x0b, 6	; 11
+	    Utility_delay(100);
+     370:	84 e6       	ldi	r24, 0x64	; 100
+     372:	90 e0       	ldi	r25, 0x00	; 0
+     374:	0e 94 53 00 	call	0xa6	; 0xa6 <Utility_delay>
+	    PORTD &= 0xBF;	/* turn off LED */
+     378:	5e 98       	cbi	0x0b, 6	; 11
+	    Utility_delay(100);
+     37a:	84 e6       	ldi	r24, 0x64	; 100
+     37c:	90 e0       	ldi	r25, 0x00	; 0
+     37e:	0e 94 53 00 	call	0xa6	; 0xa6 <Utility_delay>
+	    PORTD |= 0x40;
+     382:	5e 9a       	sbi	0x0b, 6	; 11
+	    Utility_delay(100);
+     384:	84 e6       	ldi	r24, 0x64	; 100
+     386:	90 e0       	ldi	r25, 0x00	; 0
+     388:	0e 94 53 00 	call	0xa6	; 0xa6 <Utility_delay>
+	    PORTD &= 0xBF;
+     38c:	5e 98       	cbi	0x0b, 6	; 11
+	    Utility_delay(500);
+     38e:	84 ef       	ldi	r24, 0xF4	; 244
+     390:	91 e0       	ldi	r25, 0x01	; 1
+     392:	0e 94 53 00 	call	0xa6	; 0xa6 <Utility_delay>
+	int i;
+
+	/* set PortD pin6 for output */
+	DDRD  |= 0x40;
+
+	for (i=0; i < 5; i++) {
+     396:	21 96       	adiw	r28, 0x01	; 1
+     398:	c5 30       	cpi	r28, 0x05	; 5
+     39a:	d1 05       	cpc	r29, r1
+     39c:	41 f7       	brne	.-48     	; 0x36e <DebugInt_init+0xa>
+	    PORTD |= 0x40;
+	    Utility_delay(100);
+	    PORTD &= 0xBF;
+	    Utility_delay(500);
+	}
+	PORTD |= 0x40;	/* turn on LED */
+     39e:	5e 9a       	sbi	0x0b, 6	; 11
+}
+     3a0:	df 91       	pop	r29
+     3a2:	cf 91       	pop	r28
+     3a4:	08 95       	ret
+
+000003a6 <Exec_writeEventFifo>:
+***********************************************************/	
+void Exec_writeEventFifo(unsigned char event)
+{
+	unsigned char tmpHead;
+
+	DISABLE_INTS();
+     3a6:	f8 94       	cli
+	Exec_eventFifo[Exec_eventFifoHead] = event;
+     3a8:	90 91 12 01 	lds	r25, 0x0112
+     3ac:	ec e1       	ldi	r30, 0x1C	; 28
+     3ae:	f3 e0       	ldi	r31, 0x03	; 3
+     3b0:	e9 0f       	add	r30, r25
+     3b2:	f1 1d       	adc	r31, r1
+     3b4:	80 83       	st	Z, r24
+
+    /* now move the head up */
+    tmpHead = (Exec_eventFifoHead + 1) & (EXEC_EVENT_FIFO_MASK);
+    Exec_eventFifoHead = tmpHead;
+     3b6:	9f 5f       	subi	r25, 0xFF	; 255
+     3b8:	97 70       	andi	r25, 0x07	; 7
+     3ba:	90 93 12 01 	sts	0x0112, r25
+	ENABLE_INTS();
+     3be:	78 94       	sei
+}
+     3c0:	08 95       	ret
+
+000003c2 <Exec_run>:
+{
+	unsigned char eventGenerated;
+	
+	while(1)
+	{
+		if (fastEventBitmask)
+     3c2:	80 91 14 01 	lds	r24, 0x0114
+     3c6:	88 23       	and	r24, r24
+     3c8:	b1 f0       	breq	.+44     	; 0x3f6 <Exec_run+0x34>
+		{
+			/* an event needing fast processing has been received */
+			/* a received line needs to be processed...this
+			needs to be processed as quickly as possible */
+			if (fastEventBitmask & FEV_ACQUIRE_LINE_COMPLETE)
+     3ca:	80 ff       	sbrs	r24, 0
+     3cc:	09 c0       	rjmp	.+18     	; 0x3e0 <Exec_run+0x1e>
+			{
+                DISABLE_INTS();
+     3ce:	f8 94       	cli
+				fastEventBitmask &= ~FEV_ACQUIRE_LINE_COMPLETE;	
+     3d0:	8e 7f       	andi	r24, 0xFE	; 254
+     3d2:	80 93 14 01 	sts	0x0114, r24
+                ENABLE_INTS();
+     3d6:	78 94       	sei
+				FrameMgr_processLine();				
+     3d8:	0e 94 a3 02 	call	0x546	; 0x546 <FrameMgr_processLine>
+			
+				/* also check if serial data needs to be sent
+				out through UIMgr */
+				UIMgr_transmitPendingData();	
+     3dc:	0e 94 04 06 	call	0xc08	; 0xc08 <UIMgr_transmitPendingData>
+				/* we can't just call acquire line again here,
+				since we don't know if we need to acquire another
+				line or not (it depends on the FrameMgr to figure
+				this out) */
+			}
+			if (fastEventBitmask & FEV_PROCESS_LINE_COMPLETE)
+     3e0:	80 91 14 01 	lds	r24, 0x0114
+     3e4:	81 ff       	sbrs	r24, 1
+     3e6:	07 c0       	rjmp	.+14     	; 0x3f6 <Exec_run+0x34>
+			{
+                DISABLE_INTS();
+     3e8:	f8 94       	cli
+				fastEventBitmask &= ~FEV_PROCESS_LINE_COMPLETE;
+     3ea:	8d 7f       	andi	r24, 0xFD	; 253
+     3ec:	80 93 14 01 	sts	0x0114, r24
+                ENABLE_INTS();
+     3f0:	78 94       	sei
+				FrameMgr_acquireLine();
+     3f2:	0e 94 e5 03 	call	0x7ca	; 0x7ca <FrameMgr_acquireLine>
+			}
+		}		
+		
+        if (IS_DATA_IN_EVENT_FIFO() == TRUE)		
+     3f6:	90 91 13 01 	lds	r25, 0x0113
+     3fa:	80 91 12 01 	lds	r24, 0x0112
+     3fe:	89 17       	cp	r24, r25
+     400:	01 f3       	breq	.-64     	; 0x3c2 <Exec_run>
+***********************************************************/	
+static unsigned char Exec_readEventFifo(void)
+{
+	unsigned char dataByte, tmpTail;
+	
+	DISABLE_INTS();
+     402:	f8 94       	cli
+	/* just return the current tail from the tx fifo */
+	dataByte = Exec_eventFifo[Exec_eventFifoTail];	
+     404:	e9 2f       	mov	r30, r25
+     406:	f0 e0       	ldi	r31, 0x00	; 0
+     408:	e4 5e       	subi	r30, 0xE4	; 228
+     40a:	fc 4f       	sbci	r31, 0xFC	; 252
+     40c:	e0 81       	ld	r30, Z
+	tmpTail = (Exec_eventFifoTail+1) & (EXEC_EVENT_FIFO_MASK);
+	Exec_eventFifoTail = tmpTail;
+     40e:	9f 5f       	subi	r25, 0xFF	; 255
+     410:	97 70       	andi	r25, 0x07	; 7
+     412:	90 93 13 01 	sts	0x0113, r25
+	ENABLE_INTS();
+     416:	78 94       	sei
+		}		
+		
+        if (IS_DATA_IN_EVENT_FIFO() == TRUE)		
+		{			
+            eventGenerated = Exec_readEventFifo();
+			switch(eventGenerated)
+     418:	e0 31       	cpi	r30, 0x10	; 16
+     41a:	19 f1       	breq	.+70     	; 0x462 <Exec_run+0xa0>
+     41c:	e1 31       	cpi	r30, 0x11	; 17
+     41e:	68 f4       	brcc	.+26     	; 0x43a <Exec_run+0x78>
+     420:	e2 30       	cpi	r30, 0x02	; 2
+     422:	c9 f0       	breq	.+50     	; 0x456 <Exec_run+0x94>
+     424:	e3 30       	cpi	r30, 0x03	; 3
+     426:	18 f4       	brcc	.+6      	; 0x42e <Exec_run+0x6c>
+     428:	e1 30       	cpi	r30, 0x01	; 1
+     42a:	59 f6       	brne	.-106    	; 0x3c2 <Exec_run>
+     42c:	25 c0       	rjmp	.+74     	; 0x478 <Exec_run+0xb6>
+     42e:	e4 30       	cpi	r30, 0x04	; 4
+     430:	09 f1       	breq	.+66     	; 0x474 <Exec_run+0xb2>
+     432:	e8 30       	cpi	r30, 0x08	; 8
+     434:	09 f0       	breq	.+2      	; 0x438 <Exec_run+0x76>
+     436:	c5 cf       	rjmp	.-118    	; 0x3c2 <Exec_run>
+     438:	1b c0       	rjmp	.+54     	; 0x470 <Exec_run+0xae>
+     43a:	e0 38       	cpi	r30, 0x80	; 128
+     43c:	71 f0       	breq	.+28     	; 0x45a <Exec_run+0x98>
+     43e:	e1 38       	cpi	r30, 0x81	; 129
+     440:	20 f4       	brcc	.+8      	; 0x44a <Exec_run+0x88>
+     442:	e0 32       	cpi	r30, 0x20	; 32
+     444:	09 f0       	breq	.+2      	; 0x448 <Exec_run+0x86>
+     446:	bd cf       	rjmp	.-134    	; 0x3c2 <Exec_run>
+     448:	11 c0       	rjmp	.+34     	; 0x46c <Exec_run+0xaa>
+     44a:	e1 38       	cpi	r30, 0x81	; 129
+     44c:	41 f0       	breq	.+16     	; 0x45e <Exec_run+0x9c>
+     44e:	e0 39       	cpi	r30, 0x90	; 144
+     450:	09 f0       	breq	.+2      	; 0x454 <Exec_run+0x92>
+     452:	b7 cf       	rjmp	.-146    	; 0x3c2 <Exec_run>
+     454:	18 c0       	rjmp	.+48     	; 0x486 <Exec_run+0xc4>
+			{
+				case (EV_DUMP_FRAME):
+					FrameMgr_dispatchEvent(eventGenerated);
+     456:	82 e0       	ldi	r24, 0x02	; 2
+     458:	13 c0       	rjmp	.+38     	; 0x480 <Exec_run+0xbe>
+					break;
+					
+				case (EV_ENABLE_TRACKING):
+					FrameMgr_dispatchEvent(eventGenerated);
+     45a:	80 e8       	ldi	r24, 0x80	; 128
+     45c:	11 c0       	rjmp	.+34     	; 0x480 <Exec_run+0xbe>
+					break;
+					
+				case (EV_DISABLE_TRACKING):
+					FrameMgr_dispatchEvent(eventGenerated);
+     45e:	81 e8       	ldi	r24, 0x81	; 129
+     460:	0f c0       	rjmp	.+30     	; 0x480 <Exec_run+0xbe>
+					break;
+					
+				case (EV_ACQUIRE_LINE_COMPLETE):
+					FrameMgr_dispatchEvent(eventGenerated);
+     462:	80 e1       	ldi	r24, 0x10	; 16
+     464:	0e 94 35 04 	call	0x86a	; 0x86a <FrameMgr_dispatchEvent>
+					UIMgr_dispatchEvent(eventGenerated);
+     468:	80 e1       	ldi	r24, 0x10	; 16
+     46a:	0e c0       	rjmp	.+28     	; 0x488 <Exec_run+0xc6>
+					break;
+					
+				case (EV_ACQUIRE_FRAME_COMPLETE):				
+					FrameMgr_dispatchEvent(eventGenerated);
+     46c:	80 e2       	ldi	r24, 0x20	; 32
+     46e:	08 c0       	rjmp	.+16     	; 0x480 <Exec_run+0xbe>
+					break;
+					
+				case (EV_PROCESS_LINE_COMPLETE):
+					FrameMgr_dispatchEvent(eventGenerated);
+     470:	88 e0       	ldi	r24, 0x08	; 8
+     472:	06 c0       	rjmp	.+12     	; 0x480 <Exec_run+0xbe>
+					break;
+				
+				case (EV_PROCESS_FRAME_COMPLETE):
+					FrameMgr_dispatchEvent(eventGenerated);
+     474:	84 e0       	ldi	r24, 0x04	; 4
+     476:	04 c0       	rjmp	.+8      	; 0x480 <Exec_run+0xbe>
+					break;
+					
+				case (EV_SERIAL_DATA_RECEIVED):
+					UIMgr_dispatchEvent(eventGenerated);
+     478:	81 e0       	ldi	r24, 0x01	; 1
+     47a:	0e 94 25 08 	call	0x104a	; 0x104a <UIMgr_dispatchEvent>
+					FrameMgr_dispatchEvent(eventGenerated);
+     47e:	81 e0       	ldi	r24, 0x01	; 1
+     480:	0e 94 35 04 	call	0x86a	; 0x86a <FrameMgr_dispatchEvent>
+     484:	9e cf       	rjmp	.-196    	; 0x3c2 <Exec_run>
+					break;																
+
+				case (EV_SERIAL_DATA_PENDING_TX):
+					UIMgr_dispatchEvent(eventGenerated);
+     486:	80 e9       	ldi	r24, 0x90	; 144
+     488:	0e 94 25 08 	call	0x104a	; 0x104a <UIMgr_dispatchEvent>
+     48c:	9a cf       	rjmp	.-204    	; 0x3c2 <Exec_run>
+
+0000048e <FrameMgr_processFrame>:
+	needed at this level.
+	Inputs:  none
+	Outputs: none
+***********************************************************/	
+void FrameMgr_processFrame(void)
+{
+     48e:	ef 92       	push	r14
+     490:	ff 92       	push	r15
+     492:	0f 93       	push	r16
+     494:	1f 93       	push	r17
+     496:	cf 93       	push	r28
+     498:	df 93       	push	r29
+	UIMgr_txBuffer(" PFC\r\n",5);
+
+#else	
+	/* we only send tracking packets if there are tracked objects */	        
+    
+	if (numCurrTrackedObjects > 0)
+     49a:	80 91 15 01 	lds	r24, 0x0115
+     49e:	88 23       	and	r24, r24
+     4a0:	09 f4       	brne	.+2      	; 0x4a4 <FrameMgr_processFrame+0x16>
+     4a2:	47 c0       	rjmp	.+142    	; 0x532 <FrameMgr_processFrame+0xa4>
+	{		
+		UIMgr_writeTxFifo(0x0A);					/* header byte for a tracking packet */
+     4a4:	8a e0       	ldi	r24, 0x0A	; 10
+     4a6:	0e 94 d1 05 	call	0xba2	; 0xba2 <UIMgr_writeTxFifo>
+        /* reset the pointer */
+        pTableData = (unsigned char *)pCurrentTrackedObjectTable;
+        
+		UIMgr_writeTxFifo(numCurrTrackedObjects);	/* num of objects tracked */
+     4aa:	80 91 15 01 	lds	r24, 0x0115
+     4ae:	0e 94 d1 05 	call	0xba2	; 0xba2 <UIMgr_writeTxFifo>
+     4b2:	ca e1       	ldi	r28, 0x1A	; 26
+     4b4:	d1 e0       	ldi	r29, 0x01	; 1
+		for (i=0; i<MAX_TRACKED_OBJECTS; i++)
+		{
+            /* we only want to process objects that have their objectValid flag
+            set to TRUE */
+            if ( *(pTableData + VALID_OBJECT_OFFSET) == TRUE)
+     4b6:	8f 81       	ldd	r24, Y+7	; 0x07
+     4b8:	81 30       	cpi	r24, 0x01	; 1
+     4ba:	91 f5       	brne	.+100    	; 0x520 <FrameMgr_processFrame+0x92>
+            {
+                /* the object is valid...convert the color from bit position to value...remember, 
+                each bit in the "color" byte corresponds to a color */
+                k=0;
+                color = *(pTableData + COLOR_OFFSET);
+     4bc:	88 81       	ld	r24, Y
+                if (color == 128) k=0;
+     4be:	80 38       	cpi	r24, 0x80	; 128
+     4c0:	e1 f0       	breq	.+56     	; 0x4fa <FrameMgr_processFrame+0x6c>
+                else if (color == 64) k=1;
+     4c2:	80 34       	cpi	r24, 0x40	; 64
+     4c4:	11 f4       	brne	.+4      	; 0x4ca <FrameMgr_processFrame+0x3c>
+     4c6:	81 e0       	ldi	r24, 0x01	; 1
+     4c8:	19 c0       	rjmp	.+50     	; 0x4fc <FrameMgr_processFrame+0x6e>
+                else if (color == 32) k=2;
+     4ca:	80 32       	cpi	r24, 0x20	; 32
+     4cc:	11 f4       	brne	.+4      	; 0x4d2 <FrameMgr_processFrame+0x44>
+     4ce:	82 e0       	ldi	r24, 0x02	; 2
+     4d0:	15 c0       	rjmp	.+42     	; 0x4fc <FrameMgr_processFrame+0x6e>
+                else if (color == 16) k=3;
+     4d2:	80 31       	cpi	r24, 0x10	; 16
+     4d4:	11 f4       	brne	.+4      	; 0x4da <FrameMgr_processFrame+0x4c>
+     4d6:	83 e0       	ldi	r24, 0x03	; 3
+     4d8:	11 c0       	rjmp	.+34     	; 0x4fc <FrameMgr_processFrame+0x6e>
+                else if (color == 8)  k=4;
+     4da:	88 30       	cpi	r24, 0x08	; 8
+     4dc:	11 f4       	brne	.+4      	; 0x4e2 <FrameMgr_processFrame+0x54>
+     4de:	84 e0       	ldi	r24, 0x04	; 4
+     4e0:	0d c0       	rjmp	.+26     	; 0x4fc <FrameMgr_processFrame+0x6e>
+                else if (color == 4)  k=5;
+     4e2:	84 30       	cpi	r24, 0x04	; 4
+     4e4:	11 f4       	brne	.+4      	; 0x4ea <FrameMgr_processFrame+0x5c>
+     4e6:	85 e0       	ldi	r24, 0x05	; 5
+     4e8:	09 c0       	rjmp	.+18     	; 0x4fc <FrameMgr_processFrame+0x6e>
+                else if (color == 2)  k=6;
+     4ea:	82 30       	cpi	r24, 0x02	; 2
+     4ec:	11 f4       	brne	.+4      	; 0x4f2 <FrameMgr_processFrame+0x64>
+     4ee:	86 e0       	ldi	r24, 0x06	; 6
+     4f0:	05 c0       	rjmp	.+10     	; 0x4fc <FrameMgr_processFrame+0x6e>
+                else if (color == 1)  k=7;
+     4f2:	81 30       	cpi	r24, 0x01	; 1
+     4f4:	11 f4       	brne	.+4      	; 0x4fa <FrameMgr_processFrame+0x6c>
+     4f6:	87 e0       	ldi	r24, 0x07	; 7
+     4f8:	01 c0       	rjmp	.+2      	; 0x4fc <FrameMgr_processFrame+0x6e>
+     4fa:	80 e0       	ldi	r24, 0x00	; 0
+                
+                tmpUpperLeftX = *(pTableData + X_UPPER_LEFT_OFFSET);	    /* get the upper left X */
+     4fc:	1b 81       	ldd	r17, Y+3	; 0x03
+                tmpUpperLeftY = *(pTableData + Y_UPPER_LEFT_OFFSET);		/* get the upper left Y */		
+     4fe:	0c 81       	ldd	r16, Y+4	; 0x04
+                tmpLowerRightX = *(pTableData + X_LOWER_RIGHT_OFFSET);		/* get the lower right X */
+     500:	fd 80       	ldd	r15, Y+5	; 0x05
+                tmpLowerRightY = *(pTableData + Y_LOWER_RIGHT_OFFSET);		/* get the lower right Y */	                
+     502:	ee 80       	ldd	r14, Y+6	; 0x06
+                
+                UIMgr_writeTxFifo(k);				  	/* send the color first */
+     504:	0e 94 d1 05 	call	0xba2	; 0xba2 <UIMgr_writeTxFifo>
+                UIMgr_writeTxFifo(tmpUpperLeftX);
+     508:	81 2f       	mov	r24, r17
+     50a:	0e 94 d1 05 	call	0xba2	; 0xba2 <UIMgr_writeTxFifo>
+                UIMgr_writeTxFifo(tmpUpperLeftY);
+     50e:	80 2f       	mov	r24, r16
+     510:	0e 94 d1 05 	call	0xba2	; 0xba2 <UIMgr_writeTxFifo>
+                UIMgr_writeTxFifo(tmpLowerRightX);
+     514:	8f 2d       	mov	r24, r15
+     516:	0e 94 d1 05 	call	0xba2	; 0xba2 <UIMgr_writeTxFifo>
+                UIMgr_writeTxFifo(tmpLowerRightY);			
+     51a:	8e 2d       	mov	r24, r14
+     51c:	0e 94 d1 05 	call	0xba2	; 0xba2 <UIMgr_writeTxFifo>
+		UIMgr_writeTxFifo(0x0A);					/* header byte for a tracking packet */
+        /* reset the pointer */
+        pTableData = (unsigned char *)pCurrentTrackedObjectTable;
+        
+		UIMgr_writeTxFifo(numCurrTrackedObjects);	/* num of objects tracked */
+		for (i=0; i<MAX_TRACKED_OBJECTS; i++)
+     520:	81 e0       	ldi	r24, 0x01	; 1
+     522:	c2 35       	cpi	r28, 0x52	; 82
+     524:	d8 07       	cpc	r29, r24
+     526:	11 f0       	breq	.+4      	; 0x52c <FrameMgr_processFrame+0x9e>
+                UIMgr_writeTxFifo(tmpLowerRightX);
+                UIMgr_writeTxFifo(tmpLowerRightY);			
+            }
+
+            /* move our pointer up to the beginning of the next object */
+            pTableData += SIZE_OF_TRACKED_OBJECT;
+     528:	28 96       	adiw	r28, 0x08	; 8
+     52a:	c5 cf       	rjmp	.-118    	; 0x4b6 <FrameMgr_processFrame+0x28>
+        }
+		
+		/* all done...send the end of tracking packets char */
+		UIMgr_writeTxFifo(0xFF);
+     52c:	8f ef       	ldi	r24, 0xFF	; 255
+     52e:	0e 94 d1 05 	call	0xba2	; 0xba2 <UIMgr_writeTxFifo>
+    /* the tracked object table will be cleared out right before we start
+    to wait for VSYNC to indicate a new frame...so it doesn't need to be
+    done now */
+    
+	/* schedule the next action to acquire a new frame */	
+	PUBLISH_EVENT(EV_PROCESS_FRAME_COMPLETE);
+     532:	84 e0       	ldi	r24, 0x04	; 4
+     534:	0e 94 d3 01 	call	0x3a6	; 0x3a6 <Exec_writeEventFifo>
+}
+     538:	df 91       	pop	r29
+     53a:	cf 91       	pop	r28
+     53c:	1f 91       	pop	r17
+     53e:	0f 91       	pop	r16
+     540:	ff 90       	pop	r15
+     542:	ef 90       	pop	r14
+     544:	08 95       	ret
+
+00000546 <FrameMgr_processLine>:
+	state).
+	Inputs:  none
+	Outputs: none
+***********************************************************/	
+void FrameMgr_processLine(void)
+{
+     546:	4f 92       	push	r4
+     548:	5f 92       	push	r5
+     54a:	7f 92       	push	r7
+     54c:	8f 92       	push	r8
+     54e:	9f 92       	push	r9
+     550:	af 92       	push	r10
+     552:	bf 92       	push	r11
+     554:	cf 92       	push	r12
+     556:	df 92       	push	r13
+     558:	ef 92       	push	r14
+     55a:	ff 92       	push	r15
+     55c:	0f 93       	push	r16
+     55e:	1f 93       	push	r17
+     560:	df 93       	push	r29
+     562:	cf 93       	push	r28
+     564:	0f 92       	push	r0
+     566:	cd b7       	in	r28, 0x3d	; 61
+     568:	de b7       	in	r29, 0x3e	; 62
+	unsigned char *pSendData;
+    unsigned char asciiBuffer[5];
+    unsigned char pixelCount = 0;
+#endif    
+	
+	if (currentState == ST_FrameMgr_DumpingFrame)
+     56a:	80 91 16 01 	lds	r24, 0x0116
+     56e:	82 30       	cpi	r24, 0x02	; 2
+     570:	09 f0       	breq	.+2      	; 0x574 <FrameMgr_processLine+0x2e>
+     572:	59 c0       	rjmp	.+178    	; 0x626 <FrameMgr_processLine+0xe0>
+		port...it is sent out the serial port immediately instead
+		of going into the UIMgr tx fifo because we can't do anything
+		until its sent out anyway...may as well just get it out now	*/
+		
+		/* currentLineBuffer is getting "g" previousLineBuffer is getting "b-r" */
+		UartInt_txByte(0x0B);			/* send the header byte */
+     574:	8b e0       	ldi	r24, 0x0B	; 11
+     576:	0e 94 8a 05 	call	0xb14	; 0xb14 <UartInt_txByte>
+		UartInt_txByte(lineCount);		/* send the line count */
+     57a:	80 91 17 01 	lds	r24, 0x0117
+     57e:	0e 94 8a 05 	call	0xb14	; 0xb14 <UartInt_txByte>
+     582:	0c e6       	ldi	r16, 0x6C	; 108
+     584:	12 e0       	ldi	r17, 0x02	; 2
+     586:	2c eb       	ldi	r18, 0xBC	; 188
+     588:	e2 2e       	mov	r14, r18
+     58a:	21 e0       	ldi	r18, 0x01	; 1
+     58c:	f2 2e       	mov	r15, r18
+			/* when a dump line is sampled, the upper byte can potentially
+			have garbage in it...we don't have time to mask it off as we're
+			sampling, so it is done here before we send it out...we also
+			combine the samples together so we really are sending up a
+			sample for line N as well as line N+1 */
+			dataToSend = currentLineBuffer[i];
+     58e:	d8 01       	movw	r26, r16
+     590:	8c 91       	ld	r24, X
+     592:	89 83       	std	Y+1, r24	; 0x01
+			dataToSend &= 0x0F;
+     594:	89 81       	ldd	r24, Y+1	; 0x01
+     596:	8f 70       	andi	r24, 0x0F	; 15
+     598:	89 83       	std	Y+1, r24	; 0x01
+			dataToSend <<= 4;
+     59a:	89 81       	ldd	r24, Y+1	; 0x01
+     59c:	82 95       	swap	r24
+     59e:	80 7f       	andi	r24, 0xF0	; 240
+     5a0:	89 83       	std	Y+1, r24	; 0x01
+			dataToSend |= (previousLineBuffer[i] & 0x0F);
+     5a2:	99 81       	ldd	r25, Y+1	; 0x01
+     5a4:	f7 01       	movw	r30, r14
+     5a6:	80 81       	ld	r24, Z
+     5a8:	8f 70       	andi	r24, 0x0F	; 15
+     5aa:	89 2b       	or	r24, r25
+     5ac:	89 83       	std	Y+1, r24	; 0x01
+			
+			/* dataToSend should be packed now */
+			UartInt_txByte(dataToSend);
+     5ae:	89 81       	ldd	r24, Y+1	; 0x01
+     5b0:	0e 94 8a 05 	call	0xb14	; 0xb14 <UartInt_txByte>
+			
+			/* flip the colors around since we are doing all G on Y and BR on UV */
+			dataToSend = previousLineBuffer[i+1];
+     5b4:	d7 01       	movw	r26, r14
+     5b6:	11 96       	adiw	r26, 0x01	; 1
+     5b8:	8c 91       	ld	r24, X
+     5ba:	89 83       	std	Y+1, r24	; 0x01
+			dataToSend &= 0x0F;
+     5bc:	89 81       	ldd	r24, Y+1	; 0x01
+     5be:	8f 70       	andi	r24, 0x0F	; 15
+     5c0:	89 83       	std	Y+1, r24	; 0x01
+			dataToSend <<= 4;
+     5c2:	89 81       	ldd	r24, Y+1	; 0x01
+     5c4:	82 95       	swap	r24
+     5c6:	80 7f       	andi	r24, 0xF0	; 240
+     5c8:	89 83       	std	Y+1, r24	; 0x01
+			dataToSend |= (currentLineBuffer[i+1] & 0x0F);
+     5ca:	99 81       	ldd	r25, Y+1	; 0x01
+     5cc:	f8 01       	movw	r30, r16
+     5ce:	81 81       	ldd	r24, Z+1	; 0x01
+     5d0:	8f 70       	andi	r24, 0x0F	; 15
+     5d2:	89 2b       	or	r24, r25
+     5d4:	89 83       	std	Y+1, r24	; 0x01
+			
+			/* dataToSend should be packed now */
+			UartInt_txByte(dataToSend);
+     5d6:	89 81       	ldd	r24, Y+1	; 0x01
+     5d8:	0e 94 8a 05 	call	0xb14	; 0xb14 <UartInt_txByte>
+     5dc:	0e 5f       	subi	r16, 0xFE	; 254
+     5de:	1f 4f       	sbci	r17, 0xFF	; 255
+     5e0:	42 e0       	ldi	r20, 0x02	; 2
+     5e2:	50 e0       	ldi	r21, 0x00	; 0
+     5e4:	e4 0e       	add	r14, r20
+     5e6:	f5 1e       	adc	r15, r21
+		until its sent out anyway...may as well just get it out now	*/
+		
+		/* currentLineBuffer is getting "g" previousLineBuffer is getting "b-r" */
+		UartInt_txByte(0x0B);			/* send the header byte */
+		UartInt_txByte(lineCount);		/* send the line count */
+		for (i=0; i<NUM_PIXELS_IN_A_DUMP_LINE; i+=2)
+     5e8:	53 e0       	ldi	r21, 0x03	; 3
+     5ea:	0c 31       	cpi	r16, 0x1C	; 28
+     5ec:	15 07       	cpc	r17, r21
+     5ee:	79 f6       	brne	.-98     	; 0x58e <FrameMgr_processLine+0x48>
+			dataToSend |= (currentLineBuffer[i+1] & 0x0F);
+			
+			/* dataToSend should be packed now */
+			UartInt_txByte(dataToSend);
+		}
+		UartInt_txByte(0x0F);  /* send line end */
+     5f0:	8f e0       	ldi	r24, 0x0F	; 15
+     5f2:	0e 94 8a 05 	call	0xb14	; 0xb14 <UartInt_txByte>
+		/* once all the data is sent, increment out line count by 2 since
+		we really get 2 lines worth of pixels on each pass */
+		/* Update...increment only by 1, but only send 72 double-lines */
+		lineCount++;
+     5f6:	80 91 17 01 	lds	r24, 0x0117
+     5fa:	8f 5f       	subi	r24, 0xFF	; 255
+     5fc:	80 93 17 01 	sts	0x0117, r24
+		
+		/* check to see if we have retrieved all of the needed lines */
+		if (lineCount >= 72)  /* half 144, since we send two lines at a time */
+     600:	88 34       	cpi	r24, 0x48	; 72
+     602:	08 f4       	brcc	.+2      	; 0x606 <FrameMgr_processLine+0xc0>
+     604:	bf c0       	rjmp	.+382    	; 0x784 <FrameMgr_processLine+0x23e>
+		{
+			/* we're done, so send the dump complete?...nope, just change
+			states and we should be fine */
+			lineCount = 0;
+     606:	10 92 17 01 	sts	0x0117, r1
+			currentState = ST_FrameMgr_idle;
+     60a:	10 92 16 01 	sts	0x0116, r1
+			
+			/* disable the PCLK counting overflow interrupt */
+#if defined (__AVR_ATmega328P__) || defined (__AVR_ATmega328__)
+			TIMSK1 &= DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK;
+     60e:	80 91 6f 00 	lds	r24, 0x006F
+     612:	8e 7f       	andi	r24, 0xFE	; 254
+     614:	80 93 6f 00 	sts	0x006F, r24
+#elif defined (__AVR_ATmega8__)
+			TIMSK &= DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK;
+#else
+#warning Processor unsupported!
+#endif		
+			CamConfig_setCamReg(0x11,0x00);  /* reset the frame rate to normal*/
+     618:	81 e1       	ldi	r24, 0x11	; 17
+     61a:	60 e0       	ldi	r22, 0x00	; 0
+     61c:	0e 94 95 00 	call	0x12a	; 0x12a <CamConfig_setCamReg>
+			CamConfig_sendFifoCmds();
+     620:	0e 94 99 00 	call	0x132	; 0x132 <CamConfig_sendFifoCmds>
+     624:	b9 c0       	rjmp	.+370    	; 0x798 <FrameMgr_processLine+0x252>
+		{
+			/* we have more lines to acquire in this frame, so keep on truckin...*/
+			PUBLISH_FAST_EVENT(FEV_PROCESS_LINE_COMPLETE);
+		}
+	}
+	else if (currentState == ST_FrameMgr_TrackingFrame)
+     626:	81 30       	cpi	r24, 0x01	; 1
+     628:	09 f0       	breq	.+2      	; 0x62c <FrameMgr_processLine+0xe6>
+     62a:	b6 c0       	rjmp	.+364    	; 0x798 <FrameMgr_processLine+0x252>
+            of each structure in the array the more normal way...*/
+            
+            pTrackedObjectData = (unsigned char *)pCurrentTrackedObjectTable;
+			for (i=0; i<MAX_TRACKED_OBJECTS; i++)
+			{
+				if ( (currColor == *(pTrackedObjectData + COLOR_OFFSET)) && 
+     62c:	c0 90 18 01 	lds	r12, 0x0118
+     630:	ec 2c       	mov	r14, r12
+     632:	ff 24       	eor	r15, r15
+     634:	47 01       	movw	r8, r14
+     636:	08 94       	sec
+     638:	81 08       	sbc	r8, r1
+     63a:	91 08       	sbc	r9, r1
+     63c:	10 91 15 01 	lds	r17, 0x0115
+     640:	dd 24       	eor	r13, r13
+     642:	d3 94       	inc	r13
+     644:	20 e0       	ldi	r18, 0x00	; 0
+     646:	30 e0       	ldi	r19, 0x00	; 0
+     648:	9c e6       	ldi	r25, 0x6C	; 108
+     64a:	49 2e       	mov	r4, r25
+     64c:	92 e0       	ldi	r25, 0x02	; 2
+     64e:	59 2e       	mov	r5, r25
+					*(pTrackedObjectData + LAST_LINE_X_FINISH_OFFSET)   = currPixelRunFinish;	/* lastLineXFinish */
+					*(pTrackedObjectData + X_UPPER_LEFT_OFFSET)         = currPixelRunStart;	/* x_upperLeft */
+					*(pTrackedObjectData + Y_UPPER_LEFT_OFFSET)         = trackedLineCount;	/* y_upperLeft */
+					*(pTrackedObjectData + X_LOWER_RIGHT_OFFSET)        = currPixelRunFinish;	/* x_lowerRight */
+					*(pTrackedObjectData + Y_LOWER_RIGHT_OFFSET)        = trackedLineCount;	/* y_lowerRight */
+                    *(pTrackedObjectData + VALID_OBJECT_OFFSET)         = TRUE;                /* objectValid flag */
+     650:	77 24       	eor	r7, r7
+     652:	73 94       	inc	r7
+	do
+	{
+		/* grab both the current color and the number of pixels
+		in the run...remember, pixels start at 1, not 0! */
+		colorConnected = FALSE;
+		currColor = *pCurrLineColorInfo++;
+     654:	d2 01       	movw	r26, r4
+     656:	0c 91       	ld	r16, X
+		currPixelRunStart += runLength;
+     658:	3d 0d       	add	r19, r13
+		runLength = *pCurrLineColorInfo++;
+     65a:	11 96       	adiw	r26, 0x01	; 1
+     65c:	dc 90       	ld	r13, X
+	state).
+	Inputs:  none
+	Outputs: none
+***********************************************************/	
+void FrameMgr_processLine(void)
+{
+     65e:	e2 e0       	ldi	r30, 0x02	; 2
+     660:	f0 e0       	ldi	r31, 0x00	; 0
+     662:	4e 0e       	add	r4, r30
+     664:	5f 1e       	adc	r5, r31
+		in the run...remember, pixels start at 1, not 0! */
+		colorConnected = FALSE;
+		currColor = *pCurrLineColorInfo++;
+		currPixelRunStart += runLength;
+		runLength = *pCurrLineColorInfo++;
+		currPixelRunFinish += runLength;
+     666:	2d 0d       	add	r18, r13
+      
+        /* make sure that the run-length is at least as wide as
+        the minimum horizontal tracking width, and we care about the color */ 
+        
+		if ( (currColor != notTracked) && (runLength > MIN_OBJECT_TRACKING_WIDTH) )
+     668:	00 23       	and	r16, r16
+     66a:	09 f4       	brne	.+2      	; 0x66e <FrameMgr_processLine+0x128>
+     66c:	52 c0       	rjmp	.+164    	; 0x712 <FrameMgr_processLine+0x1cc>
+     66e:	f3 e0       	ldi	r31, 0x03	; 3
+     670:	fd 15       	cp	r31, r13
+     672:	08 f0       	brcs	.+2      	; 0x676 <FrameMgr_processLine+0x130>
+     674:	4e c0       	rjmp	.+156    	; 0x712 <FrameMgr_processLine+0x1cc>
+     676:	ea e1       	ldi	r30, 0x1A	; 26
+     678:	f1 e0       	ldi	r31, 0x01	; 1
+            of each structure in the array the more normal way...*/
+            
+            pTrackedObjectData = (unsigned char *)pCurrentTrackedObjectTable;
+			for (i=0; i<MAX_TRACKED_OBJECTS; i++)
+			{
+				if ( (currColor == *(pTrackedObjectData + COLOR_OFFSET)) && 
+     67a:	80 81       	ld	r24, Z
+     67c:	08 17       	cp	r16, r24
+     67e:	81 f5       	brne	.+96     	; 0x6e0 <FrameMgr_processLine+0x19a>
+     680:	87 81       	ldd	r24, Z+7	; 0x07
+     682:	81 30       	cpi	r24, 0x01	; 1
+     684:	69 f5       	brne	.+90     	; 0x6e0 <FrameMgr_processLine+0x19a>
+     686:	86 e0       	ldi	r24, 0x06	; 6
+     688:	a8 2e       	mov	r10, r24
+     68a:	b1 2c       	mov	r11, r1
+     68c:	ae 0e       	add	r10, r30
+     68e:	bf 1e       	adc	r11, r31
+     690:	86 81       	ldd	r24, Z+6	; 0x06
+     692:	90 e0       	ldi	r25, 0x00	; 0
+     694:	88 15       	cp	r24, r8
+     696:	99 05       	cpc	r25, r9
+     698:	19 f5       	brne	.+70     	; 0x6e0 <FrameMgr_processLine+0x19a>
+     69a:	bf 01       	movw	r22, r30
+     69c:	6f 5f       	subi	r22, 0xFF	; 255
+     69e:	7f 4f       	sbci	r23, 0xFF	; 255
+                     (*(pTrackedObjectData + VALID_OBJECT_OFFSET) == TRUE) &&
+                     (*(pTrackedObjectData + Y_LOWER_RIGHT_OFFSET) == trackedLineCount - 1) )
+				{
+					/* found a color match and the object is valid...check to see if there is
+					connectedness */
+					lastLineXStart = *(pTrackedObjectData + LAST_LINE_X_START_OFFSET);
+     6a0:	81 81       	ldd	r24, Z+1	; 0x01
+     6a2:	af 01       	movw	r20, r30
+     6a4:	4e 5f       	subi	r20, 0xFE	; 254
+     6a6:	5f 4f       	sbci	r21, 0xFF	; 255
+					lastLineXFinish = *(pTrackedObjectData + LAST_LINE_X_FINISH_OFFSET);
+     6a8:	92 81       	ldd	r25, Z+2	; 0x02
+					|                   |
+					---------------------
+					         -------------------------
+							 |                       |
+							 -------------------------  */
+					if ( (	(currPixelRunStart >= lastLineXStart) &&
+     6aa:	38 17       	cp	r19, r24
+     6ac:	10 f0       	brcs	.+4      	; 0x6b2 <FrameMgr_processLine+0x16c>
+     6ae:	93 17       	cp	r25, r19
+     6b0:	40 f4       	brcc	.+16     	; 0x6c2 <FrameMgr_processLine+0x17c>
+     6b2:	28 17       	cp	r18, r24
+     6b4:	10 f0       	brcs	.+4      	; 0x6ba <FrameMgr_processLine+0x174>
+     6b6:	92 17       	cp	r25, r18
+     6b8:	20 f4       	brcc	.+8      	; 0x6c2 <FrameMgr_processLine+0x17c>
+     6ba:	83 17       	cp	r24, r19
+     6bc:	88 f0       	brcs	.+34     	; 0x6e0 <FrameMgr_processLine+0x19a>
+     6be:	29 17       	cp	r18, r25
+     6c0:	78 f0       	brcs	.+30     	; 0x6e0 <FrameMgr_processLine+0x19a>
+						 (  (currPixelRunStart <= lastLineXStart) &&
+							(currPixelRunFinish >= lastLineXFinish) ) )
+					{
+						/* THERE IS CONNECTEDNESS...update the lastLineXStart and lastLineXFinish
+						data pointed to by pTrackedObjectData */
+						*(pTrackedObjectData + LAST_LINE_X_START_OFFSET) = currPixelRunStart;
+     6c2:	db 01       	movw	r26, r22
+     6c4:	3c 93       	st	X, r19
+						*(pTrackedObjectData + LAST_LINE_X_FINISH_OFFSET) = currPixelRunFinish;
+     6c6:	da 01       	movw	r26, r20
+     6c8:	2c 93       	st	X, r18
+						
+						/* check if the bounding box needs to be updated */
+						if (*(pTrackedObjectData + X_UPPER_LEFT_OFFSET) > currPixelRunStart)
+     6ca:	83 81       	ldd	r24, Z+3	; 0x03
+     6cc:	38 17       	cp	r19, r24
+     6ce:	08 f4       	brcc	.+2      	; 0x6d2 <FrameMgr_processLine+0x18c>
+						{
+							/* need to update the bounding box for the upper left point to 
+							enclose this new left-most point...we never have to update the
+							upper left Y point, since each scan line we process moves from
+							top to bottom */
+							*(pTrackedObjectData + X_UPPER_LEFT_OFFSET) = currPixelRunStart;
+     6d0:	33 83       	std	Z+3, r19	; 0x03
+						}
+
+						if ( *(pTrackedObjectData + X_LOWER_RIGHT_OFFSET) < currPixelRunFinish)
+     6d2:	85 81       	ldd	r24, Z+5	; 0x05
+     6d4:	82 17       	cp	r24, r18
+     6d6:	08 f4       	brcc	.+2      	; 0x6da <FrameMgr_processLine+0x194>
+						{
+							/* need to update the bounding box for the lower right X point to
+							enclose this new right-most point */
+							*(pTrackedObjectData + X_LOWER_RIGHT_OFFSET) = currPixelRunFinish;
+     6d8:	25 83       	std	Z+5, r18	; 0x05
+						}
+						
+						/* the lower right 'y' point always gets updated when connectedness is found */
+						*(pTrackedObjectData + Y_LOWER_RIGHT_OFFSET) = trackedLineCount;
+     6da:	f5 01       	movw	r30, r10
+     6dc:	c0 82       	st	Z, r12
+     6de:	19 c0       	rjmp	.+50     	; 0x712 <FrameMgr_processLine+0x1cc>
+            by accessing the elements through specified offsets.  GCC seems to be
+            able to optimize this code much better than simply accessing the elements
+            of each structure in the array the more normal way...*/
+            
+            pTrackedObjectData = (unsigned char *)pCurrentTrackedObjectTable;
+			for (i=0; i<MAX_TRACKED_OBJECTS; i++)
+     6e0:	41 e0       	ldi	r20, 0x01	; 1
+     6e2:	e2 35       	cpi	r30, 0x52	; 82
+     6e4:	f4 07       	cpc	r31, r20
+     6e6:	09 f4       	brne	.+2      	; 0x6ea <FrameMgr_processLine+0x1a4>
+     6e8:	53 c0       	rjmp	.+166    	; 0x790 <FrameMgr_processLine+0x24a>
+						break;
+					}
+				}
+                
+                /* go to the next object */
+                pTrackedObjectData += SIZE_OF_TRACKED_OBJECT;
+     6ea:	38 96       	adiw	r30, 0x08	; 8
+     6ec:	c6 cf       	rjmp	.-116    	; 0x67a <FrameMgr_processLine+0x134>
+     6ee:	f8 97       	sbiw	r30, 0x38	; 56
+                    /* space is available...add the object...but first we need to find an
+                    invalid object in the object tracking table */
+                    pTrackedObjectData = (unsigned char *)pCurrentTrackedObjectTable;
+                    for (i=0; i<MAX_TRACKED_OBJECTS; i++)
+                    {
+                        if ( *(pTrackedObjectData + VALID_OBJECT_OFFSET) == FALSE)  break;
+     6f0:	87 81       	ldd	r24, Z+7	; 0x07
+     6f2:	88 23       	and	r24, r24
+     6f4:	29 f0       	breq	.+10     	; 0x700 <FrameMgr_processLine+0x1ba>
+                        
+                        /* if we haven't broken above, then the object must have been valid...
+                        go ahead and move the pointer to the next object to check it */
+                        pTrackedObjectData += SIZE_OF_TRACKED_OBJECT;
+     6f6:	38 96       	adiw	r30, 0x08	; 8
+				if (numCurrTrackedObjects < MAX_TRACKED_OBJECTS)
+				{                
+                    /* space is available...add the object...but first we need to find an
+                    invalid object in the object tracking table */
+                    pTrackedObjectData = (unsigned char *)pCurrentTrackedObjectTable;
+                    for (i=0; i<MAX_TRACKED_OBJECTS; i++)
+     6f8:	51 e0       	ldi	r21, 0x01	; 1
+     6fa:	ea 35       	cpi	r30, 0x5A	; 90
+     6fc:	f5 07       	cpc	r31, r21
+     6fe:	c1 f7       	brne	.-16     	; 0x6f0 <FrameMgr_processLine+0x1aa>
+                    }
+                    
+					
+					/* now that we have a pointer to the tracked object to be updated, update all
+					the fields */
+					*(pTrackedObjectData + COLOR_OFFSET)                = currColor;			/* color */
+     700:	00 83       	st	Z, r16
+					*(pTrackedObjectData + LAST_LINE_X_START_OFFSET)    = currPixelRunStart; 	/* lastLineXStart */
+     702:	31 83       	std	Z+1, r19	; 0x01
+					*(pTrackedObjectData + LAST_LINE_X_FINISH_OFFSET)   = currPixelRunFinish;	/* lastLineXFinish */
+     704:	22 83       	std	Z+2, r18	; 0x02
+					*(pTrackedObjectData + X_UPPER_LEFT_OFFSET)         = currPixelRunStart;	/* x_upperLeft */
+     706:	33 83       	std	Z+3, r19	; 0x03
+					*(pTrackedObjectData + Y_UPPER_LEFT_OFFSET)         = trackedLineCount;	/* y_upperLeft */
+     708:	c4 82       	std	Z+4, r12	; 0x04
+					*(pTrackedObjectData + X_LOWER_RIGHT_OFFSET)        = currPixelRunFinish;	/* x_lowerRight */
+     70a:	25 83       	std	Z+5, r18	; 0x05
+					*(pTrackedObjectData + Y_LOWER_RIGHT_OFFSET)        = trackedLineCount;	/* y_lowerRight */
+     70c:	c6 82       	std	Z+6, r12	; 0x06
+                    *(pTrackedObjectData + VALID_OBJECT_OFFSET)         = TRUE;                /* objectValid flag */
+     70e:	77 82       	std	Z+7, r7	; 0x07
+						
+					numCurrTrackedObjects++;
+     710:	1f 5f       	subi	r17, 0xFF	; 255
+			}
+            
+            /* move the pointer to the beginning of the next tracked object */
+            pTrackedObjectData += SIZE_OF_TRACKED_OBJECT;
+		}
+	} while(currPixelRunFinish < ACTUAL_NUM_PIXELS_IN_A_LINE);
+     712:	20 3b       	cpi	r18, 0xB0	; 176
+     714:	08 f4       	brcc	.+2      	; 0x718 <FrameMgr_processLine+0x1d2>
+     716:	9e cf       	rjmp	.-196    	; 0x654 <FrameMgr_processLine+0x10e>
+     718:	10 93 15 01 	sts	0x0115, r17
+        findConnectedness() routine...doing it here instead of 
+        a function to speed things up...this may end up slowing down the
+        frame rate slightly, and can be removed if this isn't needed */
+  
+        /* run this routine once every 8 lines */       
+        if ( (trackedLineCount & RUN_OBJECT_FILTER_MASK) == RUN_OBJECT_FILTER_MASK)
+     71c:	c7 01       	movw	r24, r14
+     71e:	87 70       	andi	r24, 0x07	; 7
+     720:	90 70       	andi	r25, 0x00	; 0
+     722:	07 97       	sbiw	r24, 0x07	; 7
+     724:	f1 f4       	brne	.+60     	; 0x762 <FrameMgr_processLine+0x21c>
+     726:	ea e1       	ldi	r30, 0x1A	; 26
+     728:	f1 e0       	ldi	r31, 0x01	; 1
+        {
+            for (i=0; i<MAX_TRACKED_OBJECTS; i++)
+            {
+                if ( *(pTrackedObjectData + VALID_OBJECT_OFFSET) == TRUE)
+     72a:	87 81       	ldd	r24, Z+7	; 0x07
+     72c:	81 30       	cpi	r24, 0x01	; 1
+     72e:	89 f4       	brne	.+34     	; 0x752 <FrameMgr_processLine+0x20c>
+                {
+                    /* check to see if the object is already in
+                    our past...i.e., its last */
+                    if ( (*(pTrackedObjectData + Y_LOWER_RIGHT_OFFSET) - 
+     730:	86 81       	ldd	r24, Z+6	; 0x06
+     732:	28 2f       	mov	r18, r24
+     734:	30 e0       	ldi	r19, 0x00	; 0
+     736:	84 81       	ldd	r24, Z+4	; 0x04
+     738:	d9 01       	movw	r26, r18
+     73a:	a8 1b       	sub	r26, r24
+     73c:	b1 09       	sbc	r27, r1
+     73e:	a3 30       	cpi	r26, 0x03	; 3
+     740:	b1 05       	cpc	r27, r1
+     742:	3c f4       	brge	.+14     	; 0x752 <FrameMgr_processLine+0x20c>
+                          *(pTrackedObjectData + Y_UPPER_LEFT_OFFSET)) < MIN_OBJECT_TRACKING_HEIGHT)
+                    {
+                        /* the object is less than the minimum height...see if it is adjacent
+                        to the current line we just processed...if so, leave it here...otherwise,
+                        it needs to be invalidated since its too small */
+                        if ( trackedLineCount - *(pTrackedObjectData + Y_LOWER_RIGHT_OFFSET) > 2)
+     744:	c7 01       	movw	r24, r14
+     746:	82 1b       	sub	r24, r18
+     748:	93 0b       	sbc	r25, r19
+     74a:	03 97       	sbiw	r24, 0x03	; 3
+     74c:	14 f0       	brlt	.+4      	; 0x752 <FrameMgr_processLine+0x20c>
+                        {
+                            /* invalidate the object */
+                            *(pTrackedObjectData + VALID_OBJECT_OFFSET) = FALSE;
+     74e:	17 82       	std	Z+7, r1	; 0x07
+                            numCurrTrackedObjects--;
+     750:	11 50       	subi	r17, 0x01	; 1
+        frame rate slightly, and can be removed if this isn't needed */
+  
+        /* run this routine once every 8 lines */       
+        if ( (trackedLineCount & RUN_OBJECT_FILTER_MASK) == RUN_OBJECT_FILTER_MASK)
+        {
+            for (i=0; i<MAX_TRACKED_OBJECTS; i++)
+     752:	b1 e0       	ldi	r27, 0x01	; 1
+     754:	e2 35       	cpi	r30, 0x52	; 82
+     756:	fb 07       	cpc	r31, r27
+     758:	11 f0       	breq	.+4      	; 0x75e <FrameMgr_processLine+0x218>
+                            *(pTrackedObjectData + VALID_OBJECT_OFFSET) = FALSE;
+                            numCurrTrackedObjects--;
+                        }
+                    }
+                }
+                pTrackedObjectData += SIZE_OF_TRACKED_OBJECT;
+     75a:	38 96       	adiw	r30, 0x08	; 8
+     75c:	e6 cf       	rjmp	.-52     	; 0x72a <FrameMgr_processLine+0x1e4>
+     75e:	10 93 15 01 	sts	0x0115, r17
+            }
+        }     
+ 
+		trackedLineCount++;
+     762:	8c 2d       	mov	r24, r12
+     764:	8f 5f       	subi	r24, 0xFF	; 255
+     766:	80 93 18 01 	sts	0x0118, r24
+		if (trackedLineCount == ACTUAL_NUM_LINES_IN_A_FRAME)
+     76a:	80 39       	cpi	r24, 0x90	; 144
+     76c:	59 f4       	brne	.+22     	; 0x784 <FrameMgr_processLine+0x23e>
+		{
+			/* an entire frame of tracking data has been acquired, so
+			publish an event letting the system know this fact */
+			PUBLISH_EVENT(EV_ACQUIRE_FRAME_COMPLETE);
+     76e:	80 e2       	ldi	r24, 0x20	; 32
+     770:	0e 94 d3 01 	call	0x3a6	; 0x3a6 <Exec_writeEventFifo>
+			/* disable the PCLK counting overflow interrupt */
+#if defined (__AVR_ATmega328P__) || defined (__AVR_ATmega328__)
+			TIMSK1 &= DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK;
+     774:	80 91 6f 00 	lds	r24, 0x006F
+     778:	8e 7f       	andi	r24, 0xFE	; 254
+     77a:	80 93 6f 00 	sts	0x006F, r24
+#elif defined (__AVR_ATmega8__)
+			TIMSK &= DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK;
+#else
+#warning Processor unsupported!
+#endif
+			trackedLineCount = 0;
+     77e:	10 92 18 01 	sts	0x0118, r1
+     782:	0a c0       	rjmp	.+20     	; 0x798 <FrameMgr_processLine+0x252>
+
+		}
+		else
+		{
+			PUBLISH_FAST_EVENT(FEV_PROCESS_LINE_COMPLETE);
+     784:	80 91 14 01 	lds	r24, 0x0114
+     788:	82 60       	ori	r24, 0x02	; 2
+     78a:	80 93 14 01 	sts	0x0114, r24
+     78e:	04 c0       	rjmp	.+8      	; 0x798 <FrameMgr_processLine+0x252>
+			if (colorConnected == FALSE)
+			{
+				/* a new entry needs to be made to the tracking table, since we have
+				a run-length with a color, and it isn't connected to anything...but we
+				can only do this if there is space left in the trackedObject table */
+				if (numCurrTrackedObjects < MAX_TRACKED_OBJECTS)
+     790:	18 30       	cpi	r17, 0x08	; 8
+     792:	08 f4       	brcc	.+2      	; 0x796 <FrameMgr_processLine+0x250>
+     794:	ac cf       	rjmp	.-168    	; 0x6ee <FrameMgr_processLine+0x1a8>
+     796:	bd cf       	rjmp	.-134    	; 0x712 <FrameMgr_processLine+0x1cc>
+	}
+	else
+	{
+		/* ...and here? */
+	}
+}
+     798:	0f 90       	pop	r0
+     79a:	cf 91       	pop	r28
+     79c:	df 91       	pop	r29
+     79e:	1f 91       	pop	r17
+     7a0:	0f 91       	pop	r16
+     7a2:	ff 90       	pop	r15
+     7a4:	ef 90       	pop	r14
+     7a6:	df 90       	pop	r13
+     7a8:	cf 90       	pop	r12
+     7aa:	bf 90       	pop	r11
+     7ac:	af 90       	pop	r10
+     7ae:	9f 90       	pop	r9
+     7b0:	8f 90       	pop	r8
+     7b2:	7f 90       	pop	r7
+     7b4:	5f 90       	pop	r5
+     7b6:	4f 90       	pop	r4
+     7b8:	08 95       	ret
+
+000007ba <FrameMgr_init>:
+	Inputs:  none
+	Outputs: none
+***********************************************************/	
+void FrameMgr_init(void)
+{
+	memset(trackedObjectTable,0x00,sizeof(trackedObjectTable));
+     7ba:	80 e4       	ldi	r24, 0x40	; 64
+     7bc:	ea e1       	ldi	r30, 0x1A	; 26
+     7be:	f1 e0       	ldi	r31, 0x01	; 1
+     7c0:	df 01       	movw	r26, r30
+     7c2:	1d 92       	st	X+, r1
+     7c4:	8a 95       	dec	r24
+     7c6:	e9 f7       	brne	.-6      	; 0x7c2 <FrameMgr_init+0x8>
+}
+     7c8:	08 95       	ret
+
+000007ca <FrameMgr_acquireLine>:
+	we start acquiring...at no point do we check for 
+	a 0x00 value in the current or previous lineBuffers,
+	so it was a bit excessive :-)  */
+	
+	/* check which state we are in and proceed as needed */
+	if (currentState == ST_FrameMgr_DumpingFrame)
+     7ca:	80 91 16 01 	lds	r24, 0x0116
+     7ce:	82 30       	cpi	r24, 0x02	; 2
+     7d0:	29 f5       	brne	.+74     	; 0x81c <FrameMgr_acquireLine+0x52>
+	{
+		tmpLineCount = lineCount*2;
+     7d2:	90 91 17 01 	lds	r25, 0x0117
+        
+        /* clearing out the line data in dump mode is ok, and actually
+        is needed, since it is possible for the first dump line in
+        a frame to come back with the last line captured of the
+        last capture session...*/
+        memset(currentLineBuffer,0x00,LENGTH_OF_LINE_BUFFER);
+     7d6:	80 eb       	ldi	r24, 0xB0	; 176
+     7d8:	ec e6       	ldi	r30, 0x6C	; 108
+     7da:	f2 e0       	ldi	r31, 0x02	; 2
+     7dc:	df 01       	movw	r26, r30
+     7de:	28 2f       	mov	r18, r24
+     7e0:	1d 92       	st	X+, r1
+     7e2:	2a 95       	dec	r18
+     7e4:	e9 f7       	brne	.-6      	; 0x7e0 <FrameMgr_acquireLine+0x16>
+        memset(previousLineBuffer,0x00,LENGTH_OF_LINE_BUFFER);
+     7e6:	ec eb       	ldi	r30, 0xBC	; 188
+     7e8:	f1 e0       	ldi	r31, 0x01	; 1
+     7ea:	df 01       	movw	r26, r30
+     7ec:	1d 92       	st	X+, r1
+     7ee:	8a 95       	dec	r24
+     7f0:	e9 f7       	brne	.-6      	; 0x7ec <FrameMgr_acquireLine+0x22>
+		/* wait for another VSYNC so we know which frame to use 
+		to start looking for a line to receive */
+		WAIT_FOR_VSYNC_HIGH();  
+     7f2:	4a 9b       	sbis	0x09, 2	; 9
+     7f4:	fe cf       	rjmp	.-4      	; 0x7f2 <FrameMgr_acquireLine+0x28>
+		WAIT_FOR_VSYNC_LOW();
+     7f6:	4a 99       	sbic	0x09, 2	; 9
+     7f8:	fe cf       	rjmp	.-4      	; 0x7f6 <FrameMgr_acquireLine+0x2c>
+	so it was a bit excessive :-)  */
+	
+	/* check which state we are in and proceed as needed */
+	if (currentState == ST_FrameMgr_DumpingFrame)
+	{
+		tmpLineCount = lineCount*2;
+     7fa:	89 2f       	mov	r24, r25
+     7fc:	88 0f       	add	r24, r24
+     7fe:	05 c0       	rjmp	.+10     	; 0x80a <FrameMgr_acquireLine+0x40>
+		
+		/* look at lineCount to determine how many HREFs we should
+		wait before we start sampling */
+		while(tmpLineCount != 0)
+		{
+			WAIT_FOR_HREF_HIGH(); 
+     800:	4c 9b       	sbis	0x09, 4	; 9
+     802:	fe cf       	rjmp	.-4      	; 0x800 <FrameMgr_acquireLine+0x36>
+			tmpLineCount--;
+			WAIT_FOR_HREF_LOW(); 
+     804:	4c 99       	sbic	0x09, 4	; 9
+     806:	fe cf       	rjmp	.-4      	; 0x804 <FrameMgr_acquireLine+0x3a>
+		/* look at lineCount to determine how many HREFs we should
+		wait before we start sampling */
+		while(tmpLineCount != 0)
+		{
+			WAIT_FOR_HREF_HIGH(); 
+			tmpLineCount--;
+     808:	81 50       	subi	r24, 0x01	; 1
+		WAIT_FOR_VSYNC_HIGH();  
+		WAIT_FOR_VSYNC_LOW();
+		
+		/* look at lineCount to determine how many HREFs we should
+		wait before we start sampling */
+		while(tmpLineCount != 0)
+     80a:	88 23       	and	r24, r24
+     80c:	c9 f7       	brne	.-14     	; 0x800 <FrameMgr_acquireLine+0x36>
+			tmpLineCount--;
+			WAIT_FOR_HREF_LOW(); 
+		}
+		
+		/*  we should now be ready to sample our line...*/
+		CamIntAsm_acquireDumpLine(currentLineBuffer,previousLineBuffer);
+     80e:	8c e6       	ldi	r24, 0x6C	; 108
+     810:	92 e0       	ldi	r25, 0x02	; 2
+     812:	6c eb       	ldi	r22, 0xBC	; 188
+     814:	71 e0       	ldi	r23, 0x01	; 1
+     816:	0e 94 6f 01 	call	0x2de	; 0x2de <CamIntAsm_acquireDumpLine>
+     81a:	08 95       	ret
+	}		
+	else if (currentState == ST_FrameMgr_TrackingFrame)
+     81c:	81 30       	cpi	r24, 0x01	; 1
+     81e:	41 f4       	brne	.+16     	; 0x830 <FrameMgr_acquireLine+0x66>
+	{
+		WAIT_FOR_HREF_LOW();
+     820:	4c 99       	sbic	0x09, 4	; 9
+     822:	fe cf       	rjmp	.-4      	; 0x820 <FrameMgr_acquireLine+0x56>
+		CamIntAsm_acquireTrackingLine(currentLineBuffer,colorMap);
+     824:	8c e6       	ldi	r24, 0x6C	; 108
+     826:	92 e0       	ldi	r25, 0x02	; 2
+     828:	60 e0       	ldi	r22, 0x00	; 0
+     82a:	74 e0       	ldi	r23, 0x04	; 4
+     82c:	0e 94 1f 01 	call	0x23e	; 0x23e <CamIntAsm_acquireTrackingLine>
+     830:	08 95       	ret
+
+00000832 <FrameMgr_acquireFrame>:
+	Inputs:  none
+	Outputs: none
+***********************************************************/	
+void FrameMgr_acquireFrame(void)
+{
+	if (currentState == ST_FrameMgr_TrackingFrame)
+     832:	80 91 16 01 	lds	r24, 0x0116
+     836:	81 30       	cpi	r24, 0x01	; 1
+     838:	b9 f4       	brne	.+46     	; 0x868 <FrameMgr_acquireFrame+0x36>
+	{
+		trackedLineCount = 0;
+     83a:	10 92 18 01 	sts	0x0118, r1
+		numPrevTrackedObjects = numCurrTrackedObjects;
+     83e:	80 91 15 01 	lds	r24, 0x0115
+     842:	80 93 19 01 	sts	0x0119, r24
+		numCurrTrackedObjects = 0;
+     846:	10 92 15 01 	sts	0x0115, r1
+		
+		/* clear out the tracking table, and wait for the new frame
+		to start */
+		memset(trackedObjectTable,0x00,sizeof(trackedObjectTable));
+     84a:	80 e4       	ldi	r24, 0x40	; 64
+     84c:	ea e1       	ldi	r30, 0x1A	; 26
+     84e:	f1 e0       	ldi	r31, 0x01	; 1
+     850:	df 01       	movw	r26, r30
+     852:	1d 92       	st	X+, r1
+     854:	8a 95       	dec	r24
+     856:	e9 f7       	brne	.-6      	; 0x852 <FrameMgr_acquireFrame+0x20>
+		//CamIntAsm_waitForNewTrackingFrame(currentLineBuffer,colorMap);
+        WAIT_FOR_VSYNC_HIGH();
+     858:	4a 9b       	sbis	0x09, 2	; 9
+     85a:	fe cf       	rjmp	.-4      	; 0x858 <FrameMgr_acquireFrame+0x26>
+        CamIntAsm_acquireTrackingLine(currentLineBuffer,colorMap);
+     85c:	8c e6       	ldi	r24, 0x6C	; 108
+     85e:	92 e0       	ldi	r25, 0x02	; 2
+     860:	60 e0       	ldi	r22, 0x00	; 0
+     862:	74 e0       	ldi	r23, 0x04	; 4
+     864:	0e 94 1f 01 	call	0x23e	; 0x23e <CamIntAsm_acquireTrackingLine>
+     868:	08 95       	ret
+
+0000086a <FrameMgr_dispatchEvent>:
+	actions with it as pertains to the FrameMgr.
+	Inputs:  event - the generated event
+	Outputs: none
+***********************************************************/	
+void FrameMgr_dispatchEvent(unsigned char event)
+{	
+     86a:	1f 93       	push	r17
+     86c:	18 2f       	mov	r17, r24
+	switch(event)
+     86e:	84 30       	cpi	r24, 0x04	; 4
+     870:	31 f1       	breq	.+76     	; 0x8be <FrameMgr_dispatchEvent+0x54>
+     872:	85 30       	cpi	r24, 0x05	; 5
+     874:	28 f4       	brcc	.+10     	; 0x880 <FrameMgr_dispatchEvent+0x16>
+     876:	81 30       	cpi	r24, 0x01	; 1
+     878:	29 f1       	breq	.+74     	; 0x8c4 <FrameMgr_dispatchEvent+0x5a>
+     87a:	82 30       	cpi	r24, 0x02	; 2
+     87c:	69 f5       	brne	.+90     	; 0x8d8 <FrameMgr_dispatchEvent+0x6e>
+     87e:	07 c0       	rjmp	.+14     	; 0x88e <FrameMgr_dispatchEvent+0x24>
+     880:	80 38       	cpi	r24, 0x80	; 128
+     882:	b1 f0       	breq	.+44     	; 0x8b0 <FrameMgr_dispatchEvent+0x46>
+     884:	81 38       	cpi	r24, 0x81	; 129
+     886:	31 f1       	breq	.+76     	; 0x8d4 <FrameMgr_dispatchEvent+0x6a>
+     888:	80 32       	cpi	r24, 0x20	; 32
+     88a:	31 f5       	brne	.+76     	; 0x8d8 <FrameMgr_dispatchEvent+0x6e>
+     88c:	15 c0       	rjmp	.+42     	; 0x8b8 <FrameMgr_dispatchEvent+0x4e>
+	{
+		case EV_DUMP_FRAME:
+            /* try re-initializing the camera before we start dumping */
+            
+			CamConfig_setCamReg(0x11,0x01);  /* reduce the frame rate for dumping*/
+     88e:	81 e1       	ldi	r24, 0x11	; 17
+     890:	61 e0       	ldi	r22, 0x01	; 1
+     892:	0e 94 95 00 	call	0x12a	; 0x12a <CamConfig_setCamReg>
+			CamConfig_sendFifoCmds();
+     896:	0e 94 99 00 	call	0x132	; 0x132 <CamConfig_sendFifoCmds>
+			Utility_delay(1000);		/* allow the new frame rate to settle */
+     89a:	88 ee       	ldi	r24, 0xE8	; 232
+     89c:	93 e0       	ldi	r25, 0x03	; 3
+     89e:	0e 94 53 00 	call	0xa6	; 0xa6 <Utility_delay>
+			lineCount = 0;
+     8a2:	10 92 17 01 	sts	0x0117, r1
+			currentState = ST_FrameMgr_DumpingFrame;
+     8a6:	10 93 16 01 	sts	0x0116, r17
+			//CamIntAsm_waitForNewDumpFrame(currentLineBuffer,previousLineBuffer);
+            FrameMgr_acquireLine();
+     8aa:	0e 94 e5 03 	call	0x7ca	; 0x7ca <FrameMgr_acquireLine>
+     8ae:	14 c0       	rjmp	.+40     	; 0x8d8 <FrameMgr_dispatchEvent+0x6e>
+			break;
+		
+		case EV_ENABLE_TRACKING:
+			currentState = ST_FrameMgr_TrackingFrame;					
+     8b0:	81 e0       	ldi	r24, 0x01	; 1
+     8b2:	80 93 16 01 	sts	0x0116, r24
+     8b6:	03 c0       	rjmp	.+6      	; 0x8be <FrameMgr_dispatchEvent+0x54>
+			FrameMgr_acquireFrame();
+			break;
+			
+		case EV_ACQUIRE_FRAME_COMPLETE:
+			FrameMgr_processFrame();
+     8b8:	0e 94 47 02 	call	0x48e	; 0x48e <FrameMgr_processFrame>
+     8bc:	0d c0       	rjmp	.+26     	; 0x8d8 <FrameMgr_dispatchEvent+0x6e>
+			break;
+		
+		case EV_PROCESS_FRAME_COMPLETE:
+			FrameMgr_acquireFrame();
+     8be:	0e 94 19 04 	call	0x832	; 0x832 <FrameMgr_acquireFrame>
+     8c2:	0a c0       	rjmp	.+20     	; 0x8d8 <FrameMgr_dispatchEvent+0x6e>
+			break;
+
+		case EV_SERIAL_DATA_RECEIVED:
+			if (currentState != ST_FrameMgr_idle)
+     8c4:	80 91 16 01 	lds	r24, 0x0116
+     8c8:	88 23       	and	r24, r24
+     8ca:	31 f0       	breq	.+12     	; 0x8d8 <FrameMgr_dispatchEvent+0x6e>
+			{
+				/* we need to go back to processing line data, since
+				serial data reception interrupted us....just trash the
+				frame and act like the frame has been processed, which
+				will kick off the system to wait for the next line */
+				PUBLISH_EVENT(EV_PROCESS_FRAME_COMPLETE);
+     8cc:	84 e0       	ldi	r24, 0x04	; 4
+     8ce:	0e 94 d3 01 	call	0x3a6	; 0x3a6 <Exec_writeEventFifo>
+     8d2:	02 c0       	rjmp	.+4      	; 0x8d8 <FrameMgr_dispatchEvent+0x6e>
+			}
+			break;
+			
+		case EV_DISABLE_TRACKING:
+			/* tracking needs to be turned off */
+			currentState = ST_FrameMgr_idle;
+     8d4:	10 92 16 01 	sts	0x0116, r1
+			break;
+	}
+}
+     8d8:	1f 91       	pop	r17
+     8da:	08 95       	ret
+
+000008dc <I2CInt_init>:
+	Inputs:  none
+	Outputs: none
+***********************************************************/	
+void I2CInt_init(void)
+{
+	TWSR = 0;
+     8dc:	10 92 b9 00 	sts	0x00B9, r1
+    
+	/* init the speed of the I2C interface, running at
+    100 Kbps */
+	TWBR = (FOSC / I2C_SPEED - 16)/2;
+     8e0:	88 e4       	ldi	r24, 0x48	; 72
+     8e2:	80 93 b8 00 	sts	0x00B8, r24
+}
+     8e6:	08 95       	ret
+
+000008e8 <I2CInt_writeData>:
+				  format
+			bytes: the number of bytes to write 
+	Outputs: none
+***********************************************************/
+void I2CInt_writeData(unsigned char address, unsigned char *data, unsigned char bytes)
+{
+     8e8:	98 2f       	mov	r25, r24
+	while(status & (1<<BUSY));		/* Bus is busy wait (or exit with error code) */
+     8ea:	80 91 5f 01 	lds	r24, 0x015F
+     8ee:	87 fd       	sbrc	r24, 7
+     8f0:	fc cf       	rjmp	.-8      	; 0x8ea <I2CInt_writeData+0x2>
+	while(TWCR & (1<<TWSTO));
+     8f2:	80 91 bc 00 	lds	r24, 0x00BC
+     8f6:	84 fd       	sbrc	r24, 4
+     8f8:	fc cf       	rjmp	.-8      	; 0x8f2 <I2CInt_writeData+0xa>
+	
+	/* copy the needed data and state info to our local I2C command structure */
+	twi_address = address;
+     8fa:	90 93 5a 01 	sts	0x015A, r25
+	twi_data = data;
+     8fe:	70 93 5c 01 	sts	0x015C, r23
+     902:	60 93 5b 01 	sts	0x015B, r22
+	twi_bytes = bytes;
+     906:	40 93 5e 01 	sts	0x015E, r20
+	twi_ddr = TW_WRITE;
+     90a:	10 92 5d 01 	sts	0x015D, r1
+
+	retry_cnt = 0;
+     90e:	10 92 60 01 	sts	0x0160, r1
+	
+	/* Generate start condition, the remainder of the transfer is interrupt driven and
+	   will be performed in the background */
+	TWCR = (1<<TWINT)|(1<<TWSTA)|(1<<TWEN)|(1<<TWIE);
+     912:	85 ea       	ldi	r24, 0xA5	; 165
+     914:	80 93 bc 00 	sts	0x00BC, r24
+	
+	status |= (1<<BUSY);
+     918:	80 91 5f 01 	lds	r24, 0x015F
+     91c:	80 68       	ori	r24, 0x80	; 128
+     91e:	80 93 5f 01 	sts	0x015F, r24
+}
+     922:	08 95       	ret
+
+00000924 <I2CInt_readData>:
+			 data: a pointer to where the data will be stored
+			 bytes: the number of bytes to read
+	Outputs: none
+***********************************************************/
+void I2CInt_readData(unsigned char address, unsigned char *data, unsigned char bytes)
+{
+     924:	98 2f       	mov	r25, r24
+    /* Bus is busy wait (or exit with error code) */
+	while(status & (1<<BUSY));									
+     926:	80 91 5f 01 	lds	r24, 0x015F
+     92a:	87 fd       	sbrc	r24, 7
+     92c:	fc cf       	rjmp	.-8      	; 0x926 <I2CInt_readData+0x2>
+
+	twi_address = address;
+     92e:	90 93 5a 01 	sts	0x015A, r25
+	twi_data = data;
+     932:	70 93 5c 01 	sts	0x015C, r23
+     936:	60 93 5b 01 	sts	0x015B, r22
+	twi_bytes = bytes;
+     93a:	40 93 5e 01 	sts	0x015E, r20
+	twi_ddr = TW_READ;
+     93e:	81 e0       	ldi	r24, 0x01	; 1
+     940:	80 93 5d 01 	sts	0x015D, r24
+
+	retry_cnt = 0;
+     944:	10 92 60 01 	sts	0x0160, r1
+	
+	/* Generate start condition, the remainder of the transfer is interrupt driven and
+	   will be performed in the background */
+	TWCR = (1<<TWINT)|(1<<TWSTA)|(1<<TWEN)|(1<<TWIE);
+     948:	85 ea       	ldi	r24, 0xA5	; 165
+     94a:	80 93 bc 00 	sts	0x00BC, r24
+	
+	status |= (1<<BUSY);
+     94e:	80 91 5f 01 	lds	r24, 0x015F
+     952:	80 68       	ori	r24, 0x80	; 128
+     954:	80 93 5f 01 	sts	0x015F, r24
+}
+     958:	08 95       	ret
+
+0000095a <I2CInt_isI2cBusy>:
+	Outputs: bool_t - indicating if bus is busy
+***********************************************************/
+bool_t I2CInt_isI2cBusy(void)
+{
+	bool_t retVal = FALSE;
+	if ( (status & (1<<BUSY)) != 0)
+     95a:	80 91 5f 01 	lds	r24, 0x015F
+	{
+		retVal = TRUE;
+	}
+	
+	return(retVal);
+}
+     95e:	88 1f       	adc	r24, r24
+     960:	88 27       	eor	r24, r24
+     962:	88 1f       	adc	r24, r24
+     964:	08 95       	ret
+
+00000966 <__vector_24>:
+	read or write operation with an I2C slave.
+	Inputs:  none
+	Outputs: none
+***********************************************************/
+ISR(TWI_vect)
+{
+     966:	1f 92       	push	r1
+     968:	0f 92       	push	r0
+     96a:	0f b6       	in	r0, 0x3f	; 63
+     96c:	0f 92       	push	r0
+     96e:	11 24       	eor	r1, r1
+     970:	8f 93       	push	r24
+     972:	9f 93       	push	r25
+     974:	ef 93       	push	r30
+     976:	ff 93       	push	r31
+	unsigned char TWI_status = TWSR & TW_STATUS_MASK;   /* grab just the status bits */
+     978:	80 91 b9 00 	lds	r24, 0x00B9
+	
+    /* the entire I2C handler is state-based...determine
+    what needs to be done based on TWI_status */
+	switch(TWI_status) 
+     97c:	88 7f       	andi	r24, 0xF8	; 248
+     97e:	88 32       	cpi	r24, 0x28	; 40
+     980:	09 f4       	brne	.+2      	; 0x984 <__vector_24+0x1e>
+     982:	3f c0       	rjmp	.+126    	; 0xa02 <__vector_24+0x9c>
+     984:	89 32       	cpi	r24, 0x29	; 41
+     986:	70 f4       	brcc	.+28     	; 0x9a4 <__vector_24+0x3e>
+     988:	80 31       	cpi	r24, 0x10	; 16
+     98a:	f1 f0       	breq	.+60     	; 0x9c8 <__vector_24+0x62>
+     98c:	81 31       	cpi	r24, 0x11	; 17
+     98e:	20 f4       	brcc	.+8      	; 0x998 <__vector_24+0x32>
+     990:	88 30       	cpi	r24, 0x08	; 8
+     992:	09 f0       	breq	.+2      	; 0x996 <__vector_24+0x30>
+     994:	87 c0       	rjmp	.+270    	; 0xaa4 <__vector_24+0x13e>
+     996:	18 c0       	rjmp	.+48     	; 0x9c8 <__vector_24+0x62>
+     998:	88 31       	cpi	r24, 0x18	; 24
+     99a:	39 f1       	breq	.+78     	; 0x9ea <__vector_24+0x84>
+     99c:	80 32       	cpi	r24, 0x20	; 32
+     99e:	09 f0       	breq	.+2      	; 0x9a2 <__vector_24+0x3c>
+     9a0:	81 c0       	rjmp	.+258    	; 0xaa4 <__vector_24+0x13e>
+     9a2:	26 c0       	rjmp	.+76     	; 0x9f0 <__vector_24+0x8a>
+     9a4:	88 34       	cpi	r24, 0x48	; 72
+     9a6:	21 f1       	breq	.+72     	; 0x9f0 <__vector_24+0x8a>
+     9a8:	89 34       	cpi	r24, 0x49	; 73
+     9aa:	38 f4       	brcc	.+14     	; 0x9ba <__vector_24+0x54>
+     9ac:	80 33       	cpi	r24, 0x30	; 48
+     9ae:	09 f4       	brne	.+2      	; 0x9b2 <__vector_24+0x4c>
+     9b0:	6f c0       	rjmp	.+222    	; 0xa90 <__vector_24+0x12a>
+     9b2:	80 34       	cpi	r24, 0x40	; 64
+     9b4:	09 f0       	breq	.+2      	; 0x9b8 <__vector_24+0x52>
+     9b6:	76 c0       	rjmp	.+236    	; 0xaa4 <__vector_24+0x13e>
+     9b8:	39 c0       	rjmp	.+114    	; 0xa2c <__vector_24+0xc6>
+     9ba:	80 35       	cpi	r24, 0x50	; 80
+     9bc:	09 f4       	brne	.+2      	; 0x9c0 <__vector_24+0x5a>
+     9be:	43 c0       	rjmp	.+134    	; 0xa46 <__vector_24+0xe0>
+     9c0:	88 35       	cpi	r24, 0x58	; 88
+     9c2:	09 f0       	breq	.+2      	; 0x9c6 <__vector_24+0x60>
+     9c4:	6f c0       	rjmp	.+222    	; 0xaa4 <__vector_24+0x13e>
+     9c6:	5d c0       	rjmp	.+186    	; 0xa82 <__vector_24+0x11c>
+    {
+        case TW_START:									/* Start condition */
+        case TW_REP_START:								/* Repeated start condition */
+            if(retry_cnt > MAX_TWI_RETRIES) 
+     9c8:	80 91 60 01 	lds	r24, 0x0160
+     9cc:	83 30       	cpi	r24, 0x03	; 3
+     9ce:	08 f0       	brcs	.+2      	; 0x9d2 <__vector_24+0x6c>
+     9d0:	5f c0       	rjmp	.+190    	; 0xa90 <__vector_24+0x12a>
+                TWCR |= (1<<TWINT)|(1<<TWSTO);					
+                status &= ~(1<<BUSY);								
+                return;												
+            }
+            /* indicate read or write */
+            TWDR = (twi_address<<1) + twi_ddr;	
+     9d2:	80 91 5a 01 	lds	r24, 0x015A
+     9d6:	90 91 5d 01 	lds	r25, 0x015D
+     9da:	88 0f       	add	r24, r24
+     9dc:	89 0f       	add	r24, r25
+     9de:	80 93 bb 00 	sts	0x00BB, r24
+            /* TWSTA must be cleared...also clears TWINT */
+            TWCR &= ~(1<<TWSTA);
+     9e2:	80 91 bc 00 	lds	r24, 0x00BC
+     9e6:	8f 7d       	andi	r24, 0xDF	; 223
+     9e8:	49 c0       	rjmp	.+146    	; 0xa7c <__vector_24+0x116>
+            break;
+
+        case TW_MT_SLA_ACK:							/* Slave acknowledged address, */
+            retry_cnt = 0;					
+     9ea:	10 92 60 01 	sts	0x0160, r1
+     9ee:	12 c0       	rjmp	.+36     	; 0xa14 <__vector_24+0xae>
+            TWCR |= (1<<TWINT);						
+            break;
+
+        case TW_MT_SLA_NACK:							/* Slave didn't acknowledge address, */
+        case TW_MR_SLA_NACK:
+            retry_cnt++;		
+     9f0:	80 91 60 01 	lds	r24, 0x0160
+     9f4:	8f 5f       	subi	r24, 0xFF	; 255
+     9f6:	80 93 60 01 	sts	0x0160, r24
+
+            /* retry...*/
+            TWCR |= (1<<TWINT)|(1<<TWSTA)|(1<<TWSTO);	
+     9fa:	80 91 bc 00 	lds	r24, 0x00BC
+     9fe:	80 6b       	ori	r24, 0xB0	; 176
+     a00:	3d c0       	rjmp	.+122    	; 0xa7c <__vector_24+0x116>
+            break;
+
+        case TW_MT_DATA_ACK:							/* Slave Acknowledged data, */
+            if(--twi_bytes > 0) 
+     a02:	80 91 5e 01 	lds	r24, 0x015E
+     a06:	81 50       	subi	r24, 0x01	; 1
+     a08:	80 93 5e 01 	sts	0x015E, r24
+     a0c:	80 91 5e 01 	lds	r24, 0x015E
+     a10:	88 23       	and	r24, r24
+     a12:	f1 f1       	breq	.+124    	; 0xa90 <__vector_24+0x12a>
+            {						
+                /* more data to send, so send it */
+                TWDR = *twi_data;									
+     a14:	e0 91 5b 01 	lds	r30, 0x015B
+     a18:	f0 91 5c 01 	lds	r31, 0x015C
+     a1c:	81 91       	ld	r24, Z+
+     a1e:	80 93 bb 00 	sts	0x00BB, r24
+                twi_data++;											
+     a22:	f0 93 5c 01 	sts	0x015C, r31
+     a26:	e0 93 5b 01 	sts	0x015B, r30
+     a2a:	09 c0       	rjmp	.+18     	; 0xa3e <__vector_24+0xd8>
+            TWCR |= (1<<TWINT)|(1<<TWSTO);						
+            status &= ~(1<<BUSY);									
+            break;
+
+        case TW_MR_SLA_ACK:                             /* Slave acknowledged address */
+            if(--twi_bytes > 0) 
+     a2c:	80 91 5e 01 	lds	r24, 0x015E
+     a30:	81 50       	subi	r24, 0x01	; 1
+     a32:	80 93 5e 01 	sts	0x015E, r24
+     a36:	80 91 5e 01 	lds	r24, 0x015E
+     a3a:	88 23       	and	r24, r24
+     a3c:	c1 f4       	brne	.+48     	; 0xa6e <__vector_24+0x108>
+                TWCR |= (1<<TWEA)|(1<<TWINT);	
+            }
+			else
+            {
+                /* no acknowledge */
+                TWCR |= (1<<TWINT);					
+     a3e:	80 91 bc 00 	lds	r24, 0x00BC
+     a42:	80 68       	ori	r24, 0x80	; 128
+     a44:	1b c0       	rjmp	.+54     	; 0xa7c <__vector_24+0x116>
+            break;
+
+        case TW_MR_DATA_ACK: 							/* Master acknowledged data */
+        
+            /* grab the received data */
+            *twi_data = TWDR;										
+     a46:	80 91 bb 00 	lds	r24, 0x00BB
+     a4a:	e0 91 5b 01 	lds	r30, 0x015B
+     a4e:	f0 91 5c 01 	lds	r31, 0x015C
+     a52:	81 93       	st	Z+, r24
+            twi_data++;											
+     a54:	f0 93 5c 01 	sts	0x015C, r31
+     a58:	e0 93 5b 01 	sts	0x015B, r30
+            if(--twi_bytes > 0) 
+     a5c:	80 91 5e 01 	lds	r24, 0x015E
+     a60:	81 50       	subi	r24, 0x01	; 1
+     a62:	80 93 5e 01 	sts	0x015E, r24
+     a66:	80 91 5e 01 	lds	r24, 0x015E
+     a6a:	88 23       	and	r24, r24
+     a6c:	21 f0       	breq	.+8      	; 0xa76 <__vector_24+0x110>
+            {
+                /* get the next data byte and ack */
+                TWCR |= (1<<TWEA)|(1<<TWINT);	
+     a6e:	80 91 bc 00 	lds	r24, 0x00BC
+     a72:	80 6c       	ori	r24, 0xC0	; 192
+     a74:	03 c0       	rjmp	.+6      	; 0xa7c <__vector_24+0x116>
+            }
+            else
+            {
+                /* clear out the enable acknowledge bit */
+                TWCR &= ~(1<<TWEA);							
+     a76:	80 91 bc 00 	lds	r24, 0x00BC
+     a7a:	8f 7b       	andi	r24, 0xBF	; 191
+     a7c:	80 93 bc 00 	sts	0x00BC, r24
+     a80:	11 c0       	rjmp	.+34     	; 0xaa4 <__vector_24+0x13e>
+            }
+            break;
+
+        case TW_MR_DATA_NACK:						/* Master didn't acknowledge data -> end of read process */
+            /* read data, and generate the stop condition */
+            *twi_data = TWDR;										
+     a82:	e0 91 5b 01 	lds	r30, 0x015B
+     a86:	f0 91 5c 01 	lds	r31, 0x015C
+     a8a:	80 91 bb 00 	lds	r24, 0x00BB
+     a8e:	80 83       	st	Z, r24
+            TWCR |= (1<<TWSTO)|(1<<TWINT); 						
+     a90:	80 91 bc 00 	lds	r24, 0x00BC
+     a94:	80 69       	ori	r24, 0x90	; 144
+     a96:	80 93 bc 00 	sts	0x00BC, r24
+            status &= ~(1<<BUSY);											
+     a9a:	80 91 5f 01 	lds	r24, 0x015F
+     a9e:	8f 77       	andi	r24, 0x7F	; 127
+     aa0:	80 93 5f 01 	sts	0x015F, r24
+            break;
+	}
+}
+     aa4:	ff 91       	pop	r31
+     aa6:	ef 91       	pop	r30
+     aa8:	9f 91       	pop	r25
+     aaa:	8f 91       	pop	r24
+     aac:	0f 90       	pop	r0
+     aae:	0f be       	out	0x3f, r0	; 63
+     ab0:	0f 90       	pop	r0
+     ab2:	1f 90       	pop	r1
+     ab4:	18 95       	reti
+
+00000ab6 <main>:
+	Outputs: int
+***********************************************************/	
+int main(void)
+{
+	/* requied on ATmega328P */
+	wdt_disable();
+     ab6:	88 e1       	ldi	r24, 0x18	; 24
+     ab8:	0f b6       	in	r0, 0x3f	; 63
+     aba:	f8 94       	cli
+     abc:	80 93 60 00 	sts	0x0060, r24
+     ac0:	10 92 60 00 	sts	0x0060, r1
+     ac4:	0f be       	out	0x3f, r0	; 63
+
+	/* initialize all of the interface modules */
+	DebugInt_init();
+     ac6:	0e 94 b2 01 	call	0x364	; 0x364 <DebugInt_init>
+	UartInt_init();
+     aca:	0e 94 7b 05 	call	0xaf6	; 0xaf6 <UartInt_init>
+	I2CInt_init();
+     ace:	0e 94 6e 04 	call	0x8dc	; 0x8dc <I2CInt_init>
+	CamInt_init();
+     ad2:	0e 94 e4 00 	call	0x1c8	; 0x1c8 <CamInt_init>
+	
+	/* initialize the remaining modules that will process
+	data...interrupts need to be on for these */
+	ENABLE_INTS();
+     ad6:	78 94       	sei
+	CamConfig_init(); 
+     ad8:	0e 94 cc 00 	call	0x198	; 0x198 <CamConfig_init>
+	UIMgr_init();
+     adc:	0e 94 6a 06 	call	0xcd4	; 0xcd4 <UIMgr_init>
+	FrameMgr_init();
+     ae0:	0e 94 dd 03 	call	0x7ba	; 0x7ba <FrameMgr_init>
+    
+	/* provide a short delay for the camera to stabilize before
+	we let the executive start up */
+	Utility_delay(1000);
+     ae4:	88 ee       	ldi	r24, 0xE8	; 232
+     ae6:	93 e0       	ldi	r25, 0x03	; 3
+     ae8:	0e 94 53 00 	call	0xa6	; 0xa6 <Utility_delay>
+	
+	/* the rest of the application will be under the
+	control of the Executive.  */
+	Exec_run();	
+     aec:	0e 94 e1 01 	call	0x3c2	; 0x3c2 <Exec_run>
+	
+	/* this should never be reached */
+	return(0);
+}
+     af0:	80 e0       	ldi	r24, 0x00	; 0
+     af2:	90 e0       	ldi	r25, 0x00	; 0
+     af4:	08 95       	ret
+
+00000af6 <UartInt_init>:
+***********************************************************/	
+void UartInt_init(void)
+{	
+#if defined (__AVR_ATmega328P__) || defined (__AVR_ATmega328__)
+
+	UBRR0H = 0x00;	/* set up the baud rate registers so the UART will operate at 115.2 Kbps */
+     af6:	10 92 c5 00 	sts	0x00C5, r1
+#ifdef NO_CRYSTAL
+	UBRR0L = 18; 	/* 18 for double clocking at 115.2 kbps not used */
+     afa:	82 e1       	ldi	r24, 0x12	; 18
+     afc:	80 93 c4 00 	sts	0x00C4, r24
+#else
+	UBRR0L = 0x08;  /* for 16 MHz crystal at 115.2 kbps */
+#endif
+					/* what about 17.7Mhz crystal?! */
+	UCSR0B = (1<<RXCIE0)|(1<<RXEN0)|(1<<TXEN0);	/* enable the tx and rx capabilities of the UART...as well as the receive complete interrupt */
+     b00:	88 e9       	ldi	r24, 0x98	; 152
+     b02:	80 93 c1 00 	sts	0x00C1, r24
+	UCSR0C = (1<<UCSZ01)|(1<<UCSZ00); /* set up the control registers so the UART works at 8N1 */
+     b06:	86 e0       	ldi	r24, 0x06	; 6
+     b08:	80 93 c2 00 	sts	0x00C2, r24
+
+#ifdef NO_CRYSTAL     
+
+    UCSR0A = (1<<U2X0);    /* set the baud rate to use the double-speed not used*/
+     b0c:	82 e0       	ldi	r24, 0x02	; 2
+     b0e:	80 93 c0 00 	sts	0x00C0, r24
+
+
+#else
+#warning Processor unsupported!
+#endif	
+}
+     b12:	08 95       	ret
+
+00000b14 <UartInt_txByte>:
+	application while this takes place (or just send one
+	byte at a time at strtegically timed intervals, like
+	the stats data is sent out :-)
+***********************************************************/
+void UartInt_txByte(unsigned char txByte)
+{
+     b14:	98 2f       	mov	r25, r24
+#if defined (__AVR_ATmega328P__) || defined (__AVR_ATmega328__)
+	while ( !( UCSR0A & (1<<UDRE0)) ); /* Wait for empty transmit buffer */
+     b16:	80 91 c0 00 	lds	r24, 0x00C0
+     b1a:	85 ff       	sbrs	r24, 5
+     b1c:	fc cf       	rjmp	.-8      	; 0xb16 <UartInt_txByte+0x2>
+	UDR0 = txByte; /* Put data into buffer, sends the data */
+     b1e:	90 93 c6 00 	sts	0x00C6, r25
+	while ( !( UCSRA & (1<<UDRE)) ); /* Wait for empty transmit buffer */
+	UDR = txByte; /* Put data into buffer, sends the data */
+#else
+#warning Processor unsupported!
+#endif
+}
+     b22:	08 95       	ret
+
+00000b24 <__vector_18>:
+    bytes in the middle of tracking or dumping a frame.
+    But it wasn't really needed, and understanding the C
+    is easier  :-)
+***********************************************************/
+ISR(USART_RX_vect)
+{
+     b24:	1f 92       	push	r1
+     b26:	0f 92       	push	r0
+     b28:	0f b6       	in	r0, 0x3f	; 63
+     b2a:	0f 92       	push	r0
+     b2c:	11 24       	eor	r1, r1
+     b2e:	8f 93       	push	r24
+     b30:	9f 93       	push	r25
+     b32:	ef 93       	push	r30
+     b34:	ff 93       	push	r31
+    unsigned char tmpHead;
+    /* read the data byte, put it in the serial queue, and
+    post the event */
+ 
+#if defined (__AVR_ATmega328P__) || defined (__AVR_ATmega328__)
+    UIMgr_rxFifo[UIMgr_rxFifoHead] = UDR0;
+     b36:	80 91 61 01 	lds	r24, 0x0161
+     b3a:	90 91 c6 00 	lds	r25, 0x00C6
+     b3e:	e4 e2       	ldi	r30, 0x24	; 36
+     b40:	f3 e0       	ldi	r31, 0x03	; 3
+     b42:	e8 0f       	add	r30, r24
+     b44:	f1 1d       	adc	r31, r1
+     b46:	90 83       	st	Z, r25
+#else
+#warning Processor unsupported!
+#endif
+    /* now move the head up */
+    tmpHead = (UIMgr_rxFifoHead + 1) & (UI_MGR_RX_FIFO_MASK);
+    UIMgr_rxFifoHead = tmpHead;
+     b48:	8f 5f       	subi	r24, 0xFF	; 255
+     b4a:	8f 71       	andi	r24, 0x1F	; 31
+     b4c:	80 93 61 01 	sts	0x0161, r24
+    
+    /* write the serial received event to the event fifo */
+    Exec_eventFifo[Exec_eventFifoHead] = EV_SERIAL_DATA_RECEIVED;
+     b50:	80 91 12 01 	lds	r24, 0x0112
+     b54:	ec e1       	ldi	r30, 0x1C	; 28
+     b56:	f3 e0       	ldi	r31, 0x03	; 3
+     b58:	e8 0f       	add	r30, r24
+     b5a:	f1 1d       	adc	r31, r1
+     b5c:	91 e0       	ldi	r25, 0x01	; 1
+     b5e:	90 83       	st	Z, r25
+
+    /* now move the head up */
+    tmpHead = (Exec_eventFifoHead + 1) & (EXEC_EVENT_FIFO_MASK);
+    Exec_eventFifoHead = tmpHead;
+     b60:	8f 5f       	subi	r24, 0xFF	; 255
+     b62:	87 70       	andi	r24, 0x07	; 7
+     b64:	80 93 12 01 	sts	0x0112, r24
+}
+     b68:	ff 91       	pop	r31
+     b6a:	ef 91       	pop	r30
+     b6c:	9f 91       	pop	r25
+     b6e:	8f 91       	pop	r24
+     b70:	0f 90       	pop	r0
+     b72:	0f be       	out	0x3f, r0	; 63
+     b74:	0f 90       	pop	r0
+     b76:	1f 90       	pop	r1
+     b78:	18 95       	reti
+
+00000b7a <UIMgr_writeBufferToTxFifo>:
+	Inputs:  pData -  a pointer to the data to send
+	         length - the number of bytes to send
+	Outputs: none
+***********************************************************/	
+void UIMgr_writeBufferToTxFifo(unsigned char *pData, unsigned char length)
+{
+     b7a:	dc 01       	movw	r26, r24
+	unsigned char tmpHead;
+	if (length == 0)
+     b7c:	66 23       	and	r22, r22
+     b7e:	81 f0       	breq	.+32     	; 0xba0 <UIMgr_writeBufferToTxFifo+0x26>
+	{
+		return;
+	}
+	
+	DISABLE_INTS();
+     b80:	f8 94       	cli
+	while(length-- != 0)
+	{
+		UIMgr_txFifo[UIMgr_txFifoHead] = *pData++;
+     b82:	80 91 63 01 	lds	r24, 0x0163
+     b86:	e8 2f       	mov	r30, r24
+     b88:	f0 e0       	ldi	r31, 0x00	; 0
+     b8a:	ec 5b       	subi	r30, 0xBC	; 188
+     b8c:	fc 4f       	sbci	r31, 0xFC	; 252
+     b8e:	9d 91       	ld	r25, X+
+     b90:	90 83       	st	Z, r25
+	
+		/* now move the head up */
+		tmpHead = (UIMgr_txFifoHead + 1) & (UI_MGR_TX_FIFO_MASK);
+		UIMgr_txFifoHead = tmpHead;
+     b92:	8f 5f       	subi	r24, 0xFF	; 255
+     b94:	8f 73       	andi	r24, 0x3F	; 63
+     b96:	80 93 63 01 	sts	0x0163, r24
+     b9a:	61 50       	subi	r22, 0x01	; 1
+	{
+		return;
+	}
+	
+	DISABLE_INTS();
+	while(length-- != 0)
+     b9c:	91 f7       	brne	.-28     	; 0xb82 <UIMgr_writeBufferToTxFifo+0x8>
+	
+		/* now move the head up */
+		tmpHead = (UIMgr_txFifoHead + 1) & (UI_MGR_TX_FIFO_MASK);
+		UIMgr_txFifoHead = tmpHead;
+	}
+	ENABLE_INTS();
+     b9e:	78 94       	sei
+     ba0:	08 95       	ret
+
+00000ba2 <UIMgr_writeTxFifo>:
+***********************************************************/	
+void UIMgr_writeTxFifo(unsigned char data)
+{
+	unsigned char tmpHead;
+
+	DISABLE_INTS();
+     ba2:	f8 94       	cli
+	UIMgr_txFifo[UIMgr_txFifoHead] = data;
+     ba4:	90 91 63 01 	lds	r25, 0x0163
+     ba8:	e4 e4       	ldi	r30, 0x44	; 68
+     baa:	f3 e0       	ldi	r31, 0x03	; 3
+     bac:	e9 0f       	add	r30, r25
+     bae:	f1 1d       	adc	r31, r1
+     bb0:	80 83       	st	Z, r24
+
+    /* now move the head up */
+    tmpHead = (UIMgr_txFifoHead + 1) & (UI_MGR_TX_FIFO_MASK);
+    UIMgr_txFifoHead = tmpHead;
+     bb2:	9f 5f       	subi	r25, 0xFF	; 255
+     bb4:	9f 73       	andi	r25, 0x3F	; 63
+     bb6:	90 93 63 01 	sts	0x0163, r25
+	ENABLE_INTS();
+     bba:	78 94       	sei
+	
+}
+     bbc:	08 95       	ret
+
+00000bbe <UIMgr_flushTxBuffer>:
+	to the user.
+	Inputs:  none
+	Outputs: none
+***********************************************************/	
+void UIMgr_flushTxBuffer(void)
+{
+     bbe:	0d c0       	rjmp	.+26     	; 0xbda <UIMgr_flushTxBuffer+0x1c>
+static unsigned char UIMgr_readTxFifo(void)
+{
+	unsigned char dataByte, tmpTail;
+	
+	/* just return the current tail from the tx fifo */
+	DISABLE_INTS();
+     bc0:	f8 94       	cli
+	dataByte = UIMgr_txFifo[UIMgr_txFifoTail];	
+     bc2:	e9 2f       	mov	r30, r25
+     bc4:	f0 e0       	ldi	r31, 0x00	; 0
+     bc6:	ec 5b       	subi	r30, 0xBC	; 188
+     bc8:	fc 4f       	sbci	r31, 0xFC	; 252
+     bca:	80 81       	ld	r24, Z
+	tmpTail = (UIMgr_txFifoTail+1) & (UI_MGR_TX_FIFO_MASK);
+	UIMgr_txFifoTail = tmpTail;
+     bcc:	9f 5f       	subi	r25, 0xFF	; 255
+     bce:	9f 73       	andi	r25, 0x3F	; 63
+     bd0:	90 93 64 01 	sts	0x0164, r25
+	ENABLE_INTS();
+     bd4:	78 94       	sei
+***********************************************************/	
+void UIMgr_flushTxBuffer(void)
+{
+	while(IS_DATA_IN_TX_FIFO() == TRUE)
+	{
+		UartInt_txByte(UIMgr_readTxFifo() );
+     bd6:	0e 94 8a 05 	call	0xb14	; 0xb14 <UartInt_txByte>
+	Inputs:  none
+	Outputs: none
+***********************************************************/	
+void UIMgr_flushTxBuffer(void)
+{
+	while(IS_DATA_IN_TX_FIFO() == TRUE)
+     bda:	90 91 64 01 	lds	r25, 0x0164
+     bde:	80 91 63 01 	lds	r24, 0x0163
+     be2:	89 17       	cp	r24, r25
+     be4:	69 f7       	brne	.-38     	; 0xbc0 <UIMgr_flushTxBuffer+0x2>
+	{
+		UartInt_txByte(UIMgr_readTxFifo() );
+	}
+}
+     be6:	08 95       	ret
+
+00000be8 <UIMgr_txBuffer>:
+	Inputs:  pData -  a pointer to the data to send
+	         length - the number of bytes to send
+	Outputs: none
+***********************************************************/	
+void UIMgr_txBuffer(unsigned char *pData, unsigned char length)
+{
+     be8:	1f 93       	push	r17
+     bea:	cf 93       	push	r28
+     bec:	df 93       	push	r29
+     bee:	ec 01       	movw	r28, r24
+     bf0:	16 2f       	mov	r17, r22
+     bf2:	04 c0       	rjmp	.+8      	; 0xbfc <UIMgr_txBuffer+0x14>
+	while(length-- != 0)
+	{
+		UartInt_txByte(*pData++); 
+     bf4:	89 91       	ld	r24, Y+
+     bf6:	0e 94 8a 05 	call	0xb14	; 0xb14 <UartInt_txByte>
+     bfa:	11 50       	subi	r17, 0x01	; 1
+	         length - the number of bytes to send
+	Outputs: none
+***********************************************************/	
+void UIMgr_txBuffer(unsigned char *pData, unsigned char length)
+{
+	while(length-- != 0)
+     bfc:	11 23       	and	r17, r17
+     bfe:	d1 f7       	brne	.-12     	; 0xbf4 <UIMgr_txBuffer+0xc>
+	{
+		UartInt_txByte(*pData++); 
+	}
+}
+     c00:	df 91       	pop	r29
+     c02:	cf 91       	pop	r28
+     c04:	1f 91       	pop	r17
+     c06:	08 95       	ret
+
+00000c08 <UIMgr_transmitPendingData>:
+	Inputs:  none 
+	Outputs: none
+***********************************************************/
+void UIMgr_transmitPendingData(void)
+{
+	if (IS_DATA_IN_TX_FIFO() == TRUE)
+     c08:	90 91 64 01 	lds	r25, 0x0164
+     c0c:	80 91 63 01 	lds	r24, 0x0163
+     c10:	89 17       	cp	r24, r25
+     c12:	69 f0       	breq	.+26     	; 0xc2e <UIMgr_transmitPendingData+0x26>
+static unsigned char UIMgr_readTxFifo(void)
+{
+	unsigned char dataByte, tmpTail;
+	
+	/* just return the current tail from the tx fifo */
+	DISABLE_INTS();
+     c14:	f8 94       	cli
+	dataByte = UIMgr_txFifo[UIMgr_txFifoTail];	
+     c16:	e9 2f       	mov	r30, r25
+     c18:	f0 e0       	ldi	r31, 0x00	; 0
+     c1a:	ec 5b       	subi	r30, 0xBC	; 188
+     c1c:	fc 4f       	sbci	r31, 0xFC	; 252
+     c1e:	80 81       	ld	r24, Z
+	tmpTail = (UIMgr_txFifoTail+1) & (UI_MGR_TX_FIFO_MASK);
+	UIMgr_txFifoTail = tmpTail;
+     c20:	9f 5f       	subi	r25, 0xFF	; 255
+     c22:	9f 73       	andi	r25, 0x3F	; 63
+     c24:	90 93 64 01 	sts	0x0164, r25
+	ENABLE_INTS();
+     c28:	78 94       	sei
+void UIMgr_transmitPendingData(void)
+{
+	if (IS_DATA_IN_TX_FIFO() == TRUE)
+	{
+		/* data is waiting...send a single byte */
+		UartInt_txByte( UIMgr_readTxFifo() );
+     c2a:	0e 94 8a 05 	call	0xb14	; 0xb14 <UartInt_txByte>
+     c2e:	08 95       	ret
+
+00000c30 <UIMgr_convertTokenToCmd>:
+	Inputs:  none 
+	Outputs: none
+***********************************************************/	
+static void UIMgr_convertTokenToCmd(void)
+{
+	if ( (asciiTokenBuffer[0] == 'P') &&
+     c30:	80 91 68 01 	lds	r24, 0x0168
+     c34:	80 35       	cpi	r24, 0x50	; 80
+     c36:	31 f4       	brne	.+12     	; 0xc44 <UIMgr_convertTokenToCmd+0x14>
+     c38:	80 91 69 01 	lds	r24, 0x0169
+     c3c:	87 34       	cpi	r24, 0x47	; 71
+     c3e:	d9 f5       	brne	.+118    	; 0xcb6 <UIMgr_convertTokenToCmd+0x86>
+		 (asciiTokenBuffer[1] == 'G') )
+	{
+		/* we got a "ping" command...but we still need to see
+		if we are going to get the \r */
+		receivedCmd = pingCmd;
+     c40:	81 e0       	ldi	r24, 0x01	; 1
+     c42:	3a c0       	rjmp	.+116    	; 0xcb8 <UIMgr_convertTokenToCmd+0x88>
+	}
+	else if ( (asciiTokenBuffer[0] == 'G') &&
+     c44:	87 34       	cpi	r24, 0x47	; 71
+     c46:	39 f4       	brne	.+14     	; 0xc56 <UIMgr_convertTokenToCmd+0x26>
+     c48:	80 91 69 01 	lds	r24, 0x0169
+     c4c:	86 35       	cpi	r24, 0x56	; 86
+     c4e:	99 f5       	brne	.+102    	; 0xcb6 <UIMgr_convertTokenToCmd+0x86>
+			   (asciiTokenBuffer[1] == 'V') )
+	{
+		/* we got the "get version" command */
+		receivedCmd = getVersionCmd;
+     c50:	10 92 00 01 	sts	0x0100, r1
+     c54:	33 c0       	rjmp	.+102    	; 0xcbc <UIMgr_convertTokenToCmd+0x8c>
+	}
+	else if ( (asciiTokenBuffer[0] == 'D') &&
+     c56:	84 34       	cpi	r24, 0x44	; 68
+     c58:	31 f4       	brne	.+12     	; 0xc66 <UIMgr_convertTokenToCmd+0x36>
+     c5a:	80 91 69 01 	lds	r24, 0x0169
+     c5e:	86 34       	cpi	r24, 0x46	; 70
+     c60:	e1 f4       	brne	.+56     	; 0xc9a <UIMgr_convertTokenToCmd+0x6a>
+			   (asciiTokenBuffer[1] == 'F') )
+	{
+		/* we should go into frame dump mode */
+		receivedCmd = dumpFrameCmd;	
+     c62:	83 e0       	ldi	r24, 0x03	; 3
+     c64:	29 c0       	rjmp	.+82     	; 0xcb8 <UIMgr_convertTokenToCmd+0x88>
+	}
+	else if ( (asciiTokenBuffer[0] == 'C') &&
+     c66:	83 34       	cpi	r24, 0x43	; 67
+     c68:	31 f4       	brne	.+12     	; 0xc76 <UIMgr_convertTokenToCmd+0x46>
+     c6a:	80 91 69 01 	lds	r24, 0x0169
+     c6e:	82 35       	cpi	r24, 0x52	; 82
+     c70:	11 f5       	brne	.+68     	; 0xcb6 <UIMgr_convertTokenToCmd+0x86>
+	           (asciiTokenBuffer[1] == 'R') )
+	{
+		/* the user wants to set registers in the OV6620 */
+		receivedCmd = setCameraRegsCmd;
+     c72:	82 e0       	ldi	r24, 0x02	; 2
+     c74:	21 c0       	rjmp	.+66     	; 0xcb8 <UIMgr_convertTokenToCmd+0x88>
+	}
+	else if ( (asciiTokenBuffer[0] == 'E') &&
+     c76:	85 34       	cpi	r24, 0x45	; 69
+     c78:	31 f4       	brne	.+12     	; 0xc86 <UIMgr_convertTokenToCmd+0x56>
+     c7a:	80 91 69 01 	lds	r24, 0x0169
+     c7e:	84 35       	cpi	r24, 0x54	; 84
+     c80:	d1 f4       	brne	.+52     	; 0xcb6 <UIMgr_convertTokenToCmd+0x86>
+			   (asciiTokenBuffer[1] == 'T') )
+	{
+		/* the user wants to enable tracking */
+		receivedCmd = enableTrackingCmd;
+     c82:	84 e0       	ldi	r24, 0x04	; 4
+     c84:	19 c0       	rjmp	.+50     	; 0xcb8 <UIMgr_convertTokenToCmd+0x88>
+	}
+	else if ( (asciiTokenBuffer[0] == 'S') &&
+     c86:	83 35       	cpi	r24, 0x53	; 83
+     c88:	31 f4       	brne	.+12     	; 0xc96 <UIMgr_convertTokenToCmd+0x66>
+     c8a:	80 91 69 01 	lds	r24, 0x0169
+     c8e:	8d 34       	cpi	r24, 0x4D	; 77
+     c90:	91 f4       	brne	.+36     	; 0xcb6 <UIMgr_convertTokenToCmd+0x86>
+			   (asciiTokenBuffer[1] == 'M') )
+	{
+		/* the user wants to set the color map */
+		receivedCmd = setColorMapCmd;
+     c92:	86 e0       	ldi	r24, 0x06	; 6
+     c94:	11 c0       	rjmp	.+34     	; 0xcb8 <UIMgr_convertTokenToCmd+0x88>
+	}
+	else if ( (asciiTokenBuffer[0] == 'D') &&
+     c96:	84 34       	cpi	r24, 0x44	; 68
+     c98:	31 f4       	brne	.+12     	; 0xca6 <UIMgr_convertTokenToCmd+0x76>
+     c9a:	80 91 69 01 	lds	r24, 0x0169
+     c9e:	84 35       	cpi	r24, 0x54	; 84
+     ca0:	51 f4       	brne	.+20     	; 0xcb6 <UIMgr_convertTokenToCmd+0x86>
+			   (asciiTokenBuffer[1] == 'T') )
+	{
+		receivedCmd = disableTrackingCmd;
+     ca2:	85 e0       	ldi	r24, 0x05	; 5
+     ca4:	09 c0       	rjmp	.+18     	; 0xcb8 <UIMgr_convertTokenToCmd+0x88>
+	}
+	else if ( (asciiTokenBuffer[0] == 'R') &&
+     ca6:	82 35       	cpi	r24, 0x52	; 82
+     ca8:	31 f4       	brne	.+12     	; 0xcb6 <UIMgr_convertTokenToCmd+0x86>
+     caa:	80 91 69 01 	lds	r24, 0x0169
+     cae:	83 35       	cpi	r24, 0x53	; 83
+     cb0:	11 f4       	brne	.+4      	; 0xcb6 <UIMgr_convertTokenToCmd+0x86>
+			   (asciiTokenBuffer[1] == 'S') )
+	{
+		receivedCmd = resetCameraCmd;
+     cb2:	87 e0       	ldi	r24, 0x07	; 7
+     cb4:	01 c0       	rjmp	.+2      	; 0xcb8 <UIMgr_convertTokenToCmd+0x88>
+	}
+	else
+	{
+		/* don't recognize the cmd */
+		receivedCmd = invalidCmd;
+     cb6:	89 e0       	ldi	r24, 0x09	; 9
+     cb8:	80 93 00 01 	sts	0x0100, r24
+	}
+	memset(asciiTokenBuffer,0x00,MAX_TOKEN_LENGTH);
+     cbc:	83 e0       	ldi	r24, 0x03	; 3
+     cbe:	e8 e6       	ldi	r30, 0x68	; 104
+     cc0:	f1 e0       	ldi	r31, 0x01	; 1
+     cc2:	df 01       	movw	r26, r30
+     cc4:	1d 92       	st	X+, r1
+     cc6:	8a 95       	dec	r24
+     cc8:	e9 f7       	brne	.-6      	; 0xcc4 <UIMgr_convertTokenToCmd+0x94>
+	charIndex = 0;
+     cca:	10 92 67 01 	sts	0x0167, r1
+	charCount = 0;
+     cce:	10 92 66 01 	sts	0x0166, r1
+}
+     cd2:	08 95       	ret
+
+00000cd4 <UIMgr_init>:
+	Inputs:  none 
+	Outputs: none
+***********************************************************/	
+void UIMgr_init(void)
+{
+	memset(asciiTokenBuffer,0x00,MAX_TOKEN_LENGTH+1);
+     cd4:	10 92 68 01 	sts	0x0168, r1
+     cd8:	10 92 69 01 	sts	0x0169, r1
+     cdc:	10 92 6a 01 	sts	0x016A, r1
+     ce0:	10 92 6b 01 	sts	0x016B, r1
+	memset(tokenBuffer,0x00,MAX_TOKEN_COUNT);
+     ce4:	80 e4       	ldi	r24, 0x40	; 64
+     ce6:	ec e6       	ldi	r30, 0x6C	; 108
+     ce8:	f1 e0       	ldi	r31, 0x01	; 1
+     cea:	df 01       	movw	r26, r30
+     cec:	98 2f       	mov	r25, r24
+     cee:	1d 92       	st	X+, r1
+     cf0:	9a 95       	dec	r25
+     cf2:	e9 f7       	brne	.-6      	; 0xcee <UIMgr_init+0x1a>
+	memset(UIMgr_txFifo,0x00,UI_MGR_TX_FIFO_SIZE);
+     cf4:	e4 e4       	ldi	r30, 0x44	; 68
+     cf6:	f3 e0       	ldi	r31, 0x03	; 3
+     cf8:	df 01       	movw	r26, r30
+     cfa:	1d 92       	st	X+, r1
+     cfc:	8a 95       	dec	r24
+     cfe:	e9 f7       	brne	.-6      	; 0xcfa <UIMgr_init+0x26>
+	memset(UIMgr_rxFifo,0x00,UI_MGR_RX_FIFO_SIZE);
+     d00:	80 e2       	ldi	r24, 0x20	; 32
+     d02:	e4 e2       	ldi	r30, 0x24	; 36
+     d04:	f3 e0       	ldi	r31, 0x03	; 3
+     d06:	df 01       	movw	r26, r30
+     d08:	1d 92       	st	X+, r1
+     d0a:	8a 95       	dec	r24
+     d0c:	e9 f7       	brne	.-6      	; 0xd08 <UIMgr_init+0x34>
+}
+     d0e:	08 95       	ret
+
+00000d10 <UIMgr_convertTokenToValue>:
+***********************************************************/	
+static void UIMgr_convertTokenToValue(void)
+{
+	unsigned int newValue;
+	
+	newValue = atoi((char *) asciiTokenBuffer);
+     d10:	88 e6       	ldi	r24, 0x68	; 104
+     d12:	91 e0       	ldi	r25, 0x01	; 1
+     d14:	0e 94 35 08 	call	0x106a	; 0x106a <atoi>
+     d18:	e0 91 65 01 	lds	r30, 0x0165
+	if (newValue > 255)
+     d1c:	8f 3f       	cpi	r24, 0xFF	; 255
+     d1e:	91 05       	cpc	r25, r1
+     d20:	51 f0       	breq	.+20     	; 0xd36 <UIMgr_convertTokenToValue+0x26>
+     d22:	48 f0       	brcs	.+18     	; 0xd36 <UIMgr_convertTokenToValue+0x26>
+	{
+		/* the value is too large */
+		receivedCmd = invalidCmd;
+     d24:	89 e0       	ldi	r24, 0x09	; 9
+     d26:	80 93 00 01 	sts	0x0100, r24
+		tokenBuffer[tokenCount] = 0xFF;  /* to indicate an error */
+     d2a:	f0 e0       	ldi	r31, 0x00	; 0
+     d2c:	e4 59       	subi	r30, 0x94	; 148
+     d2e:	fe 4f       	sbci	r31, 0xFE	; 254
+     d30:	8f ef       	ldi	r24, 0xFF	; 255
+     d32:	80 83       	st	Z, r24
+     d34:	04 c0       	rjmp	.+8      	; 0xd3e <UIMgr_convertTokenToValue+0x2e>
+	}
+	else
+	{
+		/* copy the value into the tokenBuffer */
+		tokenBuffer[tokenCount] = newValue;
+     d36:	f0 e0       	ldi	r31, 0x00	; 0
+     d38:	e4 59       	subi	r30, 0x94	; 148
+     d3a:	fe 4f       	sbci	r31, 0xFE	; 254
+     d3c:	80 83       	st	Z, r24
+	}
+	memset(asciiTokenBuffer,0x00,MAX_TOKEN_LENGTH);
+     d3e:	83 e0       	ldi	r24, 0x03	; 3
+     d40:	e8 e6       	ldi	r30, 0x68	; 104
+     d42:	f1 e0       	ldi	r31, 0x01	; 1
+     d44:	df 01       	movw	r26, r30
+     d46:	1d 92       	st	X+, r1
+     d48:	8a 95       	dec	r24
+     d4a:	e9 f7       	brne	.-6      	; 0xd46 <UIMgr_convertTokenToValue+0x36>
+	charIndex = 0;
+     d4c:	10 92 67 01 	sts	0x0167, r1
+	charCount = 0;
+     d50:	10 92 66 01 	sts	0x0166, r1
+}
+     d54:	08 95       	ret
+
+00000d56 <UIMgr_processReceivedData>:
+	parsing any serial data waiting in the rx fifo
+	Inputs:  none 
+	Outputs: none
+***********************************************************/
+void UIMgr_processReceivedData(void)
+{
+     d56:	5f 92       	push	r5
+     d58:	6f 92       	push	r6
+     d5a:	7f 92       	push	r7
+     d5c:	8f 92       	push	r8
+     d5e:	9f 92       	push	r9
+     d60:	af 92       	push	r10
+     d62:	bf 92       	push	r11
+     d64:	cf 92       	push	r12
+     d66:	df 92       	push	r13
+     d68:	ef 92       	push	r14
+     d6a:	ff 92       	push	r15
+     d6c:	0f 93       	push	r16
+     d6e:	1f 93       	push	r17
+     d70:	cf 93       	push	r28
+     d72:	df 93       	push	r29
+			if (charCount > MAX_TOKEN_LENGTH)
+			{
+				/* we have received a token that cannot be handled...
+				set the received cmd to an invalid cmd, and wait
+				for the \r to process it */
+				receivedCmd = invalidCmd;
+     d74:	a9 e0       	ldi	r26, 0x09	; 9
+     d76:	da 2e       	mov	r13, r26
+				UIMgr_executeCmd();
+			}
+			
+			/* reset any necessary data */
+			tokenCount = 0;
+			memset(tokenBuffer,0x00,MAX_TOKEN_COUNT);
+     d78:	fc e6       	ldi	r31, 0x6C	; 108
+     d7a:	af 2e       	mov	r10, r31
+     d7c:	f1 e0       	ldi	r31, 0x01	; 1
+     d7e:	bf 2e       	mov	r11, r31
+     d80:	e0 e4       	ldi	r30, 0x40	; 64
+     d82:	6e 2e       	mov	r6, r30
+void UIMgr_writeTxFifo(unsigned char data)
+{
+	unsigned char tmpHead;
+
+	DISABLE_INTS();
+	UIMgr_txFifo[UIMgr_txFifoHead] = data;
+     d84:	71 e4       	ldi	r23, 0x41	; 65
+     d86:	57 2e       	mov	r5, r23
+static unsigned char UIMgr_readRxFifo(void)
+{
+	unsigned char dataByte, tmpTail;
+	
+	/* just return the current tail from the rx fifo */
+	DISABLE_INTS();
+     d88:	63 e4       	ldi	r22, 0x43	; 67
+     d8a:	c6 2e       	mov	r12, r22
+     d8c:	5b e4       	ldi	r21, 0x4B	; 75
+     d8e:	95 2e       	mov	r9, r21
+     d90:	4d e0       	ldi	r20, 0x0D	; 13
+     d92:	84 2e       	mov	r8, r20
+     d94:	3e e4       	ldi	r19, 0x4E	; 78
+     d96:	73 2e       	mov	r7, r19
+     d98:	40 c1       	rjmp	.+640    	; 0x101a <UIMgr_processReceivedData+0x2c4>
+     d9a:	f8 94       	cli
+	dataByte = UIMgr_rxFifo[UIMgr_rxFifoTail];	
+     d9c:	e9 2f       	mov	r30, r25
+     d9e:	f0 e0       	ldi	r31, 0x00	; 0
+     da0:	ec 5d       	subi	r30, 0xDC	; 220
+     da2:	fc 4f       	sbci	r31, 0xFC	; 252
+     da4:	20 81       	ld	r18, Z
+	tmpTail = (UIMgr_rxFifoTail+1) & (UI_MGR_RX_FIFO_MASK);
+	UIMgr_rxFifoTail = tmpTail;
+     da6:	9f 5f       	subi	r25, 0xFF	; 255
+     da8:	9f 71       	andi	r25, 0x1F	; 31
+     daa:	90 93 62 01 	sts	0x0162, r25
+	ENABLE_INTS();
+     dae:	78 94       	sei
+	that are excessive!!! FIX ME!!! */
+    
+	while(IS_DATA_IN_RX_FIFO() == TRUE)
+	{
+		tmpData = UIMgr_readRxFifo();
+		if (tmpData == '\r') 
+     db0:	2d 30       	cpi	r18, 0x0D	; 13
+     db2:	09 f0       	breq	.+2      	; 0xdb6 <UIMgr_processReceivedData+0x60>
+     db4:	f8 c0       	rjmp	.+496    	; 0xfa6 <UIMgr_processReceivedData+0x250>
+		{
+			/* we have reached a token separator */
+			if (tokenCount == 0)
+     db6:	80 91 65 01 	lds	r24, 0x0165
+     dba:	88 23       	and	r24, r24
+     dbc:	19 f4       	brne	.+6      	; 0xdc4 <UIMgr_processReceivedData+0x6e>
+			{
+				/* convert the command */
+				UIMgr_convertTokenToCmd();				
+     dbe:	0e 94 18 06 	call	0xc30	; 0xc30 <UIMgr_convertTokenToCmd>
+     dc2:	07 c0       	rjmp	.+14     	; 0xdd2 <UIMgr_processReceivedData+0x7c>
+			}
+			else
+			{
+				/* convert a value */
+				UIMgr_convertTokenToValue();
+     dc4:	0e 94 88 06 	call	0xd10	; 0xd10 <UIMgr_convertTokenToValue>
+				tokenCount++;
+     dc8:	80 91 65 01 	lds	r24, 0x0165
+     dcc:	8f 5f       	subi	r24, 0xFF	; 255
+     dce:	80 93 65 01 	sts	0x0165, r24
+			}
+			/* either way, it is time to try to process the received
+			token list since we have reached the end of the cmd. */
+			Utility_delay(100);
+     dd2:	84 e6       	ldi	r24, 0x64	; 100
+     dd4:	90 e0       	ldi	r25, 0x00	; 0
+     dd6:	0e 94 53 00 	call	0xa6	; 0xa6 <Utility_delay>
+			if (receivedCmd == invalidCmd ||
+     dda:	80 91 00 01 	lds	r24, 0x0100
+     dde:	88 50       	subi	r24, 0x08	; 8
+     de0:	90 91 63 01 	lds	r25, 0x0163
+     de4:	82 30       	cpi	r24, 0x02	; 2
+     de6:	48 f5       	brcc	.+82     	; 0xe3a <UIMgr_processReceivedData+0xe4>
+***********************************************************/	
+void UIMgr_writeTxFifo(unsigned char data)
+{
+	unsigned char tmpHead;
+
+	DISABLE_INTS();
+     de8:	f8 94       	cli
+	UIMgr_txFifo[UIMgr_txFifoHead] = data;
+     dea:	e9 2f       	mov	r30, r25
+     dec:	f0 e0       	ldi	r31, 0x00	; 0
+     dee:	ec 5b       	subi	r30, 0xBC	; 188
+     df0:	fc 4f       	sbci	r31, 0xFC	; 252
+     df2:	70 82       	st	Z, r7
+
+    /* now move the head up */
+    tmpHead = (UIMgr_txFifoHead + 1) & (UI_MGR_TX_FIFO_MASK);
+     df4:	89 2f       	mov	r24, r25
+     df6:	8f 5f       	subi	r24, 0xFF	; 255
+     df8:	8f 73       	andi	r24, 0x3F	; 63
+    UIMgr_txFifoHead = tmpHead;
+	ENABLE_INTS();
+     dfa:	78 94       	sei
+***********************************************************/	
+void UIMgr_writeTxFifo(unsigned char data)
+{
+	unsigned char tmpHead;
+
+	DISABLE_INTS();
+     dfc:	f8 94       	cli
+	UIMgr_txFifo[UIMgr_txFifoHead] = data;
+     dfe:	e8 2f       	mov	r30, r24
+     e00:	f0 e0       	ldi	r31, 0x00	; 0
+     e02:	ec 5b       	subi	r30, 0xBC	; 188
+     e04:	fc 4f       	sbci	r31, 0xFC	; 252
+     e06:	c0 82       	st	Z, r12
+
+    /* now move the head up */
+    tmpHead = (UIMgr_txFifoHead + 1) & (UI_MGR_TX_FIFO_MASK);
+     e08:	8f 5f       	subi	r24, 0xFF	; 255
+     e0a:	8f 73       	andi	r24, 0x3F	; 63
+    UIMgr_txFifoHead = tmpHead;
+	ENABLE_INTS();
+     e0c:	78 94       	sei
+***********************************************************/	
+void UIMgr_writeTxFifo(unsigned char data)
+{
+	unsigned char tmpHead;
+
+	DISABLE_INTS();
+     e0e:	f8 94       	cli
+	UIMgr_txFifo[UIMgr_txFifoHead] = data;
+     e10:	e8 2f       	mov	r30, r24
+     e12:	f0 e0       	ldi	r31, 0x00	; 0
+     e14:	ec 5b       	subi	r30, 0xBC	; 188
+     e16:	fc 4f       	sbci	r31, 0xFC	; 252
+     e18:	90 82       	st	Z, r9
+
+    /* now move the head up */
+    tmpHead = (UIMgr_txFifoHead + 1) & (UI_MGR_TX_FIFO_MASK);
+     e1a:	8f 5f       	subi	r24, 0xFF	; 255
+     e1c:	8f 73       	andi	r24, 0x3F	; 63
+    UIMgr_txFifoHead = tmpHead;
+	ENABLE_INTS();
+     e1e:	78 94       	sei
+***********************************************************/	
+void UIMgr_writeTxFifo(unsigned char data)
+{
+	unsigned char tmpHead;
+
+	DISABLE_INTS();
+     e20:	f8 94       	cli
+	UIMgr_txFifo[UIMgr_txFifoHead] = data;
+     e22:	e8 2f       	mov	r30, r24
+     e24:	f0 e0       	ldi	r31, 0x00	; 0
+     e26:	ec 5b       	subi	r30, 0xBC	; 188
+     e28:	fc 4f       	sbci	r31, 0xFC	; 252
+     e2a:	80 82       	st	Z, r8
+
+    /* now move the head up */
+    tmpHead = (UIMgr_txFifoHead + 1) & (UI_MGR_TX_FIFO_MASK);
+    UIMgr_txFifoHead = tmpHead;
+     e2c:	8f 5f       	subi	r24, 0xFF	; 255
+     e2e:	8f 73       	andi	r24, 0x3F	; 63
+     e30:	80 93 63 01 	sts	0x0163, r24
+	ENABLE_INTS();
+     e34:	78 94       	sei
+			Utility_delay(100);
+			if (receivedCmd == invalidCmd ||
+			     receivedCmd == noCmd )
+			{
+				UIMgr_sendNck();
+				PUBLISH_EVENT(EV_SERIAL_DATA_PENDING_TX);
+     e36:	80 e9       	ldi	r24, 0x90	; 144
+     e38:	52 c0       	rjmp	.+164    	; 0xede <UIMgr_processReceivedData+0x188>
+***********************************************************/	
+void UIMgr_writeTxFifo(unsigned char data)
+{
+	unsigned char tmpHead;
+
+	DISABLE_INTS();
+     e3a:	f8 94       	cli
+	UIMgr_txFifo[UIMgr_txFifoHead] = data;
+     e3c:	e9 2f       	mov	r30, r25
+     e3e:	f0 e0       	ldi	r31, 0x00	; 0
+     e40:	ec 5b       	subi	r30, 0xBC	; 188
+     e42:	fc 4f       	sbci	r31, 0xFC	; 252
+     e44:	50 82       	st	Z, r5
+
+    /* now move the head up */
+    tmpHead = (UIMgr_txFifoHead + 1) & (UI_MGR_TX_FIFO_MASK);
+     e46:	89 2f       	mov	r24, r25
+     e48:	8f 5f       	subi	r24, 0xFF	; 255
+     e4a:	8f 73       	andi	r24, 0x3F	; 63
+    UIMgr_txFifoHead = tmpHead;
+	ENABLE_INTS();
+     e4c:	78 94       	sei
+***********************************************************/	
+void UIMgr_writeTxFifo(unsigned char data)
+{
+	unsigned char tmpHead;
+
+	DISABLE_INTS();
+     e4e:	f8 94       	cli
+	UIMgr_txFifo[UIMgr_txFifoHead] = data;
+     e50:	e8 2f       	mov	r30, r24
+     e52:	f0 e0       	ldi	r31, 0x00	; 0
+     e54:	ec 5b       	subi	r30, 0xBC	; 188
+     e56:	fc 4f       	sbci	r31, 0xFC	; 252
+     e58:	c0 82       	st	Z, r12
+
+    /* now move the head up */
+    tmpHead = (UIMgr_txFifoHead + 1) & (UI_MGR_TX_FIFO_MASK);
+     e5a:	8f 5f       	subi	r24, 0xFF	; 255
+     e5c:	8f 73       	andi	r24, 0x3F	; 63
+    UIMgr_txFifoHead = tmpHead;
+	ENABLE_INTS();
+     e5e:	78 94       	sei
+***********************************************************/	
+void UIMgr_writeTxFifo(unsigned char data)
+{
+	unsigned char tmpHead;
+
+	DISABLE_INTS();
+     e60:	f8 94       	cli
+	UIMgr_txFifo[UIMgr_txFifoHead] = data;
+     e62:	e8 2f       	mov	r30, r24
+     e64:	f0 e0       	ldi	r31, 0x00	; 0
+     e66:	ec 5b       	subi	r30, 0xBC	; 188
+     e68:	fc 4f       	sbci	r31, 0xFC	; 252
+     e6a:	90 82       	st	Z, r9
+
+    /* now move the head up */
+    tmpHead = (UIMgr_txFifoHead + 1) & (UI_MGR_TX_FIFO_MASK);
+     e6c:	8f 5f       	subi	r24, 0xFF	; 255
+     e6e:	8f 73       	andi	r24, 0x3F	; 63
+    UIMgr_txFifoHead = tmpHead;
+	ENABLE_INTS();
+     e70:	78 94       	sei
+***********************************************************/	
+void UIMgr_writeTxFifo(unsigned char data)
+{
+	unsigned char tmpHead;
+
+	DISABLE_INTS();
+     e72:	f8 94       	cli
+	UIMgr_txFifo[UIMgr_txFifoHead] = data;
+     e74:	e8 2f       	mov	r30, r24
+     e76:	f0 e0       	ldi	r31, 0x00	; 0
+     e78:	ec 5b       	subi	r30, 0xBC	; 188
+     e7a:	fc 4f       	sbci	r31, 0xFC	; 252
+     e7c:	80 82       	st	Z, r8
+
+    /* now move the head up */
+    tmpHead = (UIMgr_txFifoHead + 1) & (UI_MGR_TX_FIFO_MASK);
+    UIMgr_txFifoHead = tmpHead;
+     e7e:	8f 5f       	subi	r24, 0xFF	; 255
+     e80:	8f 73       	andi	r24, 0x3F	; 63
+     e82:	80 93 63 01 	sts	0x0163, r24
+	ENABLE_INTS();
+     e86:	78 94       	sei
+			else
+			{
+				UIMgr_sendAck();
+				/* publish the serial data pending event, so it
+				will push the ACK out before we execute the cmd */
+				PUBLISH_EVENT(EV_SERIAL_DATA_PENDING_TX);
+     e88:	80 e9       	ldi	r24, 0x90	; 144
+     e8a:	0e 94 d3 01 	call	0x3a6	; 0x3a6 <Exec_writeEventFifo>
+    unsigned char eeprom_write_succeeded = FALSE;
+#if	DEBUG_COLOR_MAP	
+	unsigned char asciiBuffer[5];
+#endif
+
+	if (receivedCmd == pingCmd) 
+     e8e:	80 91 00 01 	lds	r24, 0x0100
+     e92:	81 30       	cpi	r24, 0x01	; 1
+     e94:	09 f4       	brne	.+2      	; 0xe98 <UIMgr_processReceivedData+0x142>
+     e96:	7f c0       	rjmp	.+254    	; 0xf96 <UIMgr_processReceivedData+0x240>
+	{
+	}
+	else if (receivedCmd == getVersionCmd)
+     e98:	88 23       	and	r24, r24
+     e9a:	a9 f4       	brne	.+42     	; 0xec6 <UIMgr_processReceivedData+0x170>
+     e9c:	80 91 63 01 	lds	r24, 0x0163
+     ea0:	a1 e0       	ldi	r26, 0x01	; 1
+     ea2:	b1 e0       	ldi	r27, 0x01	; 1
+     ea4:	0a c0       	rjmp	.+20     	; 0xeba <UIMgr_processReceivedData+0x164>
+	{
+		pData = AVRcamVersion;
+		while(*pData != 0)
+		{		
+			UIMgr_writeTxFifo(*pData++);
+     ea6:	11 96       	adiw	r26, 0x01	; 1
+***********************************************************/	
+void UIMgr_writeTxFifo(unsigned char data)
+{
+	unsigned char tmpHead;
+
+	DISABLE_INTS();
+     ea8:	f8 94       	cli
+	UIMgr_txFifo[UIMgr_txFifoHead] = data;
+     eaa:	e8 2f       	mov	r30, r24
+     eac:	f0 e0       	ldi	r31, 0x00	; 0
+     eae:	ec 5b       	subi	r30, 0xBC	; 188
+     eb0:	fc 4f       	sbci	r31, 0xFC	; 252
+     eb2:	90 83       	st	Z, r25
+
+    /* now move the head up */
+    tmpHead = (UIMgr_txFifoHead + 1) & (UI_MGR_TX_FIFO_MASK);
+     eb4:	8f 5f       	subi	r24, 0xFF	; 255
+     eb6:	8f 73       	andi	r24, 0x3F	; 63
+    UIMgr_txFifoHead = tmpHead;
+	ENABLE_INTS();
+     eb8:	78 94       	sei
+	{
+	}
+	else if (receivedCmd == getVersionCmd)
+	{
+		pData = AVRcamVersion;
+		while(*pData != 0)
+     eba:	9c 91       	ld	r25, X
+     ebc:	99 23       	and	r25, r25
+     ebe:	99 f7       	brne	.-26     	; 0xea6 <UIMgr_processReceivedData+0x150>
+     ec0:	80 93 63 01 	sts	0x0163, r24
+     ec4:	68 c0       	rjmp	.+208    	; 0xf96 <UIMgr_processReceivedData+0x240>
+		{		
+			UIMgr_writeTxFifo(*pData++);
+		}
+	}		
+	else if (receivedCmd == resetCameraCmd)
+     ec6:	87 30       	cpi	r24, 0x07	; 7
+     ec8:	19 f4       	brne	.+6      	; 0xed0 <UIMgr_processReceivedData+0x17a>
+	{
+		CamInt_resetCam();
+     eca:	0e 94 e3 00 	call	0x1c6	; 0x1c6 <CamInt_resetCam>
+     ece:	63 c0       	rjmp	.+198    	; 0xf96 <UIMgr_processReceivedData+0x240>
+	}
+	else if (receivedCmd == dumpFrameCmd)
+     ed0:	83 30       	cpi	r24, 0x03	; 3
+     ed2:	41 f4       	brne	.+16     	; 0xee4 <UIMgr_processReceivedData+0x18e>
+		be received by the FrameMgr, which will begin
+		dumping the frame...a short delay is needed
+		here to keep the Java demo app happy (sometimes
+		it wouldn't be able to receive the serial data
+		as quickly as AVRcam can provide it). */
+		Utility_delay(100);
+     ed4:	84 e6       	ldi	r24, 0x64	; 100
+     ed6:	90 e0       	ldi	r25, 0x00	; 0
+     ed8:	0e 94 53 00 	call	0xa6	; 0xa6 <Utility_delay>
+		PUBLISH_EVENT(EV_DUMP_FRAME);
+     edc:	82 e0       	ldi	r24, 0x02	; 2
+     ede:	0e 94 d3 01 	call	0x3a6	; 0x3a6 <Exec_writeEventFifo>
+     ee2:	59 c0       	rjmp	.+178    	; 0xf96 <UIMgr_processReceivedData+0x240>
+	}
+	else if (receivedCmd == setCameraRegsCmd)
+     ee4:	82 30       	cpi	r24, 0x02	; 2
+     ee6:	91 f4       	brne	.+36     	; 0xf0c <UIMgr_processReceivedData+0x1b6>
+     ee8:	11 e0       	ldi	r17, 0x01	; 1
+     eea:	09 c0       	rjmp	.+18     	; 0xefe <UIMgr_processReceivedData+0x1a8>
+		/* we need to gather the tokens and
+		build config cmds to be sent to the camera */
+		for (i=1; i<tokenCount; i+=2)  /* starts at 1 since first token
+											is the CR cmd */
+		{
+			CamConfig_setCamReg(tokenBuffer[i],tokenBuffer[i+1]);
+     eec:	e1 2f       	mov	r30, r17
+     eee:	f0 e0       	ldi	r31, 0x00	; 0
+     ef0:	e4 59       	subi	r30, 0x94	; 148
+     ef2:	fe 4f       	sbci	r31, 0xFE	; 254
+     ef4:	80 81       	ld	r24, Z
+     ef6:	61 81       	ldd	r22, Z+1	; 0x01
+     ef8:	0e 94 95 00 	call	0x12a	; 0x12a <CamConfig_setCamReg>
+	}
+	else if (receivedCmd == setCameraRegsCmd)
+	{
+		/* we need to gather the tokens and
+		build config cmds to be sent to the camera */
+		for (i=1; i<tokenCount; i+=2)  /* starts at 1 since first token
+     efc:	1e 5f       	subi	r17, 0xFE	; 254
+     efe:	80 91 65 01 	lds	r24, 0x0165
+     f02:	18 17       	cp	r17, r24
+     f04:	98 f3       	brcs	.-26     	; 0xeec <UIMgr_processReceivedData+0x196>
+											is the CR cmd */
+		{
+			CamConfig_setCamReg(tokenBuffer[i],tokenBuffer[i+1]);
+		}
+		CamConfig_sendFifoCmds();
+     f06:	0e 94 99 00 	call	0x132	; 0x132 <CamConfig_sendFifoCmds>
+     f0a:	45 c0       	rjmp	.+138    	; 0xf96 <UIMgr_processReceivedData+0x240>
+	}
+	else if (receivedCmd == enableTrackingCmd)
+     f0c:	84 30       	cpi	r24, 0x04	; 4
+     f0e:	31 f4       	brne	.+12     	; 0xf1c <UIMgr_processReceivedData+0x1c6>
+	{
+		/* publish the event...again with a short delay */
+		Utility_delay(100);
+     f10:	84 e6       	ldi	r24, 0x64	; 100
+     f12:	90 e0       	ldi	r25, 0x00	; 0
+     f14:	0e 94 53 00 	call	0xa6	; 0xa6 <Utility_delay>
+		PUBLISH_EVENT(EV_ENABLE_TRACKING);
+     f18:	80 e8       	ldi	r24, 0x80	; 128
+     f1a:	e1 cf       	rjmp	.-62     	; 0xede <UIMgr_processReceivedData+0x188>
+	}
+	else if (receivedCmd == disableTrackingCmd)
+     f1c:	85 30       	cpi	r24, 0x05	; 5
+     f1e:	11 f4       	brne	.+4      	; 0xf24 <UIMgr_processReceivedData+0x1ce>
+	{
+		PUBLISH_EVENT(EV_DISABLE_TRACKING);
+     f20:	81 e8       	ldi	r24, 0x81	; 129
+     f22:	dd cf       	rjmp	.-70     	; 0xede <UIMgr_processReceivedData+0x188>
+	}
+	else if (receivedCmd == setColorMapCmd)
+     f24:	86 30       	cpi	r24, 0x06	; 6
+     f26:	b9 f5       	brne	.+110    	; 0xf96 <UIMgr_processReceivedData+0x240>
+     f28:	00 e0       	ldi	r16, 0x00	; 0
+     f2a:	31 c0       	rjmp	.+98     	; 0xf8e <UIMgr_processReceivedData+0x238>
+	{
+		/* copy the received tokens into the color map */
+		for (i=0; i<tokenCount; i++)
+		{
+			colorMap[i] = tokenBuffer[i+1];
+     f2c:	80 2f       	mov	r24, r16
+     f2e:	90 e0       	ldi	r25, 0x00	; 0
+     f30:	ec 01       	movw	r28, r24
+     f32:	21 96       	adiw	r28, 0x01	; 1
+     f34:	fe 01       	movw	r30, r28
+     f36:	e4 59       	subi	r30, 0x94	; 148
+     f38:	fe 4f       	sbci	r31, 0xFE	; 254
+     f3a:	10 81       	ld	r17, Z
+     f3c:	20 e0       	ldi	r18, 0x00	; 0
+     f3e:	e2 2e       	mov	r14, r18
+     f40:	24 e0       	ldi	r18, 0x04	; 4
+     f42:	f2 2e       	mov	r15, r18
+     f44:	e8 0e       	add	r14, r24
+     f46:	f9 1e       	adc	r15, r25
+     f48:	f7 01       	movw	r30, r14
+     f4a:	10 83       	st	Z, r17
+            
+            /* write each colorMap byte to EEPROM, but only those
+            that changed...this will help reduce wear on the EEPROM */
+            eepromData = eeprom_read_byte( (unsigned char*)(i+1));
+     f4c:	ce 01       	movw	r24, r28
+     f4e:	0e 94 6b 08 	call	0x10d6	; 0x10d6 <__eerd_byte_m328p>
+            if (eepromData != colorMap[i])
+     f52:	81 17       	cp	r24, r17
+     f54:	d9 f0       	breq	.+54     	; 0xf8c <UIMgr_processReceivedData+0x236>
+                /* need to actually perform the write because the
+                data in eeprom is different than the current colorMap */
+                eeprom_write_succeeded = FALSE;
+                while(eeprom_write_succeeded == FALSE && num_writes < MAX_EEPROM_WRITE_ATTEMPTS)
+                {
+                    eeprom_write_byte((unsigned char*)(i+1),colorMap[i]);
+     f56:	ce 01       	movw	r24, r28
+     f58:	61 2f       	mov	r22, r17
+     f5a:	0e 94 73 08 	call	0x10e6	; 0x10e6 <__eewr_byte_m328p>
+                    num_writes++;
+                    eepromData = eeprom_read_byte( (unsigned char*)(i+1));
+     f5e:	ce 01       	movw	r24, r28
+     f60:	0e 94 6b 08 	call	0x10d6	; 0x10d6 <__eerd_byte_m328p>
+                    if (eepromData == colorMap[i])
+     f64:	f7 01       	movw	r30, r14
+     f66:	60 81       	ld	r22, Z
+     f68:	86 17       	cp	r24, r22
+     f6a:	81 f0       	breq	.+32     	; 0xf8c <UIMgr_processReceivedData+0x236>
+                /* need to actually perform the write because the
+                data in eeprom is different than the current colorMap */
+                eeprom_write_succeeded = FALSE;
+                while(eeprom_write_succeeded == FALSE && num_writes < MAX_EEPROM_WRITE_ATTEMPTS)
+                {
+                    eeprom_write_byte((unsigned char*)(i+1),colorMap[i]);
+     f6c:	ce 01       	movw	r24, r28
+     f6e:	0e 94 73 08 	call	0x10e6	; 0x10e6 <__eewr_byte_m328p>
+                    num_writes++;
+                    eepromData = eeprom_read_byte( (unsigned char*)(i+1));
+     f72:	ce 01       	movw	r24, r28
+     f74:	0e 94 6b 08 	call	0x10d6	; 0x10d6 <__eerd_byte_m328p>
+                    if (eepromData == colorMap[i])
+     f78:	f7 01       	movw	r30, r14
+     f7a:	60 81       	ld	r22, Z
+     f7c:	86 17       	cp	r24, r22
+     f7e:	31 f0       	breq	.+12     	; 0xf8c <UIMgr_processReceivedData+0x236>
+                /* need to actually perform the write because the
+                data in eeprom is different than the current colorMap */
+                eeprom_write_succeeded = FALSE;
+                while(eeprom_write_succeeded == FALSE && num_writes < MAX_EEPROM_WRITE_ATTEMPTS)
+                {
+                    eeprom_write_byte((unsigned char*)(i+1),colorMap[i]);
+     f80:	ce 01       	movw	r24, r28
+     f82:	0e 94 73 08 	call	0x10e6	; 0x10e6 <__eewr_byte_m328p>
+                    num_writes++;
+                    eepromData = eeprom_read_byte( (unsigned char*)(i+1));
+     f86:	ce 01       	movw	r24, r28
+     f88:	0e 94 6b 08 	call	0x10d6	; 0x10d6 <__eerd_byte_m328p>
+		PUBLISH_EVENT(EV_DISABLE_TRACKING);
+	}
+	else if (receivedCmd == setColorMapCmd)
+	{
+		/* copy the received tokens into the color map */
+		for (i=0; i<tokenCount; i++)
+     f8c:	0f 5f       	subi	r16, 0xFF	; 255
+     f8e:	80 91 65 01 	lds	r24, 0x0165
+     f92:	08 17       	cp	r16, r24
+     f94:	58 f2       	brcs	.-106    	; 0xf2c <UIMgr_processReceivedData+0x1d6>
+				PUBLISH_EVENT(EV_SERIAL_DATA_PENDING_TX);
+				UIMgr_executeCmd();
+			}
+			
+			/* reset any necessary data */
+			tokenCount = 0;
+     f96:	10 92 65 01 	sts	0x0165, r1
+			memset(tokenBuffer,0x00,MAX_TOKEN_COUNT);
+     f9a:	f5 01       	movw	r30, r10
+     f9c:	86 2d       	mov	r24, r6
+     f9e:	11 92       	st	Z+, r1
+     fa0:	8a 95       	dec	r24
+     fa2:	e9 f7       	brne	.-6      	; 0xf9e <UIMgr_processReceivedData+0x248>
+     fa4:	3a c0       	rjmp	.+116    	; 0x101a <UIMgr_processReceivedData+0x2c4>
+		}
+		else if (tmpData == ' ')  /* space char */
+     fa6:	20 32       	cpi	r18, 0x20	; 32
+     fa8:	c9 f4       	brne	.+50     	; 0xfdc <UIMgr_processReceivedData+0x286>
+		{
+			/* the end of a token has been reached */
+			if (tokenCount == 0)
+     faa:	80 91 65 01 	lds	r24, 0x0165
+     fae:	88 23       	and	r24, r24
+     fb0:	19 f4       	brne	.+6      	; 0xfb8 <UIMgr_processReceivedData+0x262>
+			{
+				UIMgr_convertTokenToCmd();
+     fb2:	0e 94 18 06 	call	0xc30	; 0xc30 <UIMgr_convertTokenToCmd>
+     fb6:	0c c0       	rjmp	.+24     	; 0xfd0 <UIMgr_processReceivedData+0x27a>
+			}
+			else
+			{
+				/* check to see if this token is going to push
+				us over the limit...if so, abort the transaction */
+				if (tokenCount+1 >= MAX_TOKEN_COUNT)
+     fb8:	90 e0       	ldi	r25, 0x00	; 0
+     fba:	cf 97       	sbiw	r24, 0x3f	; 63
+     fbc:	3c f0       	brlt	.+14     	; 0xfcc <UIMgr_processReceivedData+0x276>
+				{
+					/* we received too many tokens, and 
+					need to NCK this request, since its too
+					large...reset everything...*/
+					charCount=0;
+     fbe:	10 92 66 01 	sts	0x0166, r1
+					charIndex=0;
+     fc2:	10 92 67 01 	sts	0x0167, r1
+					tokenCount=0;
+     fc6:	10 92 65 01 	sts	0x0165, r1
+     fca:	25 c0       	rjmp	.+74     	; 0x1016 <UIMgr_processReceivedData+0x2c0>
+					receivedCmd = invalidCmd;
+				}
+				else
+				{
+					/* tokenCount is still in range...*/
+					UIMgr_convertTokenToValue();
+     fcc:	0e 94 88 06 	call	0xd10	; 0xd10 <UIMgr_convertTokenToValue>
+					tokenCount++;
+     fd0:	80 91 65 01 	lds	r24, 0x0165
+     fd4:	8f 5f       	subi	r24, 0xFF	; 255
+     fd6:	80 93 65 01 	sts	0x0165, r24
+     fda:	1f c0       	rjmp	.+62     	; 0x101a <UIMgr_processReceivedData+0x2c4>
+				}
+			}
+		}
+		else if ( (tmpData >= 'A' && tmpData <= 'Z') ||
+     fdc:	82 2f       	mov	r24, r18
+     fde:	81 54       	subi	r24, 0x41	; 65
+     fe0:	8a 31       	cpi	r24, 0x1A	; 26
+     fe2:	18 f0       	brcs	.+6      	; 0xfea <UIMgr_processReceivedData+0x294>
+     fe4:	8f 5e       	subi	r24, 0xEF	; 239
+     fe6:	8a 30       	cpi	r24, 0x0A	; 10
+     fe8:	b0 f4       	brcc	.+44     	; 0x1016 <UIMgr_processReceivedData+0x2c0>
+				   (tmpData >= '0' && tmpData <= '9') )
+		{
+			/* a valid range of token was received */
+			asciiTokenBuffer[charIndex] = tmpData;
+     fea:	80 91 67 01 	lds	r24, 0x0167
+     fee:	e8 2f       	mov	r30, r24
+     ff0:	f0 e0       	ldi	r31, 0x00	; 0
+     ff2:	e8 59       	subi	r30, 0x98	; 152
+     ff4:	fe 4f       	sbci	r31, 0xFE	; 254
+     ff6:	20 83       	st	Z, r18
+			charCount++;
+     ff8:	90 91 66 01 	lds	r25, 0x0166
+     ffc:	9f 5f       	subi	r25, 0xFF	; 255
+     ffe:	90 93 66 01 	sts	0x0166, r25
+			charIndex++;
+    1002:	8f 5f       	subi	r24, 0xFF	; 255
+    1004:	80 93 67 01 	sts	0x0167, r24
+			if (charCount > MAX_TOKEN_LENGTH)
+    1008:	94 30       	cpi	r25, 0x04	; 4
+    100a:	38 f0       	brcs	.+14     	; 0x101a <UIMgr_processReceivedData+0x2c4>
+			{
+				/* we have received a token that cannot be handled...
+				set the received cmd to an invalid cmd, and wait
+				for the \r to process it */
+				receivedCmd = invalidCmd;
+    100c:	d0 92 00 01 	sts	0x0100, r13
+				charIndex = 0;  /* ...so we won't overwrite memory */
+    1010:	10 92 67 01 	sts	0x0167, r1
+    1014:	02 c0       	rjmp	.+4      	; 0x101a <UIMgr_processReceivedData+0x2c4>
+			}
+		}
+		else
+		{
+			/* an invalid character was received */
+			receivedCmd = invalidCmd;
+    1016:	d0 92 00 01 	sts	0x0100, r13
+	unsigned char tmpData = 0;
+
+	/* still need to add a mechanism to handle token counts 
+	that are excessive!!! FIX ME!!! */
+    
+	while(IS_DATA_IN_RX_FIFO() == TRUE)
+    101a:	90 91 62 01 	lds	r25, 0x0162
+    101e:	80 91 61 01 	lds	r24, 0x0161
+    1022:	89 17       	cp	r24, r25
+    1024:	09 f0       	breq	.+2      	; 0x1028 <UIMgr_processReceivedData+0x2d2>
+    1026:	b9 ce       	rjmp	.-654    	; 0xd9a <UIMgr_processReceivedData+0x44>
+			/* an invalid character was received */
+			receivedCmd = invalidCmd;
+		}
+	}  /* end while */
+	
+	asm volatile("clt"::);  /* clear out the T flag in case it wasn't
+    1028:	e8 94       	clt
+								 cleared already */
+}						
+    102a:	df 91       	pop	r29
+    102c:	cf 91       	pop	r28
+    102e:	1f 91       	pop	r17
+    1030:	0f 91       	pop	r16
+    1032:	ff 90       	pop	r15
+    1034:	ef 90       	pop	r14
+    1036:	df 90       	pop	r13
+    1038:	cf 90       	pop	r12
+    103a:	bf 90       	pop	r11
+    103c:	af 90       	pop	r10
+    103e:	9f 90       	pop	r9
+    1040:	8f 90       	pop	r8
+    1042:	7f 90       	pop	r7
+    1044:	6f 90       	pop	r6
+    1046:	5f 90       	pop	r5
+    1048:	08 95       	ret
+
+0000104a <UIMgr_dispatchEvent>:
+	Inputs:  event - the generated event
+	Outputs: none
+***********************************************************/	
+void UIMgr_dispatchEvent(unsigned char event)
+{
+	switch(event)
+    104a:	80 31       	cpi	r24, 0x10	; 16
+    104c:	29 f0       	breq	.+10     	; 0x1058 <UIMgr_dispatchEvent+0xe>
+    104e:	80 39       	cpi	r24, 0x90	; 144
+    1050:	49 f0       	breq	.+18     	; 0x1064 <UIMgr_dispatchEvent+0x1a>
+    1052:	81 30       	cpi	r24, 0x01	; 1
+    1054:	49 f4       	brne	.+18     	; 0x1068 <UIMgr_dispatchEvent+0x1e>
+    1056:	03 c0       	rjmp	.+6      	; 0x105e <UIMgr_dispatchEvent+0x14>
+	{
+		case EV_ACQUIRE_LINE_COMPLETE:
+			UIMgr_transmitPendingData();
+    1058:	0e 94 04 06 	call	0xc08	; 0xc08 <UIMgr_transmitPendingData>
+    105c:	08 95       	ret
+			break;
+			
+		case EV_SERIAL_DATA_RECEIVED:		
+			UIMgr_processReceivedData();
+    105e:	0e 94 ab 06 	call	0xd56	; 0xd56 <UIMgr_processReceivedData>
+    1062:	08 95       	ret
+			break;
+			
+		case EV_SERIAL_DATA_PENDING_TX:
+			UIMgr_flushTxBuffer();
+    1064:	0e 94 df 05 	call	0xbbe	; 0xbbe <UIMgr_flushTxBuffer>
+    1068:	08 95       	ret
+
+0000106a <atoi>:
+    106a:	fc 01       	movw	r30, r24
+    106c:	88 27       	eor	r24, r24
+    106e:	99 27       	eor	r25, r25
+    1070:	e8 94       	clt
+    1072:	21 91       	ld	r18, Z+
+    1074:	20 32       	cpi	r18, 0x20	; 32
+    1076:	e9 f3       	breq	.-6      	; 0x1072 <atoi+0x8>
+    1078:	29 30       	cpi	r18, 0x09	; 9
+    107a:	10 f0       	brcs	.+4      	; 0x1080 <atoi+0x16>
+    107c:	2e 30       	cpi	r18, 0x0E	; 14
+    107e:	c8 f3       	brcs	.-14     	; 0x1072 <atoi+0x8>
+    1080:	2b 32       	cpi	r18, 0x2B	; 43
+    1082:	41 f0       	breq	.+16     	; 0x1094 <atoi+0x2a>
+    1084:	2d 32       	cpi	r18, 0x2D	; 45
+    1086:	39 f4       	brne	.+14     	; 0x1096 <atoi+0x2c>
+    1088:	68 94       	set
+    108a:	04 c0       	rjmp	.+8      	; 0x1094 <atoi+0x2a>
+    108c:	0e 94 53 08 	call	0x10a6	; 0x10a6 <__mulhi_const_10>
+    1090:	82 0f       	add	r24, r18
+    1092:	91 1d       	adc	r25, r1
+    1094:	21 91       	ld	r18, Z+
+    1096:	20 53       	subi	r18, 0x30	; 48
+    1098:	2a 30       	cpi	r18, 0x0A	; 10
+    109a:	c0 f3       	brcs	.-16     	; 0x108c <atoi+0x22>
+    109c:	1e f4       	brtc	.+6      	; 0x10a4 <atoi+0x3a>
+    109e:	90 95       	com	r25
+    10a0:	81 95       	neg	r24
+    10a2:	9f 4f       	sbci	r25, 0xFF	; 255
+    10a4:	08 95       	ret
+
+000010a6 <__mulhi_const_10>:
+    10a6:	7a e0       	ldi	r23, 0x0A	; 10
+    10a8:	97 9f       	mul	r25, r23
+    10aa:	90 2d       	mov	r25, r0
+    10ac:	87 9f       	mul	r24, r23
+    10ae:	80 2d       	mov	r24, r0
+    10b0:	91 0d       	add	r25, r1
+    10b2:	11 24       	eor	r1, r1
+    10b4:	08 95       	ret
+
+000010b6 <__eerd_block_m328p>:
+    10b6:	dc 01       	movw	r26, r24
+    10b8:	cb 01       	movw	r24, r22
+
+000010ba <__eerd_blraw_m328p>:
+    10ba:	fc 01       	movw	r30, r24
+    10bc:	f9 99       	sbic	0x1f, 1	; 31
+    10be:	fe cf       	rjmp	.-4      	; 0x10bc <__eerd_blraw_m328p+0x2>
+    10c0:	06 c0       	rjmp	.+12     	; 0x10ce <__eerd_blraw_m328p+0x14>
+    10c2:	f2 bd       	out	0x22, r31	; 34
+    10c4:	e1 bd       	out	0x21, r30	; 33
+    10c6:	f8 9a       	sbi	0x1f, 0	; 31
+    10c8:	31 96       	adiw	r30, 0x01	; 1
+    10ca:	00 b4       	in	r0, 0x20	; 32
+    10cc:	0d 92       	st	X+, r0
+    10ce:	41 50       	subi	r20, 0x01	; 1
+    10d0:	50 40       	sbci	r21, 0x00	; 0
+    10d2:	b8 f7       	brcc	.-18     	; 0x10c2 <__eerd_blraw_m328p+0x8>
+    10d4:	08 95       	ret
+
+000010d6 <__eerd_byte_m328p>:
+    10d6:	f9 99       	sbic	0x1f, 1	; 31
+    10d8:	fe cf       	rjmp	.-4      	; 0x10d6 <__eerd_byte_m328p>
+    10da:	92 bd       	out	0x22, r25	; 34
+    10dc:	81 bd       	out	0x21, r24	; 33
+    10de:	f8 9a       	sbi	0x1f, 0	; 31
+    10e0:	99 27       	eor	r25, r25
+    10e2:	80 b5       	in	r24, 0x20	; 32
+    10e4:	08 95       	ret
+
+000010e6 <__eewr_byte_m328p>:
+    10e6:	26 2f       	mov	r18, r22
+
+000010e8 <__eewr_r18_m328p>:
+    10e8:	f9 99       	sbic	0x1f, 1	; 31
+    10ea:	fe cf       	rjmp	.-4      	; 0x10e8 <__eewr_r18_m328p>
+    10ec:	1f ba       	out	0x1f, r1	; 31
+    10ee:	92 bd       	out	0x22, r25	; 34
+    10f0:	81 bd       	out	0x21, r24	; 33
+    10f2:	20 bd       	out	0x20, r18	; 32
+    10f4:	0f b6       	in	r0, 0x3f	; 63
+    10f6:	f8 94       	cli
+    10f8:	fa 9a       	sbi	0x1f, 2	; 31
+    10fa:	f9 9a       	sbi	0x1f, 1	; 31
+    10fc:	0f be       	out	0x3f, r0	; 63
+    10fe:	01 96       	adiw	r24, 0x01	; 1
+    1100:	08 95       	ret
+
+00001102 <_exit>:
+    1102:	f8 94       	cli
+
+00001104 <__stop_program>:
+    1104:	ff cf       	rjmp	.-2      	; 0x1104 <__stop_program>
