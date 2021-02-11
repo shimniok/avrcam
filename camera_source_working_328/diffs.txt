@@ -1,0 +1,1611 @@
+46,47c46
+<                            mega8 at startup if needed.
+<     8/24/09                mods for 7620 in CamConfig_init by jcd 
+---
+>                            mega8 at startup if needed.
+55,57c54
+< #include "Utility.h"
+< #include <avr/pgmspace.h>
+< #include "DebugInterface.h"
+---
+> #include "Utility.h"
+79,163d75
+< 
+< // reg settings for 7620 from alpha.dyndns.org
+< static unsigned char initial7620regvals[63][2] PROGMEM = {
+< 	{ 0x12, 0x24 }, // agc, YCrCb data,awb initially
+< 	{ 0x11, 0x01 }, // reduce clk by 2
+<     { 0x14, 0x84 }, // full frame size, gamma on defined by reg 62
+< 	{ 0x28, 0x24 }, // progressive scan, Y = ggg, UV = brbr
+<     { 0x71, 0x40 }, // gate pclk with href
+< 	{ 0x00, 0x00 }, // default agc gain
+< 	{ 0x01, 0x80 }, // default blue gain
+< 	{ 0x02, 0x80 }, // default red gain
+< 	{ 0x03, 0xc0 }, // saturation
+<     // reg 4,5 reserved
+< 	{ 0x06, 0x60 }, // brightness
+< 
+< 	{ 0x07, 0x00 }, // analog sharpness
+<     // reg 8..c reserved
+< 	{ 0x0c, 0x24 }, // white balance blue chan
+< 	{ 0x0d, 0x24 }, // white balance red chan
+<     // reg e,f reserved
+< // 0x10 used for manual auto exposure
+<     // reg 11,12 at top
+< 	{ 0x13, 0x01 }, // default, enable auto adjust
+< 	// reg 14 at top
+< 	{ 0x15, 0x01 }, // default, polarity, data order
+< 	{ 0x16, 0x03 }, // href asserted every frame
+< 	{ 0x17, 0x2f }, // horiz window start
+< 	{ 0x18, 0xcf }, // horiz window end
+< 	{ 0x19, 0x06 }, // vert window start
+< 	{ 0x1a, 0xf5 }, // vert window end
+< 
+< 	{ 0x1b, 0x00 }, // no pixel shift
+<     // 1c,1d mfg data
+<     // 1e, 1f reserved
+< 	{ 0x20, 0x18 }, // aperture correction, awb smart mode enabled no windowing yet
+< 	{ 0x21, 0x80 }, // default y chan offset
+< 	{ 0x22, 0x80 }, // default u chan offset
+< 	{ 0x23, 0x00 }, // default crystal current
+<     // 24,25 auto exposure ratios - use defaults?
+< 	{ 0x26, 0xa2 }, // default digital sharpness
+< 	{ 0x27, 0xea }, // common cont g
+<     // reg 28 at top
+< 	{ 0x29, 0x00 }, // default exposure control
+< 	{ 0x2a, 0x10 }, // frame rate adjust uv component delay - change me? <<<<<<<<<<<<<<<<
+< 	{ 0x2b, 0x00 }, // default frame rate adjust
+< 
+< 	{ 0x2c, 0x88 }, // default expanding reg
+< 	{ 0x2d, 0x91 }, // auto bright
+< 	{ 0x2e, 0x80 }, // default V chan offset
+< 	{ 0x2f, 0x44 }, // reserved, unknown
+< 	{ 0x60, 0x27 }, // default, no grn averaging
+< 	{ 0x61, 0x02 }, // default brightness target
+< 	{ 0x62, 0x5f }, // gama control
+< 	{ 0x63, 0xd5 }, // reserved, unknown
+< 	{ 0x64, 0x57 }, // gamma curve selection
+< 	{ 0x65, 0x83 }, // a/d mode, reference
+< 
+< 	{ 0x66, 0x55 }, // default awb
+< 	{ 0x67, 0x92 }, // color space
+< 	{ 0x68, 0xcf }, // brightness target
+< 	{ 0x69, 0x76 }, // analog sharpness
+< 	{ 0x6a, 0x22 }, // edge enhancement
+< 	{ 0x6b, 0x00 }, // reserved, unknown
+< 	{ 0x6c, 0x02 }, // reserved, unknown
+< 	{ 0x6d, 0x44 }, // reserved, unknown
+< 	{ 0x6e, 0x80 }, // reserved, unknown
+< 	{ 0x6f, 0x1d }, // noise compensation
+< 
+< 	{ 0x70, 0x8b }, // saturation, awb
+< 	{ 0x72, 0x14 }, // default horiz synch edge
+< 	{ 0x73, 0x54 }, //  "      "      "     "
+< 	{ 0x74, 0x00 }, // agc gain
+< 	{ 0x75, 0x8e }, // auto brightness range
+< 	{ 0x76, 0x00 }, // default common cont O
+< 	{ 0x77, 0xff }, // reserved unknown
+< 	{ 0x78, 0x80 }, // reserved unknown
+< 	{ 0x79, 0x80 }, // reserved unknown
+< 	{ 0x7a, 0x80 }, // reserved unknown
+< 
+< 	{ 0x7b, 0xe2 }, // reserved unknown
+< 	{ 0x7c, 0x00 }, // default field average
+< 	{ 0xff, 0xff }	// END MARKER 
+< };
+< 
+< 
+173,215c85,94
+< {
+< 
+< 
+< // true and false don't seem to be defined, 
+< unsigned char index =  0;
+< unsigned char done = 0;
+< int i;
+< unsigned char reg;
+< unsigned char regValue;
+< // mainly for debug, should be read from the array when that's working
+< /*
+< 	CamConfig_setCamReg(0x12,0x24);  // agc, YCrCb data,awb initially  
+< 	CamConfig_setCamReg(0x11, 0x01);    // reduce clk by 2
+< 	CamConfig_setCamReg(0x14, 0x84) ; // full frame size, gamma on defined by reg 62
+< 	CamConfig_setCamReg(0x28, 0x24); // progressive scan, Y = ggg, UV = brbr
+<     CamConfig_setCamReg(0x71, 0x40) ; // gate pclk with href
+< //CamConfig_sendFifoCmds();
+< */
+< 
+< // set the regs from the array above
+< // the 5 vs 8 register problem below was probably 'cause the memory was so close to
+< // full the fifo was getting clobbered...might as well leave it at 5
+< 
+< while (done == 0)
+<     {
+<     for (i=0;i<5;i++) // this doesn't seem to work with 8 regs, 5 seems ok
+<         {
+<         reg = pgm_read_byte(&initial7620regvals[index][0]);
+<         regValue = pgm_read_byte(&initial7620regvals[index][1]);
+<         
+<         if (reg == 0xff)
+<             {
+<             done = 1;
+<             }
+<         else
+<             {
+<             CamConfig_setCamReg(reg,regValue); 
+<             index++;
+<             }
+<         } // end for
+<     CamConfig_sendFifoCmds();
+<     } // end !done
+< } 
+---
+> {
+> 	CamConfig_setCamReg(0x14,0x20);  /* reduce frame size */
+> 	CamConfig_setCamReg(0x39,0x40);  /* gate PCLK with HREF */
+> 	CamConfig_setCamReg(0x12,0x28);  /* set RGB mode, with no AWB */
+> 	CamConfig_setCamReg(0x28,0x05);  /* set color sequencer */
+>     CamConfig_setCamReg(0x13,0x01);  /* un-tri-state the Y/UV lines */
+> 	
+> 	/* send the first four cmds in the I2C fifo */
+> 	CamConfig_sendFifoCmds();	
+> }
+47,50c47
+<                            nothing is clocking timer1 at startup.   
+<     6/24/08        jcd     removed avr/signal.h to keep compiler happy    
+<     9/17/09         jcd    tried to increase size of linebuffers, linker complains  
+<     10/7/09         jcd    set_sleep_mode line                    
+---
+>                            nothing is clocking timer1 at startup.                             
+55d51
+< //#include <avr/signal.h> changed 6/24/08 jcd
+118,119c114,115
+< unsigned char currentLineBuffer[LENGTH_OF_LINE_BUFFER ]; // jcd 9/17/09 increasing these by 1 causes the linker
+< unsigned char previousLineBuffer[LENGTH_OF_LINE_BUFFER]; // to complain about .noinit overlapping .bss
+---
+> unsigned char currentLineBuffer[LENGTH_OF_LINE_BUFFER];
+> unsigned char previousLineBuffer[LENGTH_OF_LINE_BUFFER];
+166,167c162
+< 	//MCUCR |= (1<<ISC11) | (1<<ISC10);  /* rising edge interrupt */
+<     EICRA |= (1<<ISC11) | (1<<ISC10);  // rising edge interrupt  change for m328 9/20/09 jcd
+---
+> 	MCUCR |= (1<<ISC11) | (1<<ISC10);  /* rising edge interrupt */
+172,175c167
+< 	//MCUCR |= (1<<ISC01) | (1<<ISC00);	/* rising edge interrupt */ 
+<     EICRA |= (1<<ISC01) | (1<<ISC00);	// rising edge interrupt for m328 9/20/09
+< 	//GICR  |= (1<<INT0);    /* interrupt request enabled */ 
+< 	EIMSK  |= (1<<INT0);    // interrupt request enabled  change for M328 jcd 9/20/09
+---
+> 	MCUCR |= (1<<ISC01) | (1<<ISC00);	/* rising edge interrupt */ 
+176a169,177
+> 	/* TODO: this is for ATmega8,etc., ATmega328P doesn't have this 
+>      * Where does it store the bits which are in GICR on the Mega328P?
+>      * The INT2...0 bits are stored in EIMSK 
+>      * The IVSEL and IVCE bits are stored in MCUCR 
+> 	 */
+> 	//GICR  |= (1<<INT0);    /* interrupt request enabled */
+> 	EIMSK |= INT0;   /* INT0 interrupt request enabled */
+> 
+> 	
+181,182c182,183
+< 	TCCR0B = (1<<CS02)|(1<<CS01)|(0<<CS00); // change for M328 jcd 9/20/09 do we use this counter? 
+< 
+---
+> 	TCCR0A = (1<<CS02)|(1<<CS01)|(0<<CS00);
+> 	
+189c190
+< 	//set_sleep_mode(SLEEP_MODE_IDLE);
+---
+> 	set_sleep_mode(SLEEP_MODE_IDLE);
+191,193c192,193
+< 	//MCUCR |= 0x80 ; // p33 of m8, 44 of m48 
+< 	SMCR = 0x01; //change for M328 jcd 10/7/09 
+< 
+---
+> 	MCUCR |= 0x80;
+> 	
+89,96c89
+< 
+< void DebugToggle(void)
+< {
+< 	DDRD  |= 0x40;
+<     if (PIND & 0x40)
+<         PORTD &= 0xBF;
+<     else PORTD |= 0x40;
+< }
+---
+> 
+59,60c59
+< #include "CamConfig.h"
+< #include "DebugInterface.h"
+---
+> #include "CamConfig.h"
+95,96c94
+< 	{
+< 
+---
+> 	{
+99,101c97,99
+< 			// an event needing fast processing has been received 
+< 			// a received line needs to be processed...this
+< 			//needs to be processed as quickly as possible 
+---
+> 			/* an event needing fast processing has been received */
+> 			/* a received line needs to be processed...this
+> 			needs to be processed as quickly as possible */
+103c101
+< 			    {
+---
+> 			{
+107c105
+< 				FrameMgr_processLine();			
+---
+> 				FrameMgr_processLine();				
+109,110c107,108
+< 				// also check if serial data needs to be sent
+< 				//out through UIMgr 
+---
+> 				/* also check if serial data needs to be sent
+> 				out through UIMgr */
+113,117c111,115
+< 				//we can't just call acquire line again here,
+< 				//since we don't know if we need to acquire another
+< 				//line or not (it depends on the FrameMgr to figure
+< 				//this out) 
+< 			    }
+---
+> 				/* we can't just call acquire line again here,
+> 				since we don't know if we need to acquire another
+> 				line or not (it depends on the FrameMgr to figure
+> 				this out) */
+> 			}
+119c117
+< 			    {
+---
+> 			{
+123,124c121,122
+< 				FrameMgr_acquireLine(); 
+< 			    }
+---
+> 				FrameMgr_acquireLine();
+> 			}
+126,128c124
+< 
+< 
+< 
+---
+> 		
+175a172,173
+>         
+>         /* toggle the debug line */
+47,52c47
+<                            shot noise)
+<     all mods tagged with jcd and the date
+<     8/24/09             mods for ov7620 around line 165,169,213,290,397,408,464
+<     9/15/09             around line 166,170,291,465 changed for 176x480 dump with ov7620
+<     9/16/09             around line 88,140,142,153,291,467,483,532,588,591,593,596,675,790,795 for 176x480 track with ov7620
+<     10/15/09            misc changes to allow for int sizes in trackedObject
+---
+>                            shot noise)
+67,68c62
+< #include "CommonDefs.h"
+< #include "DebugInterface.h"
+---
+> #include "CommonDefs.h"
+87c81
+< #define MAX_TRACKED_OBJECTS	4
+---
+> #define MAX_TRACKED_OBJECTS	8
+89,92c83,85
+< /* This defines the number of ints that make up a trackedObject_t
+< structure... */ // 9/16/09 jcd larger 'cause of the ints in Y position
+< // jcd 10/15/09 all switched to ints now, color and valid too
+< #define SIZE_OF_TRACKED_OBJECT 8 
+---
+> /* This defines the number of bytes that make up a trackedObject_t
+> structure... */
+> #define SIZE_OF_TRACKED_OBJECT 8
+96,97c89
+< //#define DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK 0xFB jcd 10/8/09
+< #define DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK 0xFE
+---
+> #define DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK 0xFB
+135c127
+< typedef unsigned int trackedColor_t;    // jcd 10/15/09
+---
+> typedef unsigned char trackedColor_t;
+138,139c130
+< maintained for each trackedObject in the trackingTable */
+< // all changed to ints now, color and valid too jcd 10/15/09
+---
+> maintained for each trackedObject in the trackingTable */
+143,149c134,140
+< 	unsigned int lastLineXStart;
+< 	unsigned int lastLineXFinish;
+< 	unsigned int x_upperLeft;
+< 	unsigned int y_upperLeft;  // jcd 9/16/09 want 0..479 for Y position  - 10/15/09 X also
+< 	unsigned int x_lowerRight;
+< 	unsigned int y_lowerRight; //  jcd 9/16/09 want 0 ...479 for Y position
+< 	unsigned int objectValid;  /* used to be a fill byte...now it is
+---
+> 	unsigned char lastLineXStart;
+> 	unsigned char lastLineXFinish;
+> 	unsigned char x_upperLeft;
+> 	unsigned char y_upperLeft;
+> 	unsigned char x_lowerRight;
+> 	unsigned char y_lowerRight;
+> 	unsigned char objectValid;  /* used to be a fill byte...now it is
+158,159c149
+< accessing the elements in GCC. */
+< // offsets back as before, now unsigned int values - jcd
+---
+> accessing the elements in GCC. */
+174c164
+< static unsigned int lineCount = 0; // jcd 9/16/09
+---
+> static unsigned char lineCount = 0;
+178c168
+< static unsigned int trackedLineCount = 0; // jcd 9/16/09
+---
+> static unsigned char trackedLineCount = 0;
+190c180
+< extern void CamIntAsm_toggleDebugLine(void);
+---
+> 
+202,203c192
+< 	memset(trackedObjectTable,0x00,sizeof(trackedObjectTable));
+<     DDRD |= 0x40; // set debug line active
+---
+> 	memset(trackedObjectTable,0x00,sizeof(trackedObjectTable));
+219,220c208,211
+< 		case EV_DUMP_FRAME:
+<             CamConfig_setCamReg(0x11,0x03);  /* reduce the frame rate for dumping (ov7620) was 0x 02 jcd 8/24/09 */
+---
+> 		case EV_DUMP_FRAME:
+>             /* try re-initializing the camera before we start dumping */
+>             
+> 			CamConfig_setCamReg(0x11,0x01);  /* reduce the frame rate for dumping*/
+224a216
+> 			//CamIntAsm_waitForNewDumpFrame(currentLineBuffer,previousLineBuffer);
+278c270
+< 		memset(trackedObjectTable,0x00,sizeof(trackedObjectTable)); // 10/21/09 jcd 
+---
+> 		memset(trackedObjectTable,0x00,sizeof(trackedObjectTable));
+296c288
+< 	unsigned int tmpLineCount;  // jcd 9/16/09
+---
+> 	unsigned char tmpLineCount;
+308c300
+<      
+---
+>         
+318c310,311
+< 		WAIT_FOR_VSYNC_LOW();	
+---
+> 		WAIT_FOR_VSYNC_LOW();
+> 		
+322c315
+< 		{
+---
+> 		{
+325c318
+< 			WAIT_FOR_HREF_LOW(); 
+---
+> 			WAIT_FOR_HREF_LOW(); 
+326a320
+> 		
+328c322
+< 		CamIntAsm_acquireDumpLine(currentLineBuffer,previousLineBuffer); 
+---
+> 		CamIntAsm_acquireDumpLine(currentLineBuffer,previousLineBuffer);
+333c327
+< 		CamIntAsm_acquireTrackingLine(currentLineBuffer,colorMap); 
+---
+> 		CamIntAsm_acquireTrackingLine(currentLineBuffer,colorMap);
+349c343
+< 	unsigned int i; // jcd 10/13/09
+---
+> 	unsigned char i;
+351,352c345,351
+< 	unsigned int *pTrackedObjectData = (unsigned int*)pCurrentTrackedObjectTable;
+< 
+---
+> 	unsigned char *pTrackedObjectData = (unsigned char *)pCurrentTrackedObjectTable;
+> #ifdef DEBUG_TRACKED_LINE    
+> 	unsigned char *pSendData;
+>     unsigned char asciiBuffer[5];
+>     unsigned char pixelCount = 0;
+> #endif    
+> 	
+363c362
+< 		UartInt_txByte(lineCount);		/* send the line count */ 
+---
+> 		UartInt_txByte(lineCount);		/* send the line count */
+395,396c394
+< 		//if (lineCount >= 72)  /* half 144, since we send two lines at a time */
+<         if (lineCount >= ACTUAL_NUM_LINES_IN_A_FRAME/2)  /* half of 480, still keeps us unsigned byte sized jcd 8/31/09*/
+---
+> 		if (lineCount >= 72)  /* half 144, since we send two lines at a time */
+404,408c402,404
+< 			//TIMSK &= DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK; 
+< 			TIMSK1 &= DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK; // change for m328 9/20/09 jcd
+< 
+< 			//CamConfig_setCamReg(0x11,0x00);  /* reset the frame rate to normal ov6620 176x144 */
+<             CamConfig_setCamReg(0x11,0x01);  /* reset the frame rate to normal (track mode) ov7620  jcd 8/24/09 */
+---
+> 			TIMSK1 &= DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK;
+> 			
+> 			CamConfig_setCamReg(0x11,0x00);  /* reset the frame rate to normal*/
+418a415,448
+> #ifdef DEBUG_TRACKED_LINE	
+> 		/* send the received line over serial...this should only send
+> 		until a pixelCount == 176 */
+> 		pSendData = currentLineBuffer;
+> 		itoa(trackedLineCount,asciiBuffer,10);
+> 		UIMgr_txBuffer(asciiBuffer,3);
+> 		UIMgr_txBuffer(" ",1);
+> 		while(pixelCount < ACTUAL_NUM_PIXELS_IN_A_LINE)  
+> 		{
+> 			memset(asciiBuffer,0x00,5);
+> 			itoa(*pSendData++,asciiBuffer,10);	/* color is first byte */
+> 			UIMgr_txBuffer(asciiBuffer,3); /* 3 ascii bytes for data */
+> 			UIMgr_txBuffer(" ",1);
+> 
+> 			pixelCount += *pSendData;	/* run-length is second byte */
+> 			memset(asciiBuffer,0x00,5);
+> 			itoa(*pSendData++,asciiBuffer,10);
+> 			UIMgr_txBuffer(asciiBuffer,3);
+> 			UIMgr_txBuffer(" ",1);
+> 		}
+> 		UIMgr_txBuffer("\n\r",2);
+> 
+> 		trackedLineCount++;
+> 		if (trackedLineCount == 144)
+> 		{
+> 			UIMgr_txBuffer("  FC  \n\r",8);
+> 			trackedLineCount = 0;
+> 			PUBLISH_EVENT(EV_PROCESS_FRAME_COMPLETE);
+> 		}
+> 		else
+> 		{
+> 			PUBLISH_EVENT(EV_PROCESS_LINE_COMPLETE);
+> 		}	
+> #else
+429,430c459,460
+<         /* run this routine once every 8 lines */   // 9/16/09 jcd trackedLineCount now an int so mask it   
+<         if ( (trackedLineCount & RUN_OBJECT_FILTER_MASK & 0xff) == RUN_OBJECT_FILTER_MASK) 
+---
+>         /* run this routine once every 8 lines */       
+>         if ( (trackedLineCount & RUN_OBJECT_FILTER_MASK) == RUN_OBJECT_FILTER_MASK)
+444c474
+<                         if ( (trackedLineCount) - *(pTrackedObjectData + Y_LOWER_RIGHT_OFFSET) > 2)
+---
+>                         if ( trackedLineCount - *(pTrackedObjectData + Y_LOWER_RIGHT_OFFSET) > 2)
+463,464c493
+< 			//TIMSK &= DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK;
+<             TIMSK1 &= DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK; //changed for M328 9/20/09 jcd
+---
+> 			TIMSK1 &= DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK;
+470c499,500
+< 		}	
+---
+> 		}
+> #endif		
+488,492c518,540
+< 	unsigned char i,k;
+<     unsigned int color;
+< 	unsigned int *pTableData = (unsigned int*)pCurrentTrackedObjectTable;// 10/15/09 jcd
+< 	unsigned char tmpUpperLeftXHigh,tmpUpperLeftXLow,tmpLowerRightXHigh,tmpLowerRightXLow;
+<     unsigned char tmpUpperLeftYHigh,tmpUpperLeftYLow,tmpLowerRightYHigh,tmpLowerRightYLow;// 10/15/09 jcd 
+---
+> 	unsigned char i,k,color;
+> #if DEBUG_FRAME_DATA    
+> 	unsigned char asciiBuffer[5];
+>     unsigned char j;
+> #endif    
+> 	unsigned char *pTableData = (unsigned char *)pCurrentTrackedObjectTable;
+> 	unsigned char tmpUpperLeftX,tmpUpperLeftY,tmpLowerRightX,tmpLowerRightY;
+> 	
+> #if DEBUG_FRAME_DATA	
+> 	/* we want to send all of the currently tracked table out
+> 	the serial port for debugging */
+> 	for (i=0; i<numCurrTrackedObjects; i++)
+> 	{
+> 		UIMgr_txBuffer("----------\r\n",12);
+> 		for (j=0; j<SIZE_OF_TRACKED_OBJECT; j++)
+> 		{
+> 			memset(asciiBuffer,0x00,5);
+> 			itoa(*pTableData++,asciiBuffer,10);
+> 			UIMgr_txBuffer(asciiBuffer,3); /* 3 ascii bytes for data
+> 														+ 1 space */
+> 			UIMgr_txBuffer("\r\n",2);
+> 		}
+> 	}
+493a542,550
+> 	/* finally, send a new line */
+> 	UIMgr_txBuffer("\r\n",2);
+> 	
+> 	memset(asciiBuffer,0x00,5);
+> 	itoa(numCurrTrackedObjects,asciiBuffer,10);
+> 	UIMgr_txBuffer(asciiBuffer,3);
+> 	UIMgr_txBuffer(" PFC\r\n",5);
+> 
+> #else	
+500c557
+<         pTableData = (unsigned int*)pCurrentTrackedObjectTable;
+---
+>         pTableData = (unsigned char *)pCurrentTrackedObjectTable;
+521,541c578,583
+<                 
+<                 //jcd 10/15/09 send the int x,y values as bytes
+<                 // 
+<                 tmpUpperLeftXHigh = (unsigned char) (*(pTableData + X_UPPER_LEFT_OFFSET)/256);	    // get the upper left X high byte
+<                 tmpUpperLeftXLow = (unsigned char) (*(pTableData + X_UPPER_LEFT_OFFSET) & 0x00FF);	// get the upper left X low byte
+< 
+<                 tmpUpperLeftYHigh = (unsigned char)(*(pTableData + Y_UPPER_LEFT_OFFSET)/256);		// get the upper left Y high byte		
+<                 tmpUpperLeftYLow = (unsigned char)(*(pTableData + Y_UPPER_LEFT_OFFSET) & 0x00FF);		// get the upper left Y low byte 	
+< 	
+<                 tmpLowerRightXHigh = (unsigned char)(*(pTableData + X_LOWER_RIGHT_OFFSET)/256);		// get the lower right X high byte
+<                 tmpLowerRightXLow = (unsigned char)(*(pTableData + X_LOWER_RIGHT_OFFSET) & 0x00FF);	// get the lower right X low byte
+< 
+<                 tmpLowerRightYHigh = (unsigned char)(*(pTableData + Y_LOWER_RIGHT_OFFSET)/256);		// get the lower right Y high byte     
+<                 tmpLowerRightYLow = (unsigned char)(*(pTableData + Y_LOWER_RIGHT_OFFSET) & 0x00FF);	// get the lower right Y low byte 	 
+<  
+< if (tmpUpperLeftXLow == 0xFF) tmpUpperLeftXLow = 0xFE;    // reserve 0xFF for the terminator byte
+< if (tmpUpperLeftYLow == 0xFF) tmpUpperLeftYLow = 0xFE;   // this won't change the x/y values by much 
+< if (tmpLowerRightXLow == 0xFF) tmpLowerRightXLow = 0xFE;    // and will make the communications more robust
+< if (tmpLowerRightYLow == 0xFF) tmpLowerRightYLow = 0xFE;   
+< 
+<                 // jcd 10/15/09 need 2 bytes of position now -
+---
+>                 
+>                 tmpUpperLeftX = *(pTableData + X_UPPER_LEFT_OFFSET);	    /* get the upper left X */
+>                 tmpUpperLeftY = *(pTableData + Y_UPPER_LEFT_OFFSET);		/* get the upper left Y */		
+>                 tmpLowerRightX = *(pTableData + X_LOWER_RIGHT_OFFSET);		/* get the lower right X */
+>                 tmpLowerRightY = *(pTableData + Y_LOWER_RIGHT_OFFSET);		/* get the lower right Y */	                
+>                 
+543,550c585,588
+<                 UIMgr_writeTxFifo(tmpUpperLeftXHigh);
+<                 UIMgr_writeTxFifo(tmpUpperLeftXLow);
+<                 UIMgr_writeTxFifo(tmpUpperLeftYHigh);       
+<                 UIMgr_writeTxFifo(tmpUpperLeftYLow);    // msByte, then lsByte
+<                 UIMgr_writeTxFifo(tmpLowerRightXHigh);
+<                 UIMgr_writeTxFifo(tmpLowerRightXLow);
+<                 UIMgr_writeTxFifo(tmpLowerRightYHigh);    
+<                 UIMgr_writeTxFifo(tmpLowerRightYLow); 			
+---
+>                 UIMgr_writeTxFifo(tmpUpperLeftX);
+>                 UIMgr_writeTxFifo(tmpUpperLeftY);
+>                 UIMgr_writeTxFifo(tmpLowerRightX);
+>                 UIMgr_writeTxFifo(tmpLowerRightY);			
+557c595
+< 		/* all done...send the end of tracking packets char - */
+---
+> 		/* all done...send the end of tracking packets char */
+559c597,598
+< 	}		
+---
+> 	}	
+> #endif	
+581,587c620,626
+< 	unsigned char *pCurrLineColorInfo = currentLineBuffer;
+<     // jcd 10/15/09 all to ints
+< 	unsigned int *pTrackedObjectData;
+< 	unsigned int currPixelRunStart=0;
+< 	unsigned int currPixelRunFinish=0;     unsigned int lastLineXStart=0;
+< 	unsigned int lastLineXFinish=0;  
+< 	unsigned int runLength=1;
+---
+> 	unsigned char *pCurrLineColorInfo = currentLineBuffer;
+> 	unsigned char *pTrackedObjectData;
+> 	register unsigned char currPixelRunStart=0;
+> 	register unsigned char currPixelRunFinish=0; 
+> 	register unsigned char lastLineXStart=0;
+> 	register unsigned char lastLineXFinish=0;  
+> 	register unsigned char runLength=1;
+596,610c635,639
+< 		currColor = (unsigned int)*pCurrLineColorInfo++;
+<         // version for old acquirePixelBlock in CamInterfaceAsm 10/26/09 jcd 
+<         // 
+< 		//currPixelRunStart += runLength;
+< 		//runLength = (unsigned int)*pCurrLineColorInfo++;
+< 		//currPixelRunFinish += runLength;
+< 
+<         // new, non working code  - 
+<         currPixelRunStart = currPixelRunFinish;
+<         currPixelRunFinish = ((unsigned int)*pCurrLineColorInfo++);
+<         currPixelRunFinish += ((unsigned int)*pCurrLineColorInfo++)*256; 
+<         currPixelRunFinish -= 0xffff - ACTUAL_NUM_PIXELS_IN_A_LINE	; // minus TCNT1 counter start value 
+< 
+<         runLength = currPixelRunFinish - currPixelRunStart;
+< 
+---
+> 		currColor = *pCurrLineColorInfo++;
+> 		currPixelRunStart += runLength;
+> 		runLength = *pCurrLineColorInfo++;
+> 		currPixelRunFinish += runLength;
+>       
+631c660
+<             pTrackedObjectData = (unsigned int*)pCurrentTrackedObjectTable;
+---
+>             pTrackedObjectData = (unsigned char *)pCurrentTrackedObjectTable;
+633c662
+< 			{ 
+---
+> 			{
+636c665
+<                      (*(pTrackedObjectData + Y_LOWER_RIGHT_OFFSET) == ((trackedLineCount) - 1)) )
+---
+>                      (*(pTrackedObjectData + Y_LOWER_RIGHT_OFFSET) == trackedLineCount - 1) )
+732c761
+<                     pTrackedObjectData = (unsigned int*)pCurrentTrackedObjectTable; // jcd 10/15/09
+---
+>                     pTrackedObjectData = (unsigned char *)pCurrentTrackedObjectTable;
+744c773
+< 					the fields */ // jcd 10/15/09 integer x and y
+---
+> 					the fields */
+749c778
+< 					*(pTrackedObjectData + Y_UPPER_LEFT_OFFSET)         = trackedLineCount ;	/* y_upperLeft */
+---
+> 					*(pTrackedObjectData + Y_UPPER_LEFT_OFFSET)         = trackedLineCount;	/* y_upperLeft */
+751,752c780,781
+< 					*(pTrackedObjectData + Y_LOWER_RIGHT_OFFSET)        = trackedLineCount;	    /* y_lowerRight  */
+<                     *(pTrackedObjectData + VALID_OBJECT_OFFSET)         = TRUE;                     /* objectValid flag */
+---
+> 					*(pTrackedObjectData + Y_LOWER_RIGHT_OFFSET)        = trackedLineCount;	/* y_lowerRight */
+>                     *(pTrackedObjectData + VALID_OBJECT_OFFSET)         = TRUE;                /* objectValid flag */
+44,45c44
+<     6/24/08     removed <avr/signal.h> jcd
+<     9/22/09     changed name of TWI irq routine for mega328
+---
+> 
+50,51c49
+< #include <util/twi.h>
+< //#include <avr/signal.h> changed 6/24/08 jcd
+---
+> #include <compat/twi.h>
+54,55c52
+< #include "CommonDefs.h"
+< #include "DebugInterface.h" // jcd 9/29/09
+---
+> #include "CommonDefs.h"
+186,191c183,185
+< ***********************************************************/
+< // this name had to be changed to compile for m328, when compiling for
+< // the m168 the SIG_2WIRE_SERIAL was fine - unknown jcd 9/22/09
+< SIGNAL(TWI_vect) 
+< {
+< //DebugToggle(); // 9/29/09 jcd 
+---
+> ***********************************************************/
+> ISR(TWI_vect)
+> {
+35,37c35
+<     Date        Rel Ver.    Notes
+<     3/16/09                removed start tracking on startup - let servo s/w do it
+<     10/1/08                added cmd to start tracking on startup - jcd
+---
+>     Date        Rel Ver.    Notes
+40,41c38
+<                            contest.
+<     3/16/09     initialization changes commented out again jcd
+---
+>                            contest.
+45a43
+> #include <avr/wdt.h>
+73a72,74
+> 	/* requied on ATmega328P */
+> 	wdt_disable();
+> 
+74a76
+> 	DebugInt_init();
+77c79,80
+< 	CamInt_init(); 
+---
+> 	CamInt_init();
+> 	
+80,82c83
+< 	ENABLE_INTS(); // defined as sei in commondefs.h
+<     Utility_delay(1000); // 9/14/09 jcd 
+< 
+---
+> 	ENABLE_INTS();
+84d84
+< //DebugInt_init(); // 9/28/09 jcd
+86a87
+>     
+89,90c90,91
+< 	Utility_delay(1000);
+< //DebugInt_init(); // 9/28/09 jcd
+---
+> 	Utility_delay(1000);
+> 	
+47,49c47
+<                            written in assembly.
+<     6/24/08     <avr/signal.h> removed - jcd
+<     9/22/09     changed name of uart rx irq handler to compile for mega328
+---
+>                            written in assembly.
+55d52
+< //#include <avr/signal.h> // obsolete - changed 6/24/08 
+79,80c76
+< {	
+< // change me this will need to change with 20 meg crystal
+---
+> {	
+83,84c79,80
+< 	//UBRRH = 0x00;
+<     UBRR0H = 0x00; //change for m328 9/20/09 jcd 
+---
+> 	UBRR0H = 0x00;
+> 
+86c82
+<     UBRR0L = 18;  /* 18 for double clocking at 115.2 kbps not used */
+---
+>     UBRR0L = 18;  /* 18 for double clocking at 115.2 kbps */
+88,89c84
+< 	//UBRRL = 0x08;  /* for 16 MHz crystal at 115.2 kbps */
+<     UBRR0L = 0x08;  // for 16 MHz crystal at 115.2 kbps change for m328 9/20/09 jcd 
+---
+> 	UBRR0L = 0x08;  /* for 16 MHz crystal at 115.2 kbps */
+94,95c89
+< 	//UCSRB = (1<<RXCIE)|(1<<RXEN)|(1<<TXEN);	
+< 	UCSR0B = (1<<RXCIE0)|(1<<RXEN0)|(1<<TXEN0); // change for m328 9/20/09 jcd 
+---
+> 	UCSR0B = (1<<RXCIE0)|(1<<RXEN0)|(1<<TXEN0);	
+98,100c92,93
+< 	//UCSRC = (1<<URSEL)|(1<<UCSZ1)|(1<<UCSZ0);
+<     UCSR0C = (1<<UCSZ01)|(1<<UCSZ00); // change for m328 9/20/09 jcd 
+< 
+---
+> 	UCSR0C = (1<<UCSZ01)|(1<<UCSZ00);
+>     
+102,103c95,96
+<     /* set the baud rate to use the double-speed not used*/
+<     UCSR0A = (1<<U2X);
+---
+>     /* set the baud rate to use the double-speed */
+>     UCSR0A = (1<<U2X0);
+124,125c117
+< 	//while ( !( UCSRA & (1<<UDRE)) );
+<     while ( !( UCSR0A & (1<<UDRE0)) ); // changed for m328 9/20/09 jcd
+---
+> 	while ( !( UCSR0A & (1<<UDRE0)) );
+127,128c119
+< 	//UDR = txByte;
+<     UDR0 = txByte; // changed for m328 9/20/09 jcd
+---
+> 	UDR0 = txByte;
+145,148c136,137
+< ***********************************************************/
+< // compiler thinks this is misspelled signal handler 
+< // changed to compile for m328 9/22/09 jcd
+< SIGNAL (USART_RX_vect) 
+---
+> ***********************************************************/
+> ISR(USART_RX_vect)
+51,52c51
+<                            string to 1.4.
+<     6/24/08                 ascii token buffer to char jcd
+---
+>                            string to 1.4.
+94,96c93,94
+< static unsigned char charIndex = 0;
+< // change asciiTokenBuffer to plain char 6/24/08 jcd
+< static char asciiTokenBuffer[MAX_TOKEN_LENGTH+1]; /* +1 to ensure NULL at end */
+---
+> static unsigned char charIndex = 0;
+> static unsigned char asciiTokenBuffer[MAX_TOKEN_LENGTH+1]; /* +1 to ensure NULL at end */
+100c98
+< static unsigned char AVRcamVersion[] = "AVRcam v1.4mod 8/24/09\r";
+---
+> static unsigned char AVRcamVersion[] = "AVRcam v1.4\r";
+427c425
+< 	newValue = atoi(asciiTokenBuffer); // asciiTokenBuffer changed 6/24/08 jcd
+---
+> 	newValue = atoi((char *) asciiTokenBuffer);
+46,47c46
+<                            mega8 at startup if needed.
+<     8/24/09                mods for 7620 in CamConfig_init by jcd 
+---
+>                            mega8 at startup if needed.
+55,57c54
+< #include "Utility.h"
+< #include <avr/pgmspace.h>
+< #include "DebugInterface.h"
+---
+> #include "Utility.h"
+79,163d75
+< 
+< // reg settings for 7620 from alpha.dyndns.org
+< static unsigned char initial7620regvals[63][2] PROGMEM = {
+< 	{ 0x12, 0x24 }, // agc, YCrCb data,awb initially
+< 	{ 0x11, 0x01 }, // reduce clk by 2
+<     { 0x14, 0x84 }, // full frame size, gamma on defined by reg 62
+< 	{ 0x28, 0x24 }, // progressive scan, Y = ggg, UV = brbr
+<     { 0x71, 0x40 }, // gate pclk with href
+< 	{ 0x00, 0x00 }, // default agc gain
+< 	{ 0x01, 0x80 }, // default blue gain
+< 	{ 0x02, 0x80 }, // default red gain
+< 	{ 0x03, 0xc0 }, // saturation
+<     // reg 4,5 reserved
+< 	{ 0x06, 0x60 }, // brightness
+< 
+< 	{ 0x07, 0x00 }, // analog sharpness
+<     // reg 8..c reserved
+< 	{ 0x0c, 0x24 }, // white balance blue chan
+< 	{ 0x0d, 0x24 }, // white balance red chan
+<     // reg e,f reserved
+< // 0x10 used for manual auto exposure
+<     // reg 11,12 at top
+< 	{ 0x13, 0x01 }, // default, enable auto adjust
+< 	// reg 14 at top
+< 	{ 0x15, 0x01 }, // default, polarity, data order
+< 	{ 0x16, 0x03 }, // href asserted every frame
+< 	{ 0x17, 0x2f }, // horiz window start
+< 	{ 0x18, 0xcf }, // horiz window end
+< 	{ 0x19, 0x06 }, // vert window start
+< 	{ 0x1a, 0xf5 }, // vert window end
+< 
+< 	{ 0x1b, 0x00 }, // no pixel shift
+<     // 1c,1d mfg data
+<     // 1e, 1f reserved
+< 	{ 0x20, 0x18 }, // aperture correction, awb smart mode enabled no windowing yet
+< 	{ 0x21, 0x80 }, // default y chan offset
+< 	{ 0x22, 0x80 }, // default u chan offset
+< 	{ 0x23, 0x00 }, // default crystal current
+<     // 24,25 auto exposure ratios - use defaults?
+< 	{ 0x26, 0xa2 }, // default digital sharpness
+< 	{ 0x27, 0xea }, // common cont g
+<     // reg 28 at top
+< 	{ 0x29, 0x00 }, // default exposure control
+< 	{ 0x2a, 0x10 }, // frame rate adjust uv component delay - change me? <<<<<<<<<<<<<<<<
+< 	{ 0x2b, 0x00 }, // default frame rate adjust
+< 
+< 	{ 0x2c, 0x88 }, // default expanding reg
+< 	{ 0x2d, 0x91 }, // auto bright
+< 	{ 0x2e, 0x80 }, // default V chan offset
+< 	{ 0x2f, 0x44 }, // reserved, unknown
+< 	{ 0x60, 0x27 }, // default, no grn averaging
+< 	{ 0x61, 0x02 }, // default brightness target
+< 	{ 0x62, 0x5f }, // gama control
+< 	{ 0x63, 0xd5 }, // reserved, unknown
+< 	{ 0x64, 0x57 }, // gamma curve selection
+< 	{ 0x65, 0x83 }, // a/d mode, reference
+< 
+< 	{ 0x66, 0x55 }, // default awb
+< 	{ 0x67, 0x92 }, // color space
+< 	{ 0x68, 0xcf }, // brightness target
+< 	{ 0x69, 0x76 }, // analog sharpness
+< 	{ 0x6a, 0x22 }, // edge enhancement
+< 	{ 0x6b, 0x00 }, // reserved, unknown
+< 	{ 0x6c, 0x02 }, // reserved, unknown
+< 	{ 0x6d, 0x44 }, // reserved, unknown
+< 	{ 0x6e, 0x80 }, // reserved, unknown
+< 	{ 0x6f, 0x1d }, // noise compensation
+< 
+< 	{ 0x70, 0x8b }, // saturation, awb
+< 	{ 0x72, 0x14 }, // default horiz synch edge
+< 	{ 0x73, 0x54 }, //  "      "      "     "
+< 	{ 0x74, 0x00 }, // agc gain
+< 	{ 0x75, 0x8e }, // auto brightness range
+< 	{ 0x76, 0x00 }, // default common cont O
+< 	{ 0x77, 0xff }, // reserved unknown
+< 	{ 0x78, 0x80 }, // reserved unknown
+< 	{ 0x79, 0x80 }, // reserved unknown
+< 	{ 0x7a, 0x80 }, // reserved unknown
+< 
+< 	{ 0x7b, 0xe2 }, // reserved unknown
+< 	{ 0x7c, 0x00 }, // default field average
+< 	{ 0xff, 0xff }	// END MARKER 
+< };
+< 
+< 
+173,215c85,94
+< {
+< 
+< 
+< // true and false don't seem to be defined, 
+< unsigned char index =  0;
+< unsigned char done = 0;
+< int i;
+< unsigned char reg;
+< unsigned char regValue;
+< // mainly for debug, should be read from the array when that's working
+< /*
+< 	CamConfig_setCamReg(0x12,0x24);  // agc, YCrCb data,awb initially  
+< 	CamConfig_setCamReg(0x11, 0x01);    // reduce clk by 2
+< 	CamConfig_setCamReg(0x14, 0x84) ; // full frame size, gamma on defined by reg 62
+< 	CamConfig_setCamReg(0x28, 0x24); // progressive scan, Y = ggg, UV = brbr
+<     CamConfig_setCamReg(0x71, 0x40) ; // gate pclk with href
+< //CamConfig_sendFifoCmds();
+< */
+< 
+< // set the regs from the array above
+< // the 5 vs 8 register problem below was probably 'cause the memory was so close to
+< // full the fifo was getting clobbered...might as well leave it at 5
+< 
+< while (done == 0)
+<     {
+<     for (i=0;i<5;i++) // this doesn't seem to work with 8 regs, 5 seems ok
+<         {
+<         reg = pgm_read_byte(&initial7620regvals[index][0]);
+<         regValue = pgm_read_byte(&initial7620regvals[index][1]);
+<         
+<         if (reg == 0xff)
+<             {
+<             done = 1;
+<             }
+<         else
+<             {
+<             CamConfig_setCamReg(reg,regValue); 
+<             index++;
+<             }
+<         } // end for
+<     CamConfig_sendFifoCmds();
+<     } // end !done
+< } 
+---
+> {
+> 	CamConfig_setCamReg(0x14,0x20);  /* reduce frame size */
+> 	CamConfig_setCamReg(0x39,0x40);  /* gate PCLK with HREF */
+> 	CamConfig_setCamReg(0x12,0x28);  /* set RGB mode, with no AWB */
+> 	CamConfig_setCamReg(0x28,0x05);  /* set color sequencer */
+>     CamConfig_setCamReg(0x13,0x01);  /* un-tri-state the Y/UV lines */
+> 	
+> 	/* send the first four cmds in the I2C fifo */
+> 	CamConfig_sendFifoCmds();	
+> }
+47,50c47
+<                            nothing is clocking timer1 at startup.   
+<     6/24/08        jcd     removed avr/signal.h to keep compiler happy    
+<     9/17/09         jcd    tried to increase size of linebuffers, linker complains  
+<     10/7/09         jcd    set_sleep_mode line                    
+---
+>                            nothing is clocking timer1 at startup.                             
+55c52
+< //#include <avr/signal.h> changed 6/24/08 jcd
+---
+> #include <avr/signal.h>
+118,119c115,116
+< unsigned char currentLineBuffer[LENGTH_OF_LINE_BUFFER ]; // jcd 9/17/09 increasing these by 1 causes the linker
+< unsigned char previousLineBuffer[LENGTH_OF_LINE_BUFFER]; // to complain about .noinit overlapping .bss
+---
+> unsigned char currentLineBuffer[LENGTH_OF_LINE_BUFFER];
+> unsigned char previousLineBuffer[LENGTH_OF_LINE_BUFFER];
+166,167c163
+< 	//MCUCR |= (1<<ISC11) | (1<<ISC10);  /* rising edge interrupt */
+<     EICRA |= (1<<ISC11) | (1<<ISC10);  // rising edge interrupt  change for m328 9/20/09 jcd
+---
+> 	MCUCR |= (1<<ISC11) | (1<<ISC10);  /* rising edge interrupt */
+172,176c168,170
+< 	//MCUCR |= (1<<ISC01) | (1<<ISC00);	/* rising edge interrupt */ 
+<     EICRA |= (1<<ISC01) | (1<<ISC00);	// rising edge interrupt for m328 9/20/09
+< 	//GICR  |= (1<<INT0);    /* interrupt request enabled */ 
+< 	EIMSK  |= (1<<INT0);    // interrupt request enabled  change for M328 jcd 9/20/09
+< 
+---
+> 	MCUCR |= (1<<ISC01) | (1<<ISC00);	/* rising edge interrupt */ 
+> 	GICR  |= (1<<INT0);    /* interrupt request enabled */
+> 	
+180,182c174,175
+< 	//TCCR0 = (1<<CS02)|(1<<CS01)|(0<<CS00);
+< 	TCCR0B = (1<<CS02)|(1<<CS01)|(0<<CS00); // change for M328 jcd 9/20/09 do we use this counter? 
+< 
+---
+> 	TCCR0 = (1<<CS02)|(1<<CS01)|(0<<CS00);
+> 	
+189c182
+< 	//set_sleep_mode(SLEEP_MODE_IDLE);
+---
+> 	set_sleep_mode(SLEEP_MODE_IDLE);
+191,193c184,185
+< 	//MCUCR |= 0x80 ; // p33 of m8, 44 of m48 
+< 	SMCR = 0x01; //change for M328 jcd 10/7/09 
+< 
+---
+> 	MCUCR |= 0x80;
+> 	
+89,96c89
+< 
+< void DebugToggle(void)
+< {
+< 	DDRD  |= 0x40;
+<     if (PIND & 0x40)
+<         PORTD &= 0xBF;
+<     else PORTD |= 0x40;
+< }
+---
+> 
+59,60c59
+< #include "CamConfig.h"
+< #include "DebugInterface.h"
+---
+> #include "CamConfig.h"
+95,96c94
+< 	{
+< 
+---
+> 	{
+99,101c97,99
+< 			// an event needing fast processing has been received 
+< 			// a received line needs to be processed...this
+< 			//needs to be processed as quickly as possible 
+---
+> 			/* an event needing fast processing has been received */
+> 			/* a received line needs to be processed...this
+> 			needs to be processed as quickly as possible */
+103c101
+< 			    {
+---
+> 			{
+107c105
+< 				FrameMgr_processLine();			
+---
+> 				FrameMgr_processLine();				
+109,110c107,108
+< 				// also check if serial data needs to be sent
+< 				//out through UIMgr 
+---
+> 				/* also check if serial data needs to be sent
+> 				out through UIMgr */
+113,117c111,115
+< 				//we can't just call acquire line again here,
+< 				//since we don't know if we need to acquire another
+< 				//line or not (it depends on the FrameMgr to figure
+< 				//this out) 
+< 			    }
+---
+> 				/* we can't just call acquire line again here,
+> 				since we don't know if we need to acquire another
+> 				line or not (it depends on the FrameMgr to figure
+> 				this out) */
+> 			}
+119c117
+< 			    {
+---
+> 			{
+123,124c121,122
+< 				FrameMgr_acquireLine(); 
+< 			    }
+---
+> 				FrameMgr_acquireLine();
+> 			}
+126,128c124
+< 
+< 
+< 
+---
+> 		
+175a172,173
+>         
+>         /* toggle the debug line */
+47,52c47
+<                            shot noise)
+<     all mods tagged with jcd and the date
+<     8/24/09             mods for ov7620 around line 165,169,213,290,397,408,464
+<     9/15/09             around line 166,170,291,465 changed for 176x480 dump with ov7620
+<     9/16/09             around line 88,140,142,153,291,467,483,532,588,591,593,596,675,790,795 for 176x480 track with ov7620
+<     10/15/09            misc changes to allow for int sizes in trackedObject
+---
+>                            shot noise)
+67,68c62
+< #include "CommonDefs.h"
+< #include "DebugInterface.h"
+---
+> #include "CommonDefs.h"
+87c81
+< #define MAX_TRACKED_OBJECTS	4
+---
+> #define MAX_TRACKED_OBJECTS	8
+89,92c83,85
+< /* This defines the number of ints that make up a trackedObject_t
+< structure... */ // 9/16/09 jcd larger 'cause of the ints in Y position
+< // jcd 10/15/09 all switched to ints now, color and valid too
+< #define SIZE_OF_TRACKED_OBJECT 8 
+---
+> /* This defines the number of bytes that make up a trackedObject_t
+> structure... */
+> #define SIZE_OF_TRACKED_OBJECT 8
+96,97c89
+< //#define DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK 0xFB jcd 10/8/09
+< #define DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK 0xFE
+---
+> #define DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK 0xFB
+135c127
+< typedef unsigned int trackedColor_t;    // jcd 10/15/09
+---
+> typedef unsigned char trackedColor_t;
+138,139c130
+< maintained for each trackedObject in the trackingTable */
+< // all changed to ints now, color and valid too jcd 10/15/09
+---
+> maintained for each trackedObject in the trackingTable */
+143,149c134,140
+< 	unsigned int lastLineXStart;
+< 	unsigned int lastLineXFinish;
+< 	unsigned int x_upperLeft;
+< 	unsigned int y_upperLeft;  // jcd 9/16/09 want 0..479 for Y position  - 10/15/09 X also
+< 	unsigned int x_lowerRight;
+< 	unsigned int y_lowerRight; //  jcd 9/16/09 want 0 ...479 for Y position
+< 	unsigned int objectValid;  /* used to be a fill byte...now it is
+---
+> 	unsigned char lastLineXStart;
+> 	unsigned char lastLineXFinish;
+> 	unsigned char x_upperLeft;
+> 	unsigned char y_upperLeft;
+> 	unsigned char x_lowerRight;
+> 	unsigned char y_lowerRight;
+> 	unsigned char objectValid;  /* used to be a fill byte...now it is
+158,159c149
+< accessing the elements in GCC. */
+< // offsets back as before, now unsigned int values - jcd
+---
+> accessing the elements in GCC. */
+174c164
+< static unsigned int lineCount = 0; // jcd 9/16/09
+---
+> static unsigned char lineCount = 0;
+178c168
+< static unsigned int trackedLineCount = 0; // jcd 9/16/09
+---
+> static unsigned char trackedLineCount = 0;
+190c180
+< extern void CamIntAsm_toggleDebugLine(void);
+---
+> 
+202,203c192
+< 	memset(trackedObjectTable,0x00,sizeof(trackedObjectTable));
+<     DDRD |= 0x40; // set debug line active
+---
+> 	memset(trackedObjectTable,0x00,sizeof(trackedObjectTable));
+219,220c208,211
+< 		case EV_DUMP_FRAME:
+<             CamConfig_setCamReg(0x11,0x03);  /* reduce the frame rate for dumping (ov7620) was 0x 02 jcd 8/24/09 */
+---
+> 		case EV_DUMP_FRAME:
+>             /* try re-initializing the camera before we start dumping */
+>             
+> 			CamConfig_setCamReg(0x11,0x01);  /* reduce the frame rate for dumping*/
+224a216
+> 			//CamIntAsm_waitForNewDumpFrame(currentLineBuffer,previousLineBuffer);
+278c270
+< 		memset(trackedObjectTable,0x00,sizeof(trackedObjectTable)); // 10/21/09 jcd 
+---
+> 		memset(trackedObjectTable,0x00,sizeof(trackedObjectTable));
+296c288
+< 	unsigned int tmpLineCount;  // jcd 9/16/09
+---
+> 	unsigned char tmpLineCount;
+308c300
+<      
+---
+>         
+318c310,311
+< 		WAIT_FOR_VSYNC_LOW();	
+---
+> 		WAIT_FOR_VSYNC_LOW();
+> 		
+322c315
+< 		{
+---
+> 		{
+325c318
+< 			WAIT_FOR_HREF_LOW(); 
+---
+> 			WAIT_FOR_HREF_LOW(); 
+326a320
+> 		
+328c322
+< 		CamIntAsm_acquireDumpLine(currentLineBuffer,previousLineBuffer); 
+---
+> 		CamIntAsm_acquireDumpLine(currentLineBuffer,previousLineBuffer);
+333c327
+< 		CamIntAsm_acquireTrackingLine(currentLineBuffer,colorMap); 
+---
+> 		CamIntAsm_acquireTrackingLine(currentLineBuffer,colorMap);
+349c343
+< 	unsigned int i; // jcd 10/13/09
+---
+> 	unsigned char i;
+351,352c345,351
+< 	unsigned int *pTrackedObjectData = (unsigned int*)pCurrentTrackedObjectTable;
+< 
+---
+> 	unsigned char *pTrackedObjectData = (unsigned char *)pCurrentTrackedObjectTable;
+> #ifdef DEBUG_TRACKED_LINE    
+> 	unsigned char *pSendData;
+>     unsigned char asciiBuffer[5];
+>     unsigned char pixelCount = 0;
+> #endif    
+> 	
+363c362
+< 		UartInt_txByte(lineCount);		/* send the line count */ 
+---
+> 		UartInt_txByte(lineCount);		/* send the line count */
+395,396c394
+< 		//if (lineCount >= 72)  /* half 144, since we send two lines at a time */
+<         if (lineCount >= ACTUAL_NUM_LINES_IN_A_FRAME/2)  /* half of 480, still keeps us unsigned byte sized jcd 8/31/09*/
+---
+> 		if (lineCount >= 72)  /* half 144, since we send two lines at a time */
+404,408c402,404
+< 			//TIMSK &= DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK; 
+< 			TIMSK1 &= DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK; // change for m328 9/20/09 jcd
+< 
+< 			//CamConfig_setCamReg(0x11,0x00);  /* reset the frame rate to normal ov6620 176x144 */
+<             CamConfig_setCamReg(0x11,0x01);  /* reset the frame rate to normal (track mode) ov7620  jcd 8/24/09 */
+---
+> 			TIMSK &= DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK;
+> 			
+> 			CamConfig_setCamReg(0x11,0x00);  /* reset the frame rate to normal*/
+418a415,448
+> #ifdef DEBUG_TRACKED_LINE	
+> 		/* send the received line over serial...this should only send
+> 		until a pixelCount == 176 */
+> 		pSendData = currentLineBuffer;
+> 		itoa(trackedLineCount,asciiBuffer,10);
+> 		UIMgr_txBuffer(asciiBuffer,3);
+> 		UIMgr_txBuffer(" ",1);
+> 		while(pixelCount < ACTUAL_NUM_PIXELS_IN_A_LINE)  
+> 		{
+> 			memset(asciiBuffer,0x00,5);
+> 			itoa(*pSendData++,asciiBuffer,10);	/* color is first byte */
+> 			UIMgr_txBuffer(asciiBuffer,3); /* 3 ascii bytes for data */
+> 			UIMgr_txBuffer(" ",1);
+> 
+> 			pixelCount += *pSendData;	/* run-length is second byte */
+> 			memset(asciiBuffer,0x00,5);
+> 			itoa(*pSendData++,asciiBuffer,10);
+> 			UIMgr_txBuffer(asciiBuffer,3);
+> 			UIMgr_txBuffer(" ",1);
+> 		}
+> 		UIMgr_txBuffer("\n\r",2);
+> 
+> 		trackedLineCount++;
+> 		if (trackedLineCount == 144)
+> 		{
+> 			UIMgr_txBuffer("  FC  \n\r",8);
+> 			trackedLineCount = 0;
+> 			PUBLISH_EVENT(EV_PROCESS_FRAME_COMPLETE);
+> 		}
+> 		else
+> 		{
+> 			PUBLISH_EVENT(EV_PROCESS_LINE_COMPLETE);
+> 		}	
+> #else
+429,430c459,460
+<         /* run this routine once every 8 lines */   // 9/16/09 jcd trackedLineCount now an int so mask it   
+<         if ( (trackedLineCount & RUN_OBJECT_FILTER_MASK & 0xff) == RUN_OBJECT_FILTER_MASK) 
+---
+>         /* run this routine once every 8 lines */       
+>         if ( (trackedLineCount & RUN_OBJECT_FILTER_MASK) == RUN_OBJECT_FILTER_MASK)
+444c474
+<                         if ( (trackedLineCount) - *(pTrackedObjectData + Y_LOWER_RIGHT_OFFSET) > 2)
+---
+>                         if ( trackedLineCount - *(pTrackedObjectData + Y_LOWER_RIGHT_OFFSET) > 2)
+463,464c493
+< 			//TIMSK &= DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK;
+<             TIMSK1 &= DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK; //changed for M328 9/20/09 jcd
+---
+> 			TIMSK &= DISABLE_PCLK_TIMER1_OVERFLOW_BITMASK;
+470c499,500
+< 		}	
+---
+> 		}
+> #endif		
+488,492c518,540
+< 	unsigned char i,k;
+<     unsigned int color;
+< 	unsigned int *pTableData = (unsigned int*)pCurrentTrackedObjectTable;// 10/15/09 jcd
+< 	unsigned char tmpUpperLeftXHigh,tmpUpperLeftXLow,tmpLowerRightXHigh,tmpLowerRightXLow;
+<     unsigned char tmpUpperLeftYHigh,tmpUpperLeftYLow,tmpLowerRightYHigh,tmpLowerRightYLow;// 10/15/09 jcd 
+---
+> 	unsigned char i,k,color;
+> #if DEBUG_FRAME_DATA    
+> 	unsigned char asciiBuffer[5];
+>     unsigned char j;
+> #endif    
+> 	unsigned char *pTableData = (unsigned char *)pCurrentTrackedObjectTable;
+> 	unsigned char tmpUpperLeftX,tmpUpperLeftY,tmpLowerRightX,tmpLowerRightY;
+> 	
+> #if DEBUG_FRAME_DATA	
+> 	/* we want to send all of the currently tracked table out
+> 	the serial port for debugging */
+> 	for (i=0; i<numCurrTrackedObjects; i++)
+> 	{
+> 		UIMgr_txBuffer("----------\r\n",12);
+> 		for (j=0; j<SIZE_OF_TRACKED_OBJECT; j++)
+> 		{
+> 			memset(asciiBuffer,0x00,5);
+> 			itoa(*pTableData++,asciiBuffer,10);
+> 			UIMgr_txBuffer(asciiBuffer,3); /* 3 ascii bytes for data
+> 														+ 1 space */
+> 			UIMgr_txBuffer("\r\n",2);
+> 		}
+> 	}
+493a542,550
+> 	/* finally, send a new line */
+> 	UIMgr_txBuffer("\r\n",2);
+> 	
+> 	memset(asciiBuffer,0x00,5);
+> 	itoa(numCurrTrackedObjects,asciiBuffer,10);
+> 	UIMgr_txBuffer(asciiBuffer,3);
+> 	UIMgr_txBuffer(" PFC\r\n",5);
+> 
+> #else	
+500c557
+<         pTableData = (unsigned int*)pCurrentTrackedObjectTable;
+---
+>         pTableData = (unsigned char *)pCurrentTrackedObjectTable;
+521,541c578,583
+<                 
+<                 //jcd 10/15/09 send the int x,y values as bytes
+<                 // 
+<                 tmpUpperLeftXHigh = (unsigned char) (*(pTableData + X_UPPER_LEFT_OFFSET)/256);	    // get the upper left X high byte
+<                 tmpUpperLeftXLow = (unsigned char) (*(pTableData + X_UPPER_LEFT_OFFSET) & 0x00FF);	// get the upper left X low byte
+< 
+<                 tmpUpperLeftYHigh = (unsigned char)(*(pTableData + Y_UPPER_LEFT_OFFSET)/256);		// get the upper left Y high byte		
+<                 tmpUpperLeftYLow = (unsigned char)(*(pTableData + Y_UPPER_LEFT_OFFSET) & 0x00FF);		// get the upper left Y low byte 	
+< 	
+<                 tmpLowerRightXHigh = (unsigned char)(*(pTableData + X_LOWER_RIGHT_OFFSET)/256);		// get the lower right X high byte
+<                 tmpLowerRightXLow = (unsigned char)(*(pTableData + X_LOWER_RIGHT_OFFSET) & 0x00FF);	// get the lower right X low byte
+< 
+<                 tmpLowerRightYHigh = (unsigned char)(*(pTableData + Y_LOWER_RIGHT_OFFSET)/256);		// get the lower right Y high byte     
+<                 tmpLowerRightYLow = (unsigned char)(*(pTableData + Y_LOWER_RIGHT_OFFSET) & 0x00FF);	// get the lower right Y low byte 	 
+<  
+< if (tmpUpperLeftXLow == 0xFF) tmpUpperLeftXLow = 0xFE;    // reserve 0xFF for the terminator byte
+< if (tmpUpperLeftYLow == 0xFF) tmpUpperLeftYLow = 0xFE;   // this won't change the x/y values by much 
+< if (tmpLowerRightXLow == 0xFF) tmpLowerRightXLow = 0xFE;    // and will make the communications more robust
+< if (tmpLowerRightYLow == 0xFF) tmpLowerRightYLow = 0xFE;   
+< 
+<                 // jcd 10/15/09 need 2 bytes of position now -
+---
+>                 
+>                 tmpUpperLeftX = *(pTableData + X_UPPER_LEFT_OFFSET);	    /* get the upper left X */
+>                 tmpUpperLeftY = *(pTableData + Y_UPPER_LEFT_OFFSET);		/* get the upper left Y */		
+>                 tmpLowerRightX = *(pTableData + X_LOWER_RIGHT_OFFSET);		/* get the lower right X */
+>                 tmpLowerRightY = *(pTableData + Y_LOWER_RIGHT_OFFSET);		/* get the lower right Y */	                
+>                 
+543,550c585,588
+<                 UIMgr_writeTxFifo(tmpUpperLeftXHigh);
+<                 UIMgr_writeTxFifo(tmpUpperLeftXLow);
+<                 UIMgr_writeTxFifo(tmpUpperLeftYHigh);       
+<                 UIMgr_writeTxFifo(tmpUpperLeftYLow);    // msByte, then lsByte
+<                 UIMgr_writeTxFifo(tmpLowerRightXHigh);
+<                 UIMgr_writeTxFifo(tmpLowerRightXLow);
+<                 UIMgr_writeTxFifo(tmpLowerRightYHigh);    
+<                 UIMgr_writeTxFifo(tmpLowerRightYLow); 			
+---
+>                 UIMgr_writeTxFifo(tmpUpperLeftX);
+>                 UIMgr_writeTxFifo(tmpUpperLeftY);
+>                 UIMgr_writeTxFifo(tmpLowerRightX);
+>                 UIMgr_writeTxFifo(tmpLowerRightY);			
+557c595
+< 		/* all done...send the end of tracking packets char - */
+---
+> 		/* all done...send the end of tracking packets char */
+559c597,598
+< 	}		
+---
+> 	}	
+> #endif	
+581,587c620,626
+< 	unsigned char *pCurrLineColorInfo = currentLineBuffer;
+<     // jcd 10/15/09 all to ints
+< 	unsigned int *pTrackedObjectData;
+< 	unsigned int currPixelRunStart=0;
+< 	unsigned int currPixelRunFinish=0;     unsigned int lastLineXStart=0;
+< 	unsigned int lastLineXFinish=0;  
+< 	unsigned int runLength=1;
+---
+> 	unsigned char *pCurrLineColorInfo = currentLineBuffer;
+> 	unsigned char *pTrackedObjectData;
+> 	register unsigned char currPixelRunStart=0;
+> 	register unsigned char currPixelRunFinish=0; 
+> 	register unsigned char lastLineXStart=0;
+> 	register unsigned char lastLineXFinish=0;  
+> 	register unsigned char runLength=1;
+596,610c635,639
+< 		currColor = (unsigned int)*pCurrLineColorInfo++;
+<         // version for old acquirePixelBlock in CamInterfaceAsm 10/26/09 jcd 
+<         // 
+< 		//currPixelRunStart += runLength;
+< 		//runLength = (unsigned int)*pCurrLineColorInfo++;
+< 		//currPixelRunFinish += runLength;
+< 
+<         // new, non working code  - 
+<         currPixelRunStart = currPixelRunFinish;
+<         currPixelRunFinish = ((unsigned int)*pCurrLineColorInfo++);
+<         currPixelRunFinish += ((unsigned int)*pCurrLineColorInfo++)*256; 
+<         currPixelRunFinish -= 0xffff - ACTUAL_NUM_PIXELS_IN_A_LINE	; // minus TCNT1 counter start value 
+< 
+<         runLength = currPixelRunFinish - currPixelRunStart;
+< 
+---
+> 		currColor = *pCurrLineColorInfo++;
+> 		currPixelRunStart += runLength;
+> 		runLength = *pCurrLineColorInfo++;
+> 		currPixelRunFinish += runLength;
+>       
+631c660
+<             pTrackedObjectData = (unsigned int*)pCurrentTrackedObjectTable;
+---
+>             pTrackedObjectData = (unsigned char *)pCurrentTrackedObjectTable;
+633c662
+< 			{ 
+---
+> 			{
+636c665
+<                      (*(pTrackedObjectData + Y_LOWER_RIGHT_OFFSET) == ((trackedLineCount) - 1)) )
+---
+>                      (*(pTrackedObjectData + Y_LOWER_RIGHT_OFFSET) == trackedLineCount - 1) )
+732c761
+<                     pTrackedObjectData = (unsigned int*)pCurrentTrackedObjectTable; // jcd 10/15/09
+---
+>                     pTrackedObjectData = (unsigned char *)pCurrentTrackedObjectTable;
+744c773
+< 					the fields */ // jcd 10/15/09 integer x and y
+---
+> 					the fields */
+749c778
+< 					*(pTrackedObjectData + Y_UPPER_LEFT_OFFSET)         = trackedLineCount ;	/* y_upperLeft */
+---
+> 					*(pTrackedObjectData + Y_UPPER_LEFT_OFFSET)         = trackedLineCount;	/* y_upperLeft */
+751,752c780,781
+< 					*(pTrackedObjectData + Y_LOWER_RIGHT_OFFSET)        = trackedLineCount;	    /* y_lowerRight  */
+<                     *(pTrackedObjectData + VALID_OBJECT_OFFSET)         = TRUE;                     /* objectValid flag */
+---
+> 					*(pTrackedObjectData + Y_LOWER_RIGHT_OFFSET)        = trackedLineCount;	/* y_lowerRight */
+>                     *(pTrackedObjectData + VALID_OBJECT_OFFSET)         = TRUE;                /* objectValid flag */
+44,45c44
+<     6/24/08     removed <avr/signal.h> jcd
+<     9/22/09     changed name of TWI irq routine for mega328
+---
+> 
+50,51c49,50
+< #include <util/twi.h>
+< //#include <avr/signal.h> changed 6/24/08 jcd
+---
+> #include <avr/twi.h>
+> #include <avr/signal.h>
+54,55c53
+< #include "CommonDefs.h"
+< #include "DebugInterface.h" // jcd 9/29/09
+---
+> #include "CommonDefs.h"
+186,191c184,186
+< ***********************************************************/
+< // this name had to be changed to compile for m328, when compiling for
+< // the m168 the SIG_2WIRE_SERIAL was fine - unknown jcd 9/22/09
+< SIGNAL(TWI_vect) 
+< {
+< //DebugToggle(); // 9/29/09 jcd 
+---
+> ***********************************************************/
+> SIGNAL(SIG_2WIRE_SERIAL)
+> {
+35,37c35
+<     Date        Rel Ver.    Notes
+<     3/16/09                removed start tracking on startup - let servo s/w do it
+<     10/1/08                added cmd to start tracking on startup - jcd
+---
+>     Date        Rel Ver.    Notes
+40,41c38
+<                            contest.
+<     3/16/09     initialization changes commented out again jcd
+---
+>                            contest.
+74a72
+> 	DebugInt_init();
+77c75,76
+< 	CamInt_init(); 
+---
+> 	CamInt_init();
+> 	
+80,82c79
+< 	ENABLE_INTS(); // defined as sei in commondefs.h
+<     Utility_delay(1000); // 9/14/09 jcd 
+< 
+---
+> 	ENABLE_INTS();
+84d80
+< //DebugInt_init(); // 9/28/09 jcd
+86a83
+>     
+89,90c86,87
+< 	Utility_delay(1000);
+< //DebugInt_init(); // 9/28/09 jcd
+---
+> 	Utility_delay(1000);
+> 	
+47,49c47
+<                            written in assembly.
+<     6/24/08     <avr/signal.h> removed - jcd
+<     9/22/09     changed name of uart rx irq handler to compile for mega328
+---
+>                            written in assembly.
+55c53
+< //#include <avr/signal.h> // obsolete - changed 6/24/08 
+---
+> #include <avr/signal.h>
+79,80c77
+< {	
+< // change me this will need to change with 20 meg crystal
+---
+> {	
+83,84c80,81
+< 	//UBRRH = 0x00;
+<     UBRR0H = 0x00; //change for m328 9/20/09 jcd 
+---
+> 	UBRRH = 0x00;
+> 
+86c83
+<     UBRR0L = 18;  /* 18 for double clocking at 115.2 kbps not used */
+---
+>     UBRRL = 18;  /* 18 for double clocking at 115.2 kbps */
+88,89c85
+< 	//UBRRL = 0x08;  /* for 16 MHz crystal at 115.2 kbps */
+<     UBRR0L = 0x08;  // for 16 MHz crystal at 115.2 kbps change for m328 9/20/09 jcd 
+---
+> 	UBRRL = 0x08;  /* for 16 MHz crystal at 115.2 kbps */
+94,95c90
+< 	//UCSRB = (1<<RXCIE)|(1<<RXEN)|(1<<TXEN);	
+< 	UCSR0B = (1<<RXCIE0)|(1<<RXEN0)|(1<<TXEN0); // change for m328 9/20/09 jcd 
+---
+> 	UCSRB = (1<<RXCIE)|(1<<RXEN)|(1<<TXEN);	
+98,100c93,94
+< 	//UCSRC = (1<<URSEL)|(1<<UCSZ1)|(1<<UCSZ0);
+<     UCSR0C = (1<<UCSZ01)|(1<<UCSZ00); // change for m328 9/20/09 jcd 
+< 
+---
+> 	UCSRC = (1<<URSEL)|(1<<UCSZ1)|(1<<UCSZ0);
+>     
+102,103c96,97
+<     /* set the baud rate to use the double-speed not used*/
+<     UCSR0A = (1<<U2X);
+---
+>     /* set the baud rate to use the double-speed */
+>     UCSRA = (1<<U2X);
+124,125c118
+< 	//while ( !( UCSRA & (1<<UDRE)) );
+<     while ( !( UCSR0A & (1<<UDRE0)) ); // changed for m328 9/20/09 jcd
+---
+> 	while ( !( UCSRA & (1<<UDRE)) );
+127,128c120
+< 	//UDR = txByte;
+<     UDR0 = txByte; // changed for m328 9/20/09 jcd
+---
+> 	UDR = txByte;
+145,148c137,138
+< ***********************************************************/
+< // compiler thinks this is misspelled signal handler 
+< // changed to compile for m328 9/22/09 jcd
+< SIGNAL (USART_RX_vect) 
+---
+> ***********************************************************/
+> SIGNAL(SIG_UART_RECV)
+154c144
+<     UIMgr_rxFifo[UIMgr_rxFifoHead] = UDR0;
+---
+>     UIMgr_rxFifo[UIMgr_rxFifoHead] = UDR;
+51,52c51
+<                            string to 1.4.
+<     6/24/08                 ascii token buffer to char jcd
+---
+>                            string to 1.4.
+94,96c93,94
+< static unsigned char charIndex = 0;
+< // change asciiTokenBuffer to plain char 6/24/08 jcd
+< static char asciiTokenBuffer[MAX_TOKEN_LENGTH+1]; /* +1 to ensure NULL at end */
+---
+> static unsigned char charIndex = 0;
+> static unsigned char asciiTokenBuffer[MAX_TOKEN_LENGTH+1]; /* +1 to ensure NULL at end */
+100c98
+< static unsigned char AVRcamVersion[] = "AVRcam v1.4mod 8/24/09\r";
+---
+> static unsigned char AVRcamVersion[] = "AVRcam v1.4\r";
+427c425
+< 	newValue = atoi(asciiTokenBuffer); // asciiTokenBuffer changed 6/24/08 jcd
+---
+> 	newValue = atoi(asciiTokenBuffer);

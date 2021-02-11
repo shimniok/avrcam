@@ -1,0 +1,1052 @@
+
+CamInterfaceAsm.o:     file format elf32-avr
+
+
+Disassembly of section .text:
+
+00000000 <CamIntAsm_toggleDebugLine>:
+; 
+CamIntAsm_toggleDebugLine:
+;lds,sts work as well, the problem was that the ddr was not set
+; a short pulse of about 125 nSec...
+;       sbi     _SFR_IO_ADDR(DDRD),PD6  ; now set in framemgr.c
+	    sbi		_SFR_IO_ADDR(PORTD),PD6  ; For testing...
+   0:	5e 9a       	sbi	0x0b, 6	; 11
+		cbi		_SFR_IO_ADDR(PORTD),PD6		
+   2:	5e 98       	cbi	0x0b, 6	; 11
+        ret;	
+   4:	08 95       	ret
+
+00000006 <CamIntAsm_waitForNewTrackingFrame>:
+;*****************************************************************
+		
+CamIntAsm_waitForNewTrackingFrame:
+;		sbi		_SFR_IO_ADDR(PORTD),PD6  ; For testing...
+;		cbi		_SFR_IO_ADDR(PORTD),PD6		
+		sleep
+   6:	88 95       	sleep
+
+00000008 <CamIntAsm_acquireTrackingLine>:
+; synchronized with the flow of pixel data from the camera...
+;*****************************************************************
+
+CamIntAsm_acquireTrackingLine:
+; this branch is out of range when we just do brts _cleanUp  9/21/09 jcd
+		brts    jcdcleanUp	
+   8:	06 f0       	brts	.+0      	; 0xa <CamIntAsm_acquireTrackingLine+0x2>
+;		sbi		_SFR_IO_ADDR(PORTD),PD6 ; For testing...change me back
+;		cbi		_SFR_IO_ADDR(PORTD),PD6
+       
+;;;;;;       in      tmp1,_SFR_IO_ADDR(TCCR1B) ; 
+        lds      tmp1,TCCR1B ; Enable the PCLK line to actually   9/21/09 jcd
+   a:	30 91 81 00 	lds	r19, 0x0081
+        ori     tmp1, 0x07                 ; feed Timer1
+   e:	37 60       	ori	r19, 0x07	; 7
+;;;;;;        out     _SFR_IO_ADDR(TCCR1B),tmp1 
+        sts     TCCR1B,tmp1   ; 9/21/09 jcd
+  10:	30 93 81 00 	sts	0x0081, r19
+
+										; The line is about to start...		
+		ldi     pixelCount,0			; Initialize the RLE stats...
+  14:	00 e0       	ldi	r16, 0x00	; 0
+		ldi		pixelRunStart,PIXEL_RUN_START_INITIAL  	; Remember, we always calculate
+  16:	10 e5       	ldi	r17, 0x50	; 80
+														; the pixel run length as
+														; TCNT1L - pixelRunStart
+		
+		ldi		lastColor,0x00				; clear out the last color before we start
+  18:	20 e0       	ldi	r18, 0x00	; 0
+		
+		mov   	XH,currLineBuffHigh    	; Load the pointer to the current line
+  1a:	b9 2f       	mov	r27, r25
+		mov		XL,currLineBuffLow		; buffer into the X pointer regs		 
+  1c:	a8 2f       	mov	r26, r24
+		
+		mov   	ZH,colorMapHigh      	; Load the pointers to the membership
+  1e:	f7 2f       	mov	r31, r23
+		mov		ZL,colorMapLow			; lookup tables (ZL and YL will be overwritten
+  20:	e6 2f       	mov	r30, r22
+		mov 	YH,colorMapHigh	 		; as soon as we start reading data) to Z and Y
+  22:	d7 2f       	mov	r29, r23
+		
+;;;;;		in		tmp1, _SFR_IO_ADDR(TIMSK)	
+        lds		tmp1, TIMSK1			; enable TIMER1 to start counting 9/21/09 jcd
+  24:	30 91 6f 00 	lds	r19, 0x006F
+		ori		tmp1, ENABLE_PCLK_TIMER1_OVERFLOW_BITMASK 	; external PCLK pulses and interrupt on 
+  28:	31 60       	ori	r19, 0x01	; 1
+;;;;;		out		_SFR_IO_ADDR(TIMSK),tmp1	
+		sts		TIMSK1,tmp1			; overflow 9/21/09 jcd
+  2a:	30 93 6f 00 	sts	0x006F, r19
+
+		ldi 	tmp1,PIXEL_RUN_START_INITIAL	; set up the TCNT1 to overflow (and
+  2e:	30 e5       	ldi	r19, 0x50	; 80
+		ldi 	tmp2,0xFF 						; interrupts) after 176 pixels	
+  30:	4f ef       	ldi	r20, 0xFF	; 255
+	
+;;;;;		out 	_SFR_IO_ADDR(TCNT1H),tmp2	
+        sts 	TCNT1H,tmp2	;9/21/09 jcd
+  32:	40 93 85 00 	sts	0x0085, r20
+;;;;;		out 	_SFR_IO_ADDR(TCNT1L),tmp1	
+        sts 	TCNT1L,tmp1	;9/21/09 jcd		
+  36:	30 93 84 00 	sts	0x0084, r19
+		
+		mov		YL,colorMapLow		
+  3a:	c6 2f       	mov	r28, r22
+		
+;;;;;		in 		tmp1, _SFR_IO_ADDR(GICR)	
+        lds		tmp1,EIMSK	; enable the HREF interrupt...remember, we 9/21/09 jcd
+  3c:	30 91 3d 00 	lds	r19, 0x003D
+											; only use this interrupt to synchronize
+											; the beginning of the line
+
+		ori 	tmp1, HREF_INTERRUPT_ENABLE_MASK
+  40:	32 60       	ori	r19, 0x02	; 2
+;;;;;		out		_SFR_IO_ADDR(GICR), tmp1 
+        sts		EIMSK, tmp1 ; 9/21/09 jcd
+  42:	30 93 3d 00 	sts	0x003D, r19
+
+00000046 <_trackFrame>:
+;   Track Frame handler 
+;*******************************************************************************************		
+		
+_trackFrame:		
+;		sbi		_SFR_IO_ADDR(PORTD),PD6
+		sleep   ; ...And we wait...
+  46:	88 95       	sleep
+;;		cbi		_SFR_IO_ADDR(PORTD),PD6     ;
+
+; changing from in/out instructions to lds/sts will use 2 additional cycles, comment out
+; the nops below - perhaps set the 7620 to delay the pixels relative to the href as well...
+;;;;;		in 		tmp1, _SFR_IO_ADDR(GICR) 
+        lds 		tmp1,EIMSK ; 9/21/09 jcd
+  48:	30 91 3d 00 	lds	r19, 0x003D
+		andi 	tmp1, HREF_INTERRUPT_DISABLE_MASK
+  4c:	3d 7f       	andi	r19, 0xFD	; 253
+;;;;;		out		_SFR_IO_ADDR(GICR), tmp1 
+        sts		EIMSK, tmp1 ; 9/21/09 jcd
+  4e:	30 93 3d 00 	sts	0x003D, r19
+
+00000052 <_acquirePixelBlock>:
+	; of NOPs was determined emperically by trial and error.
+    ; *probably* no longer necessary - 9/21/09 jcd
+;;;;;		nop
+;;;;;		nop
+_acquirePixelBlock:							;							Clock Cycle Count
+		in		ZL,RB_PORT         			; sample the red value (PINB)		(1)
+  52:	e3 b1       	in	r30, 0x03	; 3
+		in		YL,G_PORT         			; sample the green value (PINC)		(1)
+  54:	c6 b1       	in	r28, 0x06	; 6
+		andi	YL,0x0F            			; clear the high nibble				(1)
+  56:	cf 70       	andi	r28, 0x0F	; 15
+		ldd		color,Z+RED_MEM_OFFSET  	; lookup the red membership			(2)
+  58:	30 81       	ld	r19, Z
+		in		ZL,RB_PORT         			; sample the blue value (PINB)		(1)
+  5a:	e3 b1       	in	r30, 0x03	; 3
+		ldd		greenData,Y+GREEN_MEM_OFFSET; lookup the green membership		(2)
+  5c:	48 89       	ldd	r20, Y+16	; 0x10
+		ldd		blueData,Z+BLUE_MEM_OFFSET	; lookup the blue membership		(2)
+  5e:	50 a1       	ldd	r21, Z+32	; 0x20
+		and		color,greenData 			; mask memberships together			(1)
+  60:	34 23       	and	r19, r20
+		and		color,blueData  			; to produce the final color		(1)
+  62:	35 23       	and	r19, r21
+		brts    _cleanUpTrackingLine		; if some interrupt routine has		(1...not set)
+  64:	06 f0       	brts	.+0      	; 0x66 <_acquirePixelBlock+0x14>
+											; come in and set our T flag in 
+											; SREG, then we need to hop out
+											; and blow away this frames data (common cleanup)									
+		cp		color,lastColor     		; check to see if the run continues	(1)
+  66:	32 17       	cp	r19, r18
+		breq    _acquirePixelBlock  		;									(2...equal)
+  68:	01 f0       	breq	.+0      	; 0x6a <_acquirePixelBlock+0x18>
+		; Toggle the debug line to indicate a color change
+;		sbi     _SFR_IO_ADDR(PORTD),PD6
+;		nop
+;		cbi		_SFR_IO_ADDR(PORTD),PD6
+		
+		mov		tmp2,pixelRunStart				; get the count value of the
+  6a:	41 2f       	mov	r20, r17
+											; current pixel run
+;;;;;   	in		pixelCount,_SFR_IO_ADDR(TCNT1L)
+        lds		pixelCount,TCNT1L	; get the current TCNT1 value 9/21/09 jcd
+  6c:	00 91 84 00 	lds	r16, 0x0084
+
+		mov   	pixelRunStart,pixelCount		; reload pixelRunStart for the
+  70:	10 2f       	mov	r17, r16
+												; next run
+		sub		pixelCount,tmp2     			; pixelCount = TCNT1L - pixelRunStart
+  72:	04 1b       	sub	r16, r20
+										
+		st		X+,lastColor			; record the color run in the current line buffer
+  74:	2d 93       	st	X+, r18
+		st		X+,pixelCount			; with its length
+  76:	0d 93       	st	X+, r16
+		mov		lastColor,color			; set lastColor so we can figure out when it changes
+  78:	23 2f       	mov	r18, r19
+		
+		nop								; waste one more cycle for a total of 16
+  7a:	00 00       	nop
+		rjmp	_acquirePixelBlock	
+  7c:	00 c0       	rjmp	.+0      	; 0x7e <jcdcleanUp>
+
+0000007e <jcdcleanUp>:
+
+jcdcleanUp:
+    rjmp _cleanUp;		just a branch extension for CamIntAsm_acquireTrackingLine
+  7e:	00 c0       	rjmp	.+0      	; 0x80 <_cleanUpTrackingLine>
+
+00000080 <_cleanUpTrackingLine>:
+
+; _cleanUpTrackingLine is used to write the last run length block off to the currentLineBuffer so
+; that all 176 pixels in the line are accounted for.
+_cleanUpTrackingLine:		
+		ldi		pixelCount,0xFF		; the length of the last run is ALWAYS 0xFF minus the last
+  80:	0f ef       	ldi	r16, 0xFF	; 255
+		sub		pixelCount,pixelRunStart  	; pixelRunStart
+  82:	01 1b       	sub	r16, r17
+		
+		inc		pixelCount				; increment pixelCount since we actually need to account
+  84:	03 95       	inc	r16
+										; for the overflow of TCNT1
+										
+		st		X+,color				; record the color run in the current line buffer
+  86:	3d 93       	st	X+, r19
+		st		X,pixelCount		
+  88:	0c 93       	st	X, r16
+		rjmp	_cleanUp
+  8a:	00 c0       	rjmp	.+0      	; 0x8c <_cleanUp>
+
+0000008c <_cleanUp>:
+
+_cleanUp:
+        ; Disable the external clocking of the Timer1 counter 
+
+;;;;;;        in      tmp1, _SFR_IO_ADDR(TCCR1B) 
+        lds     tmp1,TCCR1B ; 9/21/09 jcd 
+  8c:	30 91 81 00 	lds	r19, 0x0081
+        andi    tmp1, 0xF8
+  90:	38 7f       	andi	r19, 0xF8	; 248
+;;;;;;        out     _SFR_IO_ADDR(TCCR1B),tmp1 
+        sts     TCCR1B,tmp1 ; 9/21/09 jcd
+  92:	30 93 81 00 	sts	0x0081, r19
+		
+		; Toggle the debug line to indicate the line is complete
+;		sbi     _SFR_IO_ADDR(PORTD),PD6 ; jcd 10/1/09 change me back?
+;		cbi		_SFR_IO_ADDR(PORTD),PD6
+		clt				; clear out the T bit since we have detected
+  96:	e8 94       	clt
+
+00000098 <_exit>:
+						; the interruption and are exiting to handle it
+_exit:
+		ret
+  98:	08 95       	ret
+
+0000009a <CamIntAsm_waitForNewDumpFrame>:
+;       is awoken.
+;*****************************************************************		
+CamIntAsm_waitForNewDumpFrame:
+		;sbi		_SFR_IO_ADDR(PORTD),PD6  ; For testing...
+		;cbi		_SFR_IO_ADDR(PORTD),PD6
+		sleep
+  9a:	88 95       	sleep
+
+0000009c <CamIntAsm_acquireDumpLine>:
+;*****************************************************************
+; frameMgr calls this, but though it's reached it's never returned from...
+; it spins in sampleDumpPixel
+CamIntAsm_acquireDumpLine:
+;		call CamIntAsm_toggleDebugLine; gets here
+		brts	_cleanUp
+  9c:	06 f0       	brts	.+0      	; 0x9e <CamIntAsm_acquireDumpLine+0x2>
+
+		
+		mov   	XH,currLineBuffHigh    	; Load the pointer to the current line
+  9e:	b9 2f       	mov	r27, r25
+		mov		XL,currLineBuffLow		; buffer into the X pointer regs
+  a0:	a8 2f       	mov	r26, r24
+
+		mov		YH,prevLineBuffHigh		; Load the pointer to the previous line
+  a2:	d7 2f       	mov	r29, r23
+		mov		YL,prevLineBuffLow  	; buffer into the Y pointer regs
+  a4:	c6 2f       	mov	r28, r22
+		
+		ldi 	tmp1,PIXEL_RUN_START_INITIAL	; set up the TCNT1 to overflow (and
+  a6:	30 e5       	ldi	r19, 0x50	; 80
+		ldi 	tmp2,0xFF 						; interrupts) after 176 pixels		
+  a8:	4f ef       	ldi	r20, 0xFF	; 255
+;;;;;;	out 	_SFR_IO_ADDR(TCNT1H),tmp2	
+        sts 	TCNT1H,tmp2   ;	9/21/09 jcd	
+  aa:	40 93 85 00 	sts	0x0085, r20
+;;;;;;	out 	_SFR_IO_ADDR(TCNT1L),tmp1	
+		sts 	TCNT1L,tmp1	; 9/21/09 jcd
+  ae:	30 93 84 00 	sts	0x0084, r19
+;;;;;;        in      tmp1, _SFR_IO_ADDR(TCCR1B)
+        lds      tmp1,TCCR1B ; Enable the PCLK line to actually 9/21/09 jcd
+  b2:	30 91 81 00 	lds	r19, 0x0081
+        ori     tmp1, 0x07                 ; feed Timer1
+  b6:	37 60       	ori	r19, 0x07	; 7
+;;;;;        out     _SFR_IO_ADDR(TCCR1B),tmp1 
+        sts     TCCR1B,tmp1 ; 9/21/09 jcd
+  b8:	30 93 81 00 	sts	0x0081, r19
+;		call CamIntAsm_toggleDebugLine; change me gets here
+        
+;;;;;		in		tmp1, _SFR_IO_ADDR(TIMSK)	
+        lds		tmp1, TIMSK1			; enable TIMER1 to start counting 9/21/09 jcd
+  bc:	30 91 6f 00 	lds	r19, 0x006F
+		ori		tmp1, ENABLE_PCLK_TIMER1_OVERFLOW_BITMASK 	; 0x01 external PCLK pulses and interrupt on 
+  c0:	31 60       	ori	r19, 0x01	; 1
+;;;;;		out		_SFR_IO_ADDR(TIMSK),tmp1			
+		sts		TIMSK1,tmp1			; overflow	; 9/21/09 jcd
+  c2:	30 93 6f 00 	sts	0x006F, r19
+		
+;;;;;		in 		tmp1, _SFR_IO_ADDR(GICR)	;  
+        lds		tmp1,EIMSK; enable the HREF interrupt...remember, 9/21/09 jcd
+  c6:	30 91 3d 00 	lds	r19, 0x003D
+											; only use this interrupt to synchronize
+											; the beginning of the line
+		ori 	tmp1, HREF_INTERRUPT_ENABLE_MASK; 0x02
+  ca:	32 60       	ori	r19, 0x02	; 2
+;;;;;		out		_SFR_IO_ADDR(GICR), tmp1 
+        sts		EIMSK,tmp1; 9/21/09 jcd
+  cc:	30 93 3d 00 	sts	0x003D, r19
+
+000000d0 <_dumpFrame>:
+;*******************************************************************************************		
+		
+_dumpFrame:		
+
+;call CamIntAsm_toggleDebugLine; gets here
+        ldi     tmp1,0x01; idle, sleep enable
+  d0:	31 e0       	ldi	r19, 0x01	; 1
+        sts     SMCR,tmp1;
+  d2:	30 93 53 00 	sts	0x0053, r19
+		sleep   ; ...And we wait...seems to wait
+  d6:	88 95       	sleep
+;call CamIntAsm_toggleDebugLine; gets here but not if we trigger off the call before sleeping
+;call CamIntAsm_toggleDebugLine; 
+;call CamIntAsm_toggleDebugLine; 
+
+;;;;;		in 		tmp1, _SFR_IO_ADDR(GICR)			; 
+        lds		tmp1,EIMSK; disable the HREF interrupt 9/21/09 jcd
+  d8:	30 91 3d 00 	lds	r19, 0x003D
+		andi 	tmp1, HREF_INTERRUPT_DISABLE_MASK  	; so we don't get interrupted
+  dc:	3d 7f       	andi	r19, 0xFD	; 253
+;;;;;		out		_SFR_IO_ADDR(GICR), tmp1			; while dumping the line 
+	    sts		EIMSK,tmp1; 9/21/09 jcd
+  de:	30 93 3d 00 	sts	0x003D, r19
+	...
+
+000000e4 <_sampleDumpPixel>:
+; it is assumed that we will have to do some minor processing on the data right
+; before we send it out, like mask off the top 4-bits of each, and then pack both
+; low nibbles into a single byte for transmission...we just don't have time to
+; do that here (only 8 instruction cycles :-)  )
+_sampleDumpPixel:
+		in		tmp1,G_PORT				; sample the G value					(1) change me
+  e4:	36 b1       	in	r19, 0x06	; 6
+		in		tmp2,RB_PORT			; sample the R/B value					(1) change me
+  e6:	43 b1       	in	r20, 0x03	; 3
+		st		X+,tmp1					; store to the currLineBuff and inc ptrs(2)
+  e8:	3d 93       	st	X+, r19
+		st		Y+,tmp2					; store to the prevLineBuff and inc ptrs(2)
+  ea:	49 93       	st	Y+, r20
+
+; debug toggle here goes on forever, always executes the branch
+		brtc	_sampleDumpPixel		; loop back unless flag is set			(2...if not set)
+  ec:	06 f4       	brtc	.+0      	; 0xee <_sampleDumpPixel+0xa>
+							            ;									8 cycles normally
+;call CamIntAsm_toggleDebugLine; never gets here
+								
+		; if we make it here, it means the T flag is set, and we must have been interrupted
+		; so we need to exit (what if we were interrupted for serial? should we disable it?)
+		rjmp	_cleanUpDumpLine
+  ee:	00 c0       	rjmp	.+0      	; 0xf0 <__vector_1>
+
+000000f0 <__vector_1>:
+;	Outputs: none
+;***********************************************************
+;SIG_INTERRUPT0:
+INT0_vect:
+; This will wake us up when VSYNC transitions high...we just want to return
+call CamIntAsm_toggleDebugLine; change me not triggered
+  f0:	0e 94 00 00 	call	0	; 0x0 <CamIntAsm_toggleDebugLine>
+		reti
+  f4:	18 95       	reti
+
+000000f6 <__vector_2>:
+;	Outputs: none
+;***********************************************************	
+;SIG_INTERRUPT1:
+INT1_vect:
+; This will wake us up when HREF transitions high...we just want to return
+        call CamIntAsm_toggleDebugLine;  change me not triggered
+  f6:	0e 94 00 00 	call	0	; 0x0 <CamIntAsm_toggleDebugLine>
+		reti
+  fa:	18 95       	reti
+;SIG_OVERFLOW0:
+;		set				; set the T bit in SREG
+;		lds		tmp1,eventBitmask
+;		ori		tmp1,EV_ACQUIRE_FRAME_COMPLETE
+;		sts		eventBitmask,tmp1
+call CamIntAsm_toggleDebugLine;  change me not triggered
+  fc:	0e 94 00 00 	call	0	; 0x0 <CamIntAsm_toggleDebugLine>
+
+00000100 <TIM1_OVF_vect>:
+;	event in the fastEventBitmask, which is streamlined for
+;	efficiency reasons.
+;***********************************************************
+;SIG_OVERFLOW1:				
+TIM1_OVF_vect:
+		lds		tmp1,fastEventBitmask   		; set a flag indicating
+ 100:	30 91 00 00 	lds	r19, 0x0000
+		ori		tmp1,FEV_ACQUIRE_LINE_COMPLETE	; a line is complete
+ 104:	31 60       	ori	r19, 0x01	; 1
+		sts		fastEventBitmask,tmp1
+ 106:	30 93 00 00 	sts	0x0000, r19
+		set		; set the T bit in SREG 
+ 10a:	68 94       	set
+		call CamIntAsm_toggleDebugLine; change me
+ 10c:	0e 94 00 00 	call	0	; 0x0 <CamIntAsm_toggleDebugLine>
+		reti
+ 110:	18 95       	reti
+
+00000112 <__vector_default>:
+
+; This is the default handler for all interrupts that don't
+; have handler routines specified for them.
+        .global __vector_default              
+__vector_default:
+        reti
+ 112:	18 95       	reti
+
+Disassembly of section .stab:
+
+00000000 <.stab>:
+; 
+CamIntAsm_toggleDebugLine:
+;lds,sts work as well, the problem was that the ddr was not set
+; a short pulse of about 125 nSec...
+;       sbi     _SFR_IO_ADDR(DDRD),PD6  ; now set in framemgr.c
+	    sbi		_SFR_IO_ADDR(PORTD),PD6  ; For testing...
+   0:	01 00       	.word	0x0001	; ????
+		cbi		_SFR_IO_ADDR(PORTD),PD6		
+   2:	00 00       	nop
+        ret;	
+   4:	00 00       	nop
+;*****************************************************************
+		
+CamIntAsm_waitForNewTrackingFrame:
+;		sbi		_SFR_IO_ADDR(PORTD),PD6  ; For testing...
+;		cbi		_SFR_IO_ADDR(PORTD),PD6		
+		sleep
+   6:	6e 00       	.word	0x006e	; ????
+; synchronized with the flow of pixel data from the camera...
+;*****************************************************************
+
+CamIntAsm_acquireTrackingLine:
+; this branch is out of range when we just do brts _cleanUp  9/21/09 jcd
+		brts    jcdcleanUp	
+   8:	33 00       	.word	0x0033	; ????
+;		sbi		_SFR_IO_ADDR(PORTD),PD6 ; For testing...change me back
+;		cbi		_SFR_IO_ADDR(PORTD),PD6
+       
+;;;;;;       in      tmp1,_SFR_IO_ADDR(TCCR1B) ; 
+        lds      tmp1,TCCR1B ; Enable the PCLK line to actually   9/21/09 jcd
+   a:	00 00       	nop
+   c:	11 00       	.word	0x0011	; ????
+        ori     tmp1, 0x07                 ; feed Timer1
+   e:	00 00       	nop
+;;;;;;        out     _SFR_IO_ADDR(TCCR1B),tmp1 
+        sts     TCCR1B,tmp1   ; 9/21/09 jcd
+  10:	64 00       	.word	0x0064	; ????
+  12:	00 00       	nop
+
+										; The line is about to start...		
+		ldi     pixelCount,0			; Initialize the RLE stats...
+  14:	00 00       	nop
+		ldi		pixelRunStart,PIXEL_RUN_START_INITIAL  	; Remember, we always calculate
+  16:	00 00       	nop
+														; the pixel run length as
+														; TCNT1L - pixelRunStart
+		
+		ldi		lastColor,0x00				; clear out the last color before we start
+  18:	21 00       	.word	0x0021	; ????
+		
+		mov   	XH,currLineBuffHigh    	; Load the pointer to the current line
+  1a:	00 00       	nop
+		mov		XL,currLineBuffLow		; buffer into the X pointer regs		 
+  1c:	84 00       	.word	0x0084	; ????
+	...
+		mov   	ZH,colorMapHigh      	; Load the pointers to the membership
+		mov		ZL,colorMapLow			; lookup tables (ZL and YL will be overwritten
+		mov 	YH,colorMapHigh	 		; as soon as we start reading data) to Z and Y
+		
+;;;;;		in		tmp1, _SFR_IO_ADDR(TIMSK)	
+        lds		tmp1, TIMSK1			; enable TIMER1 to start counting 9/21/09 jcd
+  26:	00 00       	nop
+		ori		tmp1, ENABLE_PCLK_TIMER1_OVERFLOW_BITMASK 	; external PCLK pulses and interrupt on 
+  28:	44 00       	.word	0x0044	; ????
+;;;;;		out		_SFR_IO_ADDR(TIMSK),tmp1	
+		sts		TIMSK1,tmp1			; overflow 9/21/09 jcd
+  2a:	a5 00       	.word	0x00a5	; ????
+	...
+
+		ldi 	tmp1,PIXEL_RUN_START_INITIAL	; set up the TCNT1 to overflow (and
+		ldi 	tmp2,0xFF 						; interrupts) after 176 pixels	
+	
+;;;;;		out 	_SFR_IO_ADDR(TCNT1H),tmp2	
+        sts 	TCNT1H,tmp2	;9/21/09 jcd
+  34:	44 00       	.word	0x0044	; ????
+;;;;;		out 	_SFR_IO_ADDR(TCNT1L),tmp1	
+        sts 	TCNT1L,tmp1	;9/21/09 jcd		
+  36:	a6 00       	.word	0x00a6	; ????
+	...
+;;;;;		in 		tmp1, _SFR_IO_ADDR(GICR)	
+        lds		tmp1,EIMSK	; enable the HREF interrupt...remember, we 9/21/09 jcd
+											; only use this interrupt to synchronize
+											; the beginning of the line
+
+		ori 	tmp1, HREF_INTERRUPT_ENABLE_MASK
+  40:	44 00       	.word	0x0044	; ????
+;;;;;		out		_SFR_IO_ADDR(GICR), tmp1 
+        sts		EIMSK, tmp1 ; 9/21/09 jcd
+  42:	a7 00       	.word	0x00a7	; ????
+	...
+
+; changing from in/out instructions to lds/sts will use 2 additional cycles, comment out
+; the nops below - perhaps set the 7620 to delay the pixels relative to the href as well...
+;;;;;		in 		tmp1, _SFR_IO_ADDR(GICR) 
+        lds 		tmp1,EIMSK ; 9/21/09 jcd
+		andi 	tmp1, HREF_INTERRUPT_DISABLE_MASK
+  4c:	44 00       	.word	0x0044	; ????
+;;;;;		out		_SFR_IO_ADDR(GICR), tmp1 
+        sts		EIMSK, tmp1 ; 9/21/09 jcd
+  4e:	c1 00       	.word	0x00c1	; ????
+	...
+;;;;;		nop
+_acquirePixelBlock:							;							Clock Cycle Count
+		in		ZL,RB_PORT         			; sample the red value (PINB)		(1)
+		in		YL,G_PORT         			; sample the green value (PINC)		(1)
+		andi	YL,0x0F            			; clear the high nibble				(1)
+		ldd		color,Z+RED_MEM_OFFSET  	; lookup the red membership			(2)
+  58:	44 00       	.word	0x0044	; ????
+		in		ZL,RB_PORT         			; sample the blue value (PINB)		(1)
+  5a:	ca 00       	.word	0x00ca	; ????
+	...
+		ldd		greenData,Y+GREEN_MEM_OFFSET; lookup the green membership		(2)
+		ldd		blueData,Z+BLUE_MEM_OFFSET	; lookup the blue membership		(2)
+		and		color,greenData 			; mask memberships together			(1)
+		and		color,blueData  			; to produce the final color		(1)
+		brts    _cleanUpTrackingLine		; if some interrupt routine has		(1...not set)
+  64:	44 00       	.word	0x0044	; ????
+											; come in and set our T flag in 
+											; SREG, then we need to hop out
+											; and blow away this frames data (common cleanup)									
+		cp		color,lastColor     		; check to see if the run continues	(1)
+  66:	cf 00       	.word	0x00cf	; ????
+	...
+		mov		tmp2,pixelRunStart				; get the count value of the
+											; current pixel run
+;;;;;   	in		pixelCount,_SFR_IO_ADDR(TCNT1L)
+        lds		pixelCount,TCNT1L	; get the current TCNT1 value 9/21/09 jcd
+
+		mov   	pixelRunStart,pixelCount		; reload pixelRunStart for the
+  70:	44 00       	.word	0x0044	; ????
+												; next run
+		sub		pixelCount,tmp2     			; pixelCount = TCNT1L - pixelRunStart
+  72:	d0 00       	.word	0x00d0	; ????
+	...
+		st		X+,lastColor			; record the color run in the current line buffer
+		st		X+,pixelCount			; with its length
+		mov		lastColor,color			; set lastColor so we can figure out when it changes
+		
+		nop								; waste one more cycle for a total of 16
+		rjmp	_acquirePixelBlock	
+  7c:	44 00       	.word	0x0044	; ????
+
+jcdcleanUp:
+    rjmp _cleanUp;		just a branch extension for CamIntAsm_acquireTrackingLine
+  7e:	d2 00       	.word	0x00d2	; ????
+	...
+		
+		inc		pixelCount				; increment pixelCount since we actually need to account
+										; for the overflow of TCNT1
+										
+		st		X+,color				; record the color run in the current line buffer
+		st		X,pixelCount		
+  88:	44 00       	.word	0x0044	; ????
+		rjmp	_cleanUp
+  8a:	d5 00       	.word	0x00d5	; ????
+	...
+
+;;;;;;        in      tmp1, _SFR_IO_ADDR(TCCR1B) 
+        lds     tmp1,TCCR1B ; 9/21/09 jcd 
+        andi    tmp1, 0xF8
+;;;;;;        out     _SFR_IO_ADDR(TCCR1B),tmp1 
+        sts     TCCR1B,tmp1 ; 9/21/09 jcd
+  94:	44 00       	.word	0x0044	; ????
+		
+		; Toggle the debug line to indicate the line is complete
+;		sbi     _SFR_IO_ADDR(PORTD),PD6 ; jcd 10/1/09 change me back?
+;		cbi		_SFR_IO_ADDR(PORTD),PD6
+		clt				; clear out the T bit since we have detected
+  96:	d6 00       	.word	0x00d6	; ????
+	...
+;		call CamIntAsm_toggleDebugLine; gets here
+		brts	_cleanUp
+
+		
+		mov   	XH,currLineBuffHigh    	; Load the pointer to the current line
+		mov		XL,currLineBuffLow		; buffer into the X pointer regs
+  a0:	44 00       	.word	0x0044	; ????
+
+		mov		YH,prevLineBuffHigh		; Load the pointer to the previous line
+  a2:	da 00       	.word	0x00da	; ????
+	...
+		mov		YL,prevLineBuffLow  	; buffer into the Y pointer regs
+		
+		ldi 	tmp1,PIXEL_RUN_START_INITIAL	; set up the TCNT1 to overflow (and
+		ldi 	tmp2,0xFF 						; interrupts) after 176 pixels		
+;;;;;;	out 	_SFR_IO_ADDR(TCNT1H),tmp2	
+        sts 	TCNT1H,tmp2   ;	9/21/09 jcd	
+  ac:	44 00       	.word	0x0044	; ????
+;;;;;;	out 	_SFR_IO_ADDR(TCNT1L),tmp1	
+		sts 	TCNT1L,tmp1	; 9/21/09 jcd
+  ae:	dc 00       	.word	0x00dc	; ????
+	...
+;;;;;;        in      tmp1, _SFR_IO_ADDR(TCCR1B)
+        lds      tmp1,TCCR1B ; Enable the PCLK line to actually 9/21/09 jcd
+        ori     tmp1, 0x07                 ; feed Timer1
+;;;;;        out     _SFR_IO_ADDR(TCCR1B),tmp1 
+        sts     TCCR1B,tmp1 ; 9/21/09 jcd
+  b8:	44 00       	.word	0x0044	; ????
+  ba:	dd 00       	.word	0x00dd	; ????
+	...
+        
+;;;;;		in		tmp1, _SFR_IO_ADDR(TIMSK)	
+        lds		tmp1, TIMSK1			; enable TIMER1 to start counting 9/21/09 jcd
+		ori		tmp1, ENABLE_PCLK_TIMER1_OVERFLOW_BITMASK 	; 0x01 external PCLK pulses and interrupt on 
+;;;;;		out		_SFR_IO_ADDR(TIMSK),tmp1			
+		sts		TIMSK1,tmp1			; overflow	; 9/21/09 jcd
+  c4:	44 00       	.word	0x0044	; ????
+		
+;;;;;		in 		tmp1, _SFR_IO_ADDR(GICR)	;  
+        lds		tmp1,EIMSK; enable the HREF interrupt...remember, 9/21/09 jcd
+  c6:	df 00       	.word	0x00df	; ????
+	...
+;*******************************************************************************************		
+		
+_dumpFrame:		
+
+;call CamIntAsm_toggleDebugLine; gets here
+        ldi     tmp1,0x01; idle, sleep enable
+  d0:	44 00       	.word	0x0044	; ????
+        sts     SMCR,tmp1;
+  d2:	e0 00       	.word	0x00e0	; ????
+	...
+;call CamIntAsm_toggleDebugLine; 
+;call CamIntAsm_toggleDebugLine; 
+
+;;;;;		in 		tmp1, _SFR_IO_ADDR(GICR)			; 
+        lds		tmp1,EIMSK; disable the HREF interrupt 9/21/09 jcd
+		andi 	tmp1, HREF_INTERRUPT_DISABLE_MASK  	; so we don't get interrupted
+  dc:	44 00       	.word	0x0044	; ????
+;;;;;		out		_SFR_IO_ADDR(GICR), tmp1			; while dumping the line 
+	    sts		EIMSK,tmp1; 9/21/09 jcd
+  de:	e1 00       	.word	0x00e1	; ????
+	...
+; low nibbles into a single byte for transmission...we just don't have time to
+; do that here (only 8 instruction cycles :-)  )
+_sampleDumpPixel:
+		in		tmp1,G_PORT				; sample the G value					(1) change me
+		in		tmp2,RB_PORT			; sample the R/B value					(1) change me
+		st		X+,tmp1					; store to the currLineBuff and inc ptrs(2)
+  e8:	44 00       	.word	0x0044	; ????
+		st		Y+,tmp2					; store to the prevLineBuff and inc ptrs(2)
+  ea:	e4 00       	.word	0x00e4	; ????
+	...
+;***********************************************************
+;SIG_INTERRUPT0:
+INT0_vect:
+; This will wake us up when VSYNC transitions high...we just want to return
+call CamIntAsm_toggleDebugLine; change me not triggered
+		reti
+  f4:	44 00       	.word	0x0044	; ????
+;	Outputs: none
+;***********************************************************	
+;SIG_INTERRUPT1:
+INT1_vect:
+; This will wake us up when HREF transitions high...we just want to return
+        call CamIntAsm_toggleDebugLine;  change me not triggered
+  f6:	e5 00       	.word	0x00e5	; ????
+	...
+;	event in the fastEventBitmask, which is streamlined for
+;	efficiency reasons.
+;***********************************************************
+;SIG_OVERFLOW1:				
+TIM1_OVF_vect:
+		lds		tmp1,fastEventBitmask   		; set a flag indicating
+ 100:	44 00       	.word	0x0044	; ????
+ 102:	e7 00       	.word	0x00e7	; ????
+	...
+		ori		tmp1,FEV_ACQUIRE_LINE_COMPLETE	; a line is complete
+		sts		fastEventBitmask,tmp1
+		set		; set the T bit in SREG 
+		call CamIntAsm_toggleDebugLine; change me
+ 10c:	44 00       	.word	0x0044	; ????
+ 10e:	e9 00       	.word	0x00e9	; ????
+	...
+
+; This is the default handler for all interrupts that don't
+; have handler routines specified for them.
+        .global __vector_default              
+__vector_default:
+        reti
+ 118:	44 00       	.word	0x0044	; ????
+ 11a:	ea 00       	.word	0x00ea	; ????
+	...
+ 124:	44 00       	.word	0x0044	; ????
+ 126:	ed 00       	.word	0x00ed	; ????
+	...
+ 130:	44 00       	.word	0x0044	; ????
+ 132:	ef 00       	.word	0x00ef	; ????
+	...
+ 13c:	44 00       	.word	0x0044	; ????
+ 13e:	f1 00       	.word	0x00f1	; ????
+	...
+ 148:	44 00       	.word	0x0044	; ????
+ 14a:	f4 00       	.word	0x00f4	; ????
+	...
+ 154:	44 00       	.word	0x0044	; ????
+ 156:	f8 00       	.word	0x00f8	; ????
+	...
+ 160:	44 00       	.word	0x0044	; ????
+ 162:	fa 00       	.word	0x00fa	; ????
+	...
+ 16c:	44 00       	.word	0x0044	; ????
+ 16e:	02 01       	movw	r0, r4
+	...
+ 178:	44 00       	.word	0x0044	; ????
+ 17a:	0d 01       	movw	r0, r26
+	...
+ 184:	44 00       	.word	0x0044	; ????
+ 186:	0e 01       	movw	r0, r28
+	...
+ 190:	44 00       	.word	0x0044	; ????
+ 192:	10 01       	movw	r2, r0
+	...
+ 19c:	44 00       	.word	0x0044	; ????
+ 19e:	18 01       	movw	r2, r16
+	...
+ 1a8:	44 00       	.word	0x0044	; ????
+ 1aa:	19 01       	movw	r2, r18
+	...
+ 1b4:	44 00       	.word	0x0044	; ????
+ 1b6:	1a 01       	movw	r2, r20
+	...
+ 1c0:	44 00       	.word	0x0044	; ????
+ 1c2:	1b 01       	movw	r2, r22
+	...
+ 1cc:	44 00       	.word	0x0044	; ????
+ 1ce:	1c 01       	movw	r2, r24
+	...
+ 1d8:	44 00       	.word	0x0044	; ????
+ 1da:	1d 01       	movw	r2, r26
+	...
+ 1e4:	44 00       	.word	0x0044	; ????
+ 1e6:	1e 01       	movw	r2, r28
+	...
+ 1f0:	44 00       	.word	0x0044	; ????
+ 1f2:	1f 01       	movw	r2, r30
+	...
+ 1fc:	44 00       	.word	0x0044	; ????
+ 1fe:	20 01       	movw	r4, r0
+	...
+ 208:	44 00       	.word	0x0044	; ????
+ 20a:	21 01       	movw	r4, r2
+	...
+ 214:	44 00       	.word	0x0044	; ????
+ 216:	25 01       	movw	r4, r10
+	...
+ 220:	44 00       	.word	0x0044	; ????
+ 222:	26 01       	movw	r4, r12
+	...
+ 22c:	44 00       	.word	0x0044	; ????
+ 22e:	30 01       	movw	r6, r0
+	...
+ 238:	44 00       	.word	0x0044	; ????
+ 23a:	33 01       	movw	r6, r6
+	...
+ 244:	44 00       	.word	0x0044	; ????
+ 246:	35 01       	movw	r6, r10
+	...
+ 250:	44 00       	.word	0x0044	; ????
+ 252:	37 01       	movw	r6, r14
+	...
+ 25c:	44 00       	.word	0x0044	; ????
+ 25e:	39 01       	movw	r6, r18
+	...
+ 268:	44 00       	.word	0x0044	; ????
+ 26a:	3a 01       	movw	r6, r20
+	...
+ 274:	44 00       	.word	0x0044	; ????
+ 276:	3b 01       	movw	r6, r22
+	...
+ 280:	44 00       	.word	0x0044	; ????
+ 282:	3d 01       	movw	r6, r26
+	...
+ 28c:	44 00       	.word	0x0044	; ????
+ 28e:	3e 01       	movw	r6, r28
+	...
+ 298:	44 00       	.word	0x0044	; ????
+ 29a:	41 01       	movw	r8, r2
+	...
+ 2a4:	44 00       	.word	0x0044	; ????
+ 2a6:	46 01       	movw	r8, r12
+	...
+ 2b0:	44 00       	.word	0x0044	; ????
+ 2b2:	47 01       	movw	r8, r14
+	...
+ 2bc:	44 00       	.word	0x0044	; ????
+ 2be:	49 01       	movw	r8, r18
+	...
+ 2c8:	44 00       	.word	0x0044	; ????
+ 2ca:	4c 01       	movw	r8, r24
+	...
+ 2d4:	44 00       	.word	0x0044	; ????
+ 2d6:	4d 01       	movw	r8, r26
+	...
+ 2e0:	44 00       	.word	0x0044	; ????
+ 2e2:	4e 01       	movw	r8, r28
+	...
+ 2ec:	44 00       	.word	0x0044	; ????
+ 2ee:	61 01       	movw	r12, r2
+	...
+ 2f8:	44 00       	.word	0x0044	; ????
+ 2fa:	62 01       	movw	r12, r4
+	...
+ 304:	44 00       	.word	0x0044	; ????
+ 306:	64 01       	movw	r12, r8
+	...
+ 310:	44 00       	.word	0x0044	; ????
+ 312:	69 01       	movw	r12, r18
+	...
+ 31c:	44 00       	.word	0x0044	; ????
+ 31e:	6c 01       	movw	r12, r24
+	...
+ 328:	44 00       	.word	0x0044	; ????
+ 32a:	83 01       	movw	r16, r6
+	...
+ 334:	44 00       	.word	0x0044	; ????
+ 336:	8d 01       	movw	r16, r26
+	...
+ 340:	44 00       	.word	0x0044	; ????
+ 342:	90 01       	movw	r18, r0
+	...
+ 34c:	44 00       	.word	0x0044	; ????
+ 34e:	91 01       	movw	r18, r2
+	...
+ 358:	44 00       	.word	0x0044	; ????
+ 35a:	93 01       	movw	r18, r6
+	...
+ 364:	44 00       	.word	0x0044	; ????
+ 366:	94 01       	movw	r18, r8
+	...
+ 370:	44 00       	.word	0x0044	; ????
+ 372:	96 01       	movw	r18, r12
+	...
+ 37c:	44 00       	.word	0x0044	; ????
+ 37e:	97 01       	movw	r18, r14
+	...
+ 388:	44 00       	.word	0x0044	; ????
+ 38a:	99 01       	movw	r18, r18
+	...
+ 394:	44 00       	.word	0x0044	; ????
+ 396:	9b 01       	movw	r18, r22
+	...
+ 3a0:	44 00       	.word	0x0044	; ????
+ 3a2:	9d 01       	movw	r18, r26
+	...
+ 3ac:	44 00       	.word	0x0044	; ????
+ 3ae:	9e 01       	movw	r18, r28
+	...
+ 3b8:	44 00       	.word	0x0044	; ????
+ 3ba:	a0 01       	movw	r20, r0
+	...
+ 3c4:	44 00       	.word	0x0044	; ????
+ 3c6:	a4 01       	movw	r20, r8
+	...
+ 3d0:	44 00       	.word	0x0044	; ????
+ 3d2:	a5 01       	movw	r20, r10
+	...
+ 3dc:	44 00       	.word	0x0044	; ????
+ 3de:	a7 01       	movw	r20, r14
+	...
+ 3e8:	44 00       	.word	0x0044	; ????
+ 3ea:	aa 01       	movw	r20, r20
+	...
+ 3f4:	44 00       	.word	0x0044	; ????
+ 3f6:	ad 01       	movw	r20, r26
+	...
+ 400:	44 00       	.word	0x0044	; ????
+ 402:	af 01       	movw	r20, r30
+	...
+ 40c:	44 00       	.word	0x0044	; ????
+ 40e:	b9 01       	movw	r22, r18
+	...
+ 418:	44 00       	.word	0x0044	; ????
+ 41a:	ba 01       	movw	r22, r20
+	...
+ 424:	44 00       	.word	0x0044	; ????
+ 426:	bb 01       	movw	r22, r22
+	...
+ 430:	44 00       	.word	0x0044	; ????
+ 432:	c2 01       	movw	r24, r4
+	...
+ 43c:	44 00       	.word	0x0044	; ????
+ 43e:	c3 01       	movw	r24, r6
+	...
+ 448:	44 00       	.word	0x0044	; ????
+ 44a:	c5 01       	movw	r24, r10
+	...
+ 454:	44 00       	.word	0x0044	; ????
+ 456:	c6 01       	movw	r24, r12
+	...
+ 460:	44 00       	.word	0x0044	; ????
+ 462:	d3 01       	movw	r26, r6
+	...
+ 46c:	44 00       	.word	0x0044	; ????
+ 46e:	d4 01       	movw	r26, r8
+	...
+ 478:	44 00       	.word	0x0044	; ????
+ 47a:	d5 01       	movw	r26, r10
+	...
+ 484:	44 00       	.word	0x0044	; ????
+ 486:	d6 01       	movw	r26, r12
+	...
+ 490:	44 00       	.word	0x0044	; ????
+ 492:	d9 01       	movw	r26, r18
+	...
+ 49c:	44 00       	.word	0x0044	; ????
+ 49e:	e0 01       	movw	r28, r0
+	...
+ 4a8:	44 00       	.word	0x0044	; ????
+ 4aa:	ef 01       	movw	r28, r30
+	...
+ 4b4:	44 00       	.word	0x0044	; ????
+ 4b6:	f0 01       	movw	r30, r0
+	...
+ 4c0:	44 00       	.word	0x0044	; ????
+ 4c2:	00 02       	muls	r16, r16
+	...
+ 4cc:	44 00       	.word	0x0044	; ????
+ 4ce:	01 02       	muls	r16, r17
+	...
+ 4d8:	44 00       	.word	0x0044	; ????
+ 4da:	17 02       	muls	r17, r23
+	...
+ 4e4:	44 00       	.word	0x0044	; ????
+ 4e6:	26 02       	muls	r18, r22
+	...
+ 4f0:	44 00       	.word	0x0044	; ????
+ 4f2:	27 02       	muls	r18, r23
+	...
+ 4fc:	44 00       	.word	0x0044	; ????
+ 4fe:	28 02       	muls	r18, r24
+	...
+ 508:	44 00       	.word	0x0044	; ????
+ 50a:	29 02       	muls	r18, r25
+	...
+ 514:	44 00       	.word	0x0044	; ????
+ 516:	2a 02       	muls	r18, r26
+	...
+ 520:	44 00       	.word	0x0044	; ????
+ 522:	2b 02       	muls	r18, r27
+	...
+ 52c:	44 00       	.word	0x0044	; ????
+ 52e:	31 02       	muls	r19, r17
+ 530:	00 00       	nop
+	...
+
+Disassembly of section .stabstr:
+
+00000000 <.stabstr>:
+; 
+CamIntAsm_toggleDebugLine:
+;lds,sts work as well, the problem was that the ddr was not set
+; a short pulse of about 125 nSec...
+;       sbi     _SFR_IO_ADDR(DDRD),PD6  ; now set in framemgr.c
+	    sbi		_SFR_IO_ADDR(PORTD),PD6  ; For testing...
+   0:	00 2f       	mov	r16, r16
+		cbi		_SFR_IO_ADDR(PORTD),PD6		
+   2:	74 6d       	ori	r23, 0xD4	; 212
+        ret;	
+   4:	70 2f       	mov	r23, r16
+;*****************************************************************
+		
+CamIntAsm_waitForNewTrackingFrame:
+;		sbi		_SFR_IO_ADDR(PORTD),PD6  ; For testing...
+;		cbi		_SFR_IO_ADDR(PORTD),PD6		
+		sleep
+   6:	63 63       	ori	r22, 0x33	; 51
+; synchronized with the flow of pixel data from the camera...
+;*****************************************************************
+
+CamIntAsm_acquireTrackingLine:
+; this branch is out of range when we just do brts _cleanUp  9/21/09 jcd
+		brts    jcdcleanUp	
+   8:	53 76       	andi	r21, 0x63	; 99
+;		sbi		_SFR_IO_ADDR(PORTD),PD6 ; For testing...change me back
+;		cbi		_SFR_IO_ADDR(PORTD),PD6
+       
+;;;;;;       in      tmp1,_SFR_IO_ADDR(TCCR1B) ; 
+        lds      tmp1,TCCR1B ; Enable the PCLK line to actually   9/21/09 jcd
+   a:	4e 6b       	ori	r20, 0xBE	; 190
+   c:	54 78       	andi	r21, 0x84	; 132
+        ori     tmp1, 0x07                 ; feed Timer1
+   e:	2e 73       	andi	r18, 0x3E	; 62
+;;;;;;        out     _SFR_IO_ADDR(TCCR1B),tmp1 
+        sts     TCCR1B,tmp1   ; 9/21/09 jcd
+  10:	00 2f       	mov	r16, r16
+  12:	74 6d       	ori	r23, 0xD4	; 212
+
+										; The line is about to start...		
+		ldi     pixelCount,0			; Initialize the RLE stats...
+  14:	70 2f       	mov	r23, r16
+		ldi		pixelRunStart,PIXEL_RUN_START_INITIAL  	; Remember, we always calculate
+  16:	63 63       	ori	r22, 0x33	; 51
+														; the pixel run length as
+														; TCNT1L - pixelRunStart
+		
+		ldi		lastColor,0x00				; clear out the last color before we start
+  18:	53 76       	andi	r21, 0x63	; 99
+		
+		mov   	XH,currLineBuffHigh    	; Load the pointer to the current line
+  1a:	4e 6b       	ori	r20, 0xBE	; 190
+		mov		XL,currLineBuffLow		; buffer into the X pointer regs		 
+  1c:	54 78       	andi	r21, 0x84	; 132
+		
+		mov   	ZH,colorMapHigh      	; Load the pointers to the membership
+  1e:	2e 73       	andi	r18, 0x3E	; 62
+		mov		ZL,colorMapLow			; lookup tables (ZL and YL will be overwritten
+  20:	00 43       	sbci	r16, 0x30	; 48
+		mov 	YH,colorMapHigh	 		; as soon as we start reading data) to Z and Y
+  22:	61 6d       	ori	r22, 0xD1	; 209
+		
+;;;;;		in		tmp1, _SFR_IO_ADDR(TIMSK)	
+        lds		tmp1, TIMSK1			; enable TIMER1 to start counting 9/21/09 jcd
+  24:	49 6e       	ori	r20, 0xE9	; 233
+  26:	74 65       	ori	r23, 0x54	; 84
+		ori		tmp1, ENABLE_PCLK_TIMER1_OVERFLOW_BITMASK 	; external PCLK pulses and interrupt on 
+  28:	72 66       	ori	r23, 0x62	; 98
+;;;;;		out		_SFR_IO_ADDR(TIMSK),tmp1	
+		sts		TIMSK1,tmp1			; overflow 9/21/09 jcd
+  2a:	61 63       	ori	r22, 0x31	; 49
+  2c:	65 41       	sbci	r22, 0x15	; 21
+
+		ldi 	tmp1,PIXEL_RUN_START_INITIAL	; set up the TCNT1 to overflow (and
+  2e:	73 6d       	ori	r23, 0xD3	; 211
+		ldi 	tmp2,0xFF 						; interrupts) after 176 pixels	
+  30:	2e 53       	subi	r18, 0x3E	; 62
+	...
